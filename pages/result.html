@@ -461,6 +461,10 @@
                     generatedCV
                 });
 
+                if (window.location.search.includes('import=1')) {
+                    window.history.replaceState({}, '', '/pages/result.html');
+                }
+
                 hideLoadingOverlay();
                 renderCV();
             } catch (err) {
@@ -470,9 +474,16 @@
             }
         }
 
-        function renderEmptyImportState() {
+        function renderEmptyImportState(existingCv = null) {
             container.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:42rem; padding:3rem 1.5rem; text-align:center;">
+                    ${existingCv ? `
+                        <div style="margin-bottom:1.5rem; padding:0.6rem 1.25rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9999px; display:inline-flex; align-items:center; gap:0.6rem; font-size:0.85rem; color:#166534;">
+                            <span>Currículo no cache: <b>${existingCv.header?.name || 'Currículo salvo'}</b></span>
+                            <span style="color:#86efac;">•</span>
+                            <button id="btn-restore-cached-cv" type="button" style="font-weight:700; text-decoration:underline; background:none; border:none; color:#15803d; cursor:pointer; padding:0; font-size:inherit;">Continuar editando o anterior</button>
+                        </div>
+                    ` : ''}
                     <div style="width:5rem; height:5rem; background:rgba(16, 185, 129, 0.1); border:2px dashed #10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -499,6 +510,14 @@
                     </div>
                 </div>
             `;
+
+            const btnRestore = document.getElementById('btn-restore-cached-cv');
+            if (btnRestore) {
+                btnRestore.addEventListener('click', () => {
+                    window.history.replaceState({}, '', '/pages/result.html');
+                    renderCV();
+                });
+            }
 
             const fileInput = document.getElementById('direct-pdf-upload');
             if (fileInput) {
@@ -963,17 +982,17 @@
         }
 
         // Initialize view
-        if (!cv) {
-            renderEmptyImportState();
+        const urlParams = new URLSearchParams(window.location.search);
+        const isImportMode = urlParams.get('import') === '1';
+
+        if (!cv || isImportMode) {
+            renderEmptyImportState(cv);
+            if (isImportMode) {
+                const input = document.getElementById('direct-pdf-upload');
+                if (input) setTimeout(() => input.click(), 150);
+            }
         } else {
             renderCV();
-        }
-
-        // Check if query param ?import=1 was passed to auto-trigger file dialog
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('import') === '1') {
-            const input = document.getElementById('direct-pdf-upload') || sidebarFileInput;
-            if (input) setTimeout(() => input.click(), 300);
         }
     </script>
 

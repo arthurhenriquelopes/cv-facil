@@ -166,10 +166,11 @@
                         Gerar CV Otimizado
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
                     </a>
-                    <a href="/pages/result.html?import=1" class="hero-cta-secondary" style="border-color:rgba(16,185,129,0.3);color:#34d399;gap:0.4rem;">
+                    <a href="/pages/result.html?import=1" id="btn-hero-edit-pdf" class="hero-cta-secondary" style="border-color:rgba(16,185,129,0.3);color:#34d399;gap:0.4rem;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                         Editar PDF Direto
                     </a>
+                    <input type="file" id="landing-pdf-input" accept="application/pdf" style="display:none;" />
                     <a href="/pages/dashboard.html" class="hero-cta-secondary">
                         Ver Dashboard
                     </a>
@@ -299,6 +300,46 @@
             <p style="font-size:0.75rem;color:var(--color-text-muted);">© 2026 CvPorVaga. Todos os direitos reservados.</p>
         </div>
     </footer>
+    <script type="module">
+        import { extractDeterministicCVFromPDF } from '/src/lib/deterministic-pdf.js';
+        import { updateProfile, setState } from '/src/lib/store.js';
+
+        const btnEditPdf = document.getElementById('btn-hero-edit-pdf');
+        const inputPdf = document.getElementById('landing-pdf-input');
+
+        if (btnEditPdf && inputPdf) {
+            btnEditPdf.addEventListener('click', (e) => {
+                // If user clicks normally (not right-click / ctrl-click), open file dialog immediately
+                if (e.button === 0 && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    inputPdf.click();
+                }
+            });
+
+            inputPdf.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const origHtml = btnEditPdf.innerHTML;
+                btnEditPdf.innerHTML = '<div class="spinner" style="width:1.1rem;height:1.1rem;border-width:2px;border-top-color:#34d399;margin-right:0.4rem;"></div> Lendo PDF...';
+                btnEditPdf.style.pointerEvents = 'none';
+
+                try {
+                    const { profile, generatedCV } = await extractDeterministicCVFromPDF(file);
+                    updateProfile(profile);
+                    setState({ generatedCV });
+                    window.location.href = '/pages/result.html';
+                } catch (err) {
+                    console.error('Erro ao processar PDF:', err);
+                    alert('Erro ao carregar PDF: ' + (err.message || 'Tente novamente.'));
+                    btnEditPdf.innerHTML = origHtml;
+                    btnEditPdf.style.pointerEvents = 'auto';
+                } finally {
+                    inputPdf.value = '';
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
