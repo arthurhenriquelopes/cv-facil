@@ -68,8 +68,8 @@ const SECTION_KEY_MAP = {
 };
 
 const MONTHS = '(?:Jan(?:eiro)?|Fev(?:ereiro)?|Mar(?:ço)?|Abr(?:il)?|Mai(?:o)?|Jun(?:ho)?|Jul(?:ho)?|Ago(?:sto)?|Set(?:embro)?|Out(?:ubro)?|Nov(?:embro)?|Dez(?:embro)?)';
-const SINGLE_DATE = `(?:${MONTHS}\\\\s+\\\\d{4}|\\\\d{1,2}\\\\/\\\\d{2,4}|\\\\d{4}|${MONTHS})`;
-const PERIOD_REGEX = new RegExp(`\\\\b(${SINGLE_DATE}\\\\s*(?:[–—-]|a|at[ée])\\\\s*(?:Atual|Presente|Present|${SINGLE_DATE}))\\\\b`, 'i');
+const SINGLE_DATE = '(?:' + MONTHS + '\\s+\\d{4}|\\d{1,2}\\/\\d{2,4}|\\d{4}|' + MONTHS + ')';
+const PERIOD_REGEX = new RegExp('\\b(' + SINGLE_DATE + '\\s*(?:[–—-]|a|at[ée])\\s*(?:Atual|Presente|Present|' + SINGLE_DATE + '))\\b', 'i');
 
 // ─── Font style detection ──────────────────────────────────────────────────────
 
@@ -92,13 +92,13 @@ function isFontItalic(fontName) {
 /**
  * Extract font size from a textItem's transform matrix.
  * transform = [scaleX, skewX, skewY, scaleY, translateX, translateY]
- * Font size is typically abs(transform[0]) or abs(transform[3]).
  */
 function getFontSize(item) {
-    const sx = Math.abs(item.transform[0]);
-    const sy = Math.abs(item.transform[3]);
-    // Use whichever is larger — some PDFs use rotation where one axis is 0
-    return Math.max(sx, sy);
+    if (!item || !item.transform) return 10;
+    const sx = Math.abs(item.transform[0]) || 0;
+    const sy = Math.abs(item.transform[3]) || 0;
+    const size = Math.hypot(item.transform[0], item.transform[1]) || Math.max(sx, sy) || 10;
+    return Math.round(size * 10) / 10;
 }
 
 /**
@@ -106,7 +106,7 @@ function getFontSize(item) {
  * rounding to 0.5pt precision.
  */
 function computeMode(values) {
-    if (values.length === 0) return 10;
+    if (!values || values.length === 0) return 10;
     const freq = {};
     for (const v of values) {
         const key = (Math.round(v * 2) / 2).toFixed(1); // round to 0.5pt
@@ -123,72 +123,6 @@ function computeMode(values) {
     return modeVal;
 }
 
-// ─── HR detection via operator list ────────────────────────────────────────────
-
-/**
- * Detect horizontal rules from the page's operator list.
- * Returns an array of Y positions (in PDF coords, top = higher Y) where HRs appear.
- */
-async function detectHorizontalRules(page) {
-    const ops = await page.getOperatorList();
-    const viewport = page.getViewport({ scale: 1 });
-    const pageWidth = viewport.width;
-    const hrYPositions = [];
-
-    for (let i = 0; i < ops.fnArray.length; i++) {
-        // constructPath contains sub-operations
-        if (ops.fnArray[i] === pdfjsLib.OPS.constructPath) {
-            const args = ops.argsArray[i];
-            const subOps = args[0]; // array of sub-operation codes
-            const subArgs = args[1]; // flat array of numeric arguments
-
-            let argIdx = 0;
-            for (const op of subOps) {
-                if (op === pdfjsLib.OPS.rectangle) {
-                    // rect(x, y, w, h)
-                    const x = subArgs[argIdx];
-                    const y = subArgs[argIdx + 1];
-                    const w = subArgs[argIdx + 2];
-                    const h = subArgs[argIdx + 3];
-                    argIdx += 4;
-
-                    // Thin rectangle spanning significant width = horizontal rule
-                    if (Math.abs(h) <= 3 && w > pageWidth * 0.3) {
-                        hrYPositions.push(y);
-                    }
-                } else if (op === pdfjsLib.OPS.moveTo) {
-                    argIdx += 2;
-                } else if (op === pdfjsLib.OPS.lineTo) {
-                    argIdx += 2;
-                } else if (op === pdfjsLib.OPS.curveTo || op === pdfjsLib.OPS.curveTo2 || op === pdfjsLib.OPS.curveTo3) {
-                    argIdx += 6;
-                } else {
-                    // closePath etc — no args
-                }
-            }
-        }
-        // Also check for stroke paths that form lines
-        if (ops.fnArray[i] === pdfjsLib.OPS.constructPath) {
-            const args = ops.argsArray[i];
-            const subOps = args[0];
-            const subArgs = args[1];
-
-            if (subOps.length === 2 &&
-                subOps[0] === pdfjsLib.OPS.moveTo &&
-                subOps[1] === pdfjsLib.OPS.lineTo) {
-                const x1 = subArgs[0], y1 = subArgs[1];
-                const x2 = subArgs[2], y2 = subArgs[3];
-                // Horizontal line (same Y, significant width)
-                if (Math.abs(y1 - y2) < 1 && Math.abs(x2 - x1) > pageWidth * 0.3) {
-                    hrYPositions.push(y1);
-                }
-            }
-        }
-    }
-
-    return hrYPositions;
-}
-
 /**
  * Extracts structured CV data from a PDF file deterministically, preserving
  * the exact words, structure, blue hyperlinks, AND original font sizes/styles
@@ -202,7 +136,7 @@ export async function extractDeterministicCVFromPDF(file) {
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
     const allLines = [];
-    const allFontSizes = []; // collect all body font sizes for mode calculation
+    const allFontSizes = [];
     const contact = {
         location: '',
         phone: '',
@@ -212,9 +146,7 @@ export async function extractDeterministicCVFromPDF(file) {
         portfolio: ''
     };
 
-    let hrAfterSectionTitle = false; // whether HRs appear after section titles
-
-    // 1. First pass: extract all link annotations + text with font metadata
+    // 1. Extract link annotations + text with font metadata
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const annotations = await page.getAnnotations({ intent: 'display' });
@@ -236,12 +168,9 @@ export async function extractDeterministicCVFromPDF(file) {
             }
         }
 
-        // Detect horizontal rules on this page
-        const hrYPositions = await detectHorizontalRules(page);
-
         // Extract text items with font metadata
         const textContent = await page.getTextContent();
-        const rawItems = textContent.items.filter(it => it.str && it.str.length > 0);
+        const rawItems = (textContent.items || []).filter(it => it.str && it.str.length > 0);
 
         // Sort items by Y descending (top to bottom), then X ascending (left to right)
         rawItems.sort((a, b) => {
@@ -250,7 +179,7 @@ export async function extractDeterministicCVFromPDF(file) {
             return a.transform[4] - b.transform[4];
         });
 
-        // Group into lines by Y coordinate, capturing font metadata
+        // Group into lines by Y coordinate
         let curLine = null;
         for (const it of rawItems) {
             const y = Math.round(it.transform[5]);
@@ -265,20 +194,16 @@ export async function extractDeterministicCVFromPDF(file) {
                     y,
                     items: [it],
                     text: str,
-                    fontSize,       // dominant font size of the line (from first item)
+                    fontSize,
                     fontSizes: [fontSize],
                     isBold: bold,
-                    isItalic: italic,
-                    // Check if there's a HR just above this line (within 5pt)
-                    hasHrAbove: hrYPositions.some(hrY => Math.abs(hrY - y) < 15 && hrY >= y)
+                    isItalic: italic
                 };
                 allLines.push(curLine);
             } else {
                 curLine.items.push(it);
                 curLine.fontSizes.push(fontSize);
-                // Line is bold only if ALL items are bold
-                curLine.isBold = curLine.isBold && bold;
-                // Line is italic if ANY item is italic
+                curLine.isBold = curLine.isBold || bold;
                 curLine.isItalic = curLine.isItalic || italic;
 
                 const prev = curLine.items[curLine.items.length - 2];
@@ -288,7 +213,7 @@ export async function extractDeterministicCVFromPDF(file) {
         }
     }
 
-    // Finalize line font sizes: use the mode (most common) size per line
+    // Finalize line font sizes
     for (const line of allLines) {
         line.fontSize = computeMode(line.fontSizes);
     }
@@ -300,17 +225,14 @@ export async function extractDeterministicCVFromPDF(file) {
         key: cleanHeadingKey(l.text),
         fontSize: l.fontSize,
         isBold: l.isBold,
-        isItalic: l.isItalic,
-        hasHrAbove: l.hasHrAbove
+        isItalic: l.isItalic
     })).filter(l => l.text.length > 0);
 
     if (lines.length === 0) {
         throw new Error('Não foi possível extrair texto do arquivo PDF.');
     }
 
-    // ─── Compute styling metrics ───────────────────────────────────────────────
-
-    // Name = first line
+    // 2. Candidate Name = first line
     const candidateName = lines[0].text;
     const nameSize = lines[0].fontSize;
 
@@ -354,13 +276,8 @@ export async function extractDeterministicCVFromPDF(file) {
             }
         }
 
-        // Social line check (e.g. "LinkedIn | GitHub | Portfólio")
         const isSocialLine = /LinkedIn|GitHub|Portf[oó]lio/i.test(text);
-
-        // Phone/Email line check
         const isContactLine = /@|\(?\d{2}\)?\s*\d{4,5}/.test(text);
-
-        // Location line check
         const isLocationLine = /[A-Za-zÀ-ÿ\s]+,\s*[A-Za-zÀ-ÿ\s]{2,}/.test(text) &&
             !/Desenvolvedor|Engenheiro|Developer|Software|Analista|Junior|Pleno|Senior|Foco|Estudante/i.test(text);
 
@@ -371,7 +288,6 @@ export async function extractDeterministicCVFromPDF(file) {
         } else if (isSocialLine || isContactLine) {
             if (!contactSize) contactSize = hl.fontSize;
         } else if (!isSocialLine && !isContactLine && !isLocationLine && !candidateTitle) {
-            // It's the professional title/headline!
             candidateTitle = text.trim();
             titleSize = hl.fontSize;
         }
@@ -388,20 +304,16 @@ export async function extractDeterministicCVFromPDF(file) {
 
         if (secType) {
             sectionHeadingSizes.push(l.fontSize);
-            // Check if this section heading has an HR
-            if (l.hasHrAbove) hrAfterSectionTitle = true;
             currentSection = {
                 type: secType,
                 title: l.text,
                 titleBold: l.isBold,
                 titleUppercase: l.text === l.text.toUpperCase(),
-                hasHr: l.hasHrAbove,
                 lines: []
             };
             sections.push(currentSection);
         } else if (currentSection) {
             currentSection.lines.push(l);
-            // Collect body font sizes (non-heading text)
             allFontSizes.push(l.fontSize);
         }
     }
@@ -410,20 +322,15 @@ export async function extractDeterministicCVFromPDF(file) {
     const bodySize = computeMode(allFontSizes);
     const sectionSize = sectionHeadingSizes.length > 0 ? computeMode(sectionHeadingSizes) : bodySize;
 
-    // Detect if section titles use border-bottom (HR under section titles)
-    // Check if at least half of sections have HRs
-    const sectionsWithHr = sections.filter(s => s.hasHr).length;
-    const sectionHrDetected = sectionsWithHr > sections.length * 0.3;
-
     const styling = {
-        nameSize: Math.round(nameSize * 2) / 2,        // round to 0.5pt
-        titleSize: Math.round((titleSize || bodySize) * 2) / 2,
-        sectionSize: Math.round(sectionSize * 2) / 2,
-        bodySize: Math.round(bodySize * 2) / 2,
-        contactSize: Math.round((contactSize || bodySize * 0.85) * 2) / 2,
-        sectionTitleBold: sections.length > 0 ? sections[0].titleBold : true,
-        sectionTitleUppercase: sections.length > 0 ? sections[0].titleUppercase : true,
-        sectionHasHr: sectionHrDetected,
+        nameSize: Math.round((nameSize || 20) * 2) / 2,
+        titleSize: Math.round((titleSize || bodySize || 10.5) * 2) / 2,
+        sectionSize: Math.round((sectionSize || 10) * 2) / 2,
+        bodySize: Math.round((bodySize || 10) * 2) / 2,
+        contactSize: Math.round((contactSize || (bodySize ? bodySize * 0.85 : 8.5)) * 2) / 2,
+        sectionTitleBold: true,
+        sectionTitleUppercase: true,
+        sectionHasHr: true
     };
 
     // 5. Parse each section deterministically
@@ -459,7 +366,6 @@ export async function extractDeterministicCVFromPDF(file) {
                         let period = periodMatch[0].trim();
                         let company = cleanText.replace(periodMatch[0], '').replace(/[—–-]\s*$/, '').trim();
 
-                        // Next line might be the role/title
                         let roleTitle = '';
                         if (i + 1 < sec.lines.length &&
                             !/^[•\-\*◦▪]/.test(sec.lines[i + 1].text.trim()) &&
@@ -476,7 +382,6 @@ export async function extractDeterministicCVFromPDF(file) {
                         };
                         experiences.push(curExp);
                     } else if (curExp && curExp.bullets.length > 0) {
-                        // Continuation of previous bullet point!
                         curExp.bullets[curExp.bullets.length - 1] += ' ' + cleanText;
                     } else if (curExp && !curExp.title) {
                         curExp.title = cleanText;
@@ -590,7 +495,6 @@ export async function extractDeterministicCVFromPDF(file) {
             let curProj = null;
             for (const line of sec.lines) {
                 const clean = line.text.replace(/^[•\-\*◦▪]\s*/, '').trim();
-                // Match "Title — Role" or "Title - Role" or "Title: Role"
                 const titleMatch = clean.match(/^([^\n—–-]+)\s*[—–-]\s*([^\n]+)$/);
                 if (titleMatch && !curProj?.description) {
                     curProj = {
@@ -629,7 +533,7 @@ export async function extractDeterministicCVFromPDF(file) {
         languages,
         certifications,
         projects,
-        styling  // <-- NEW: extracted font sizes and style metadata
+        styling
     };
 
     const profile = {
