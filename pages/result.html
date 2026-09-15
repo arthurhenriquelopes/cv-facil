@@ -340,353 +340,563 @@
     <script type="module">
         import { injectNavbar } from '/src/lib/layout.js';
         import { getState, setState } from '/src/lib/store.js';
+        import { extractTextFromPDF } from '/src/lib/pdf.js';
+        import { parseProfileFromText } from '/src/prompts/parse-profile.js';
         injectNavbar();
 
+        const container = document.getElementById('cv-preview');
         let state = getState();
         let cv = state.generatedCV;
 
-        if (!cv) {
-            document.getElementById('cv-preview').innerHTML = '<p style="text-align:center;padding:4rem;color:var(--color-gray-400);">Nenhum CV gerado. <a href="/pages/step-profile.html" style="color:var(--color-primary);font-weight:700;">Comece aqui</a></p>';
-        } else {
-            const container = document.getElementById('cv-preview');
+        // Helper: Convert parsed profile into CV schema
+        function convertProfileToCV(profile) {
+            const experiences = (profile.experiences || []).map(exp => {
+                const period = exp.period || (
+                    exp.startDate ? `${exp.startDate} – ${exp.isCurrent ? 'Atual' : (exp.endDate || '')}` : ''
+                );
+                let bullets = [];
+                if (Array.isArray(exp.bullets) && exp.bullets.length > 0) {
+                    bullets = exp.bullets;
+                } else if (exp.description) {
+                    bullets = exp.description
+                        .split('\n')
+                        .map(l => l.replace(/^[•\-\*]\s*/, '').trim())
+                        .filter(Boolean);
+                }
+                return {
+                    company: exp.company || '',
+                    title: exp.title || '',
+                    period: period || '',
+                    bullets: bullets.length > 0 ? bullets : (exp.description ? [exp.description] : [])
+                };
+            });
 
-            // Helper: make a clickable blue link from a URL
-            function makeLink(label, url) {
-                if (!url) return '';
-                const href = url.startsWith('http') ? url : 'https://' + url;
-                return `<a href="${href}" target="_blank" style="color: #0066cc; text-decoration: none;">${label}</a>`;
-            }
+            const education = (profile.education || []).map(edu => ({
+                institution: edu.institution || '',
+                degree: edu.degree || '',
+                period: edu.period || (edu.startDate ? `${edu.startDate} – ${edu.endDate || ''}` : '')
+            }));
 
-            function renderCV() {
-                state = getState();
-                cv = state.generatedCV;
-                const h = cv.header || {};
+            const languages = (profile.languages || []).map(l => ({
+                name: typeof l === 'string' ? l : (l.name || l.language || ''),
+                level: typeof l === 'string' ? 'Fluente' : (l.level || l.proficiency || 'Intermediário')
+            }));
 
-                // Build contact lines (stacked, left-aligned like reference)
-                const contactLine1Parts = [];
-                if (h.contact?.location) contactLine1Parts.push(h.contact.location);
-                const contactLine1 = contactLine1Parts.join('');
+            const projects = (profile.projects || []).map(p => ({
+                title: p.title || p.name || '',
+                role: p.role || '',
+                description: p.description || ''
+            }));
 
-                const contactLine2Parts = [];
-                if (h.contact?.phone) contactLine2Parts.push(h.contact.phone);
-                if (h.contact?.email) contactLine2Parts.push(h.contact.email);
-                const contactLine2 = contactLine2Parts.join('<span class="sep">|</span>');
+            const certifications = (profile.certifications || []).map(c => ({
+                name: c.title || c.name || '',
+                title: c.title || c.name || '',
+                institution: c.issuer || c.institution || '',
+                issuer: c.issuer || c.institution || '',
+                year: c.date || c.year || '',
+                date: c.date || c.year || ''
+            }));
 
-                const contactLine3Parts = [];
-                const linkedinUrl = h.contact?.linkedin || state.profile?.linkedin || '';
-                const githubUrl = h.contact?.github || state.profile?.github || '';
-                const portfolioUrl = h.contact?.portfolio || state.profile?.portfolio || '';
-                if (linkedinUrl) contactLine3Parts.push(makeLink('LinkedIn', linkedinUrl));
-                if (githubUrl) contactLine3Parts.push(makeLink('GitHub', githubUrl));
-                if (portfolioUrl) contactLine3Parts.push(makeLink('Portfólio', portfolioUrl));
-                const contactLine3 = contactLine3Parts.join('<span class="sep">|</span>');
-
-                // Identify missing links
-                const missingLinks = [];
-                if (!linkedinUrl) missingLinks.push('LinkedIn');
-                if (!githubUrl) missingLinks.push('GitHub');
-                if (!portfolioUrl) missingLinks.push('Portfólio');
-
-                const missingLinksBadge = missingLinks.length > 0 ? `
-                    <button class="cv-missing-badge cv-no-print" id="btn-toggle-missing-links" type="button" title="Adicionar links faltantes">
-                        + Adicionar ${missingLinks.join(', ')}...
-                    </button>
-                ` : '';
-
-                const missingLinksPanel = missingLinks.length > 0 ? `
-                    <div id="missing-links-form" class="cv-inline-adder-card cv-no-print" style="display: none;">
-                        <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
-                            <span>Adicionar Links ao Cabeçalho</span>
-                            <span id="btn-close-missing-links" style="cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1;">&times;</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            ${!linkedinUrl ? `
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">LinkedIn:</label>
-                                    <input type="text" id="input-add-linkedin" placeholder="ex: linkedin.com/in/seunome" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
-                                </div>
-                            ` : ''}
-                            ${!githubUrl ? `
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">GitHub:</label>
-                                    <input type="text" id="input-add-github" placeholder="ex: github.com/seunome" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
-                                </div>
-                            ` : ''}
-                            ${!portfolioUrl ? `
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">Portfólio:</label>
-                                    <input type="text" id="input-add-portfolio" placeholder="ex: seunome.dev" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
-                                </div>
-                            ` : ''}
-                            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.25rem;">
-                                <button id="btn-save-missing-links" type="button" class="btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; border: none; cursor: pointer;">
-                                    Salvar no CV
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ` : '';
-
-                // Header
-                const headerHTML = `
-                    <div class="cv-header">
-                        <div class="cv-name">${h.name || state.profile?.name || ''}</div>
-                        ${h.title ? `<div class="cv-title">${h.title}</div>` : ''}
-                        ${contactLine1 ? `<div class="cv-contact-line">${contactLine1}</div>` : ''}
-                        ${contactLine2 ? `<div class="cv-contact-line">${contactLine2}</div>` : ''}
-                        <div class="cv-contact-line">${contactLine3}${missingLinksBadge}</div>
-                        ${missingLinksPanel}
-                    </div>
-                `;
-
-                // Summary section
-                const summaryHTML = cv.summary ? `
-                    <div class="cv-section-title">Resumo Profissional</div>
-                    <p class="cv-summary-text">${cv.summary}</p>
-                ` : '';
-
-                // Experience section
-                const experienceHTML = (cv.experiences && cv.experiences.length) ? `
-                    <div class="cv-section-title">Experiência Profissional</div>
-                    ${cv.experiences.map(exp => {
-                        const bullets = (exp.bullets || []).map(b => {
-                            let text = b.replace(/^[•\s]+/, '');
-                            if (cv.resultFormat) {
-                                text = text.replace(/(\d+[.,]?\d*\s*%|R\$\s*[\d.,]+|\d+[.,]?\d*\+?\s*(?:mil|M|K|projetos|clientes|equipes|pessoas|meses|anos|dias|horas|cidades|unidades|entregas))/gi, '<b>$1</b>');
-                            }
-                            return `<li>${text}</li>`;
-                        }).join('');
-
-                        return `
-                            <div class="cv-exp-item">
-                                <div class="cv-exp-header">
-                                    <div class="cv-exp-company">${exp.company || ''}</div>
-                                    <div class="cv-exp-period">${exp.period || ''}</div>
-                                </div>
-                                <div class="cv-exp-title">${exp.title || ''}</div>
-                                <ul class="cv-exp-bullets">${bullets}</ul>
-                            </div>
-                        `;
-                    }).join('')}
-                ` : '';
-
-                // Education section
-                const educationHTML = (cv.education && cv.education.length) ? `
-                    <div class="cv-section-title">Formação Acadêmica</div>
-                    ${cv.education.map(edu => `
-                        <div class="cv-edu-item">
-                            <div class="cv-edu-header">
-                                <div class="cv-edu-inst">${edu.institution || ''}</div>
-                                <div class="cv-edu-period">${edu.period || ''}</div>
-                            </div>
-                            <div class="cv-edu-degree">${edu.degree || ''}</div>
-                        </div>
-                    `).join('')}
-                ` : '';
-
-                // Skills section — categorized for IT, flat for non-IT
-                let skillsHTML = '';
-                if (cv.skills) {
-                    if (cv.skills.categories && Array.isArray(cv.skills.categories)) {
-                        const sectionTitle = cv.skills.categorized ? 'Habilidades' : 'Competências';
-                        const categoriesHtml = cv.skills.categories
-                            .filter(cat => cat.items && cat.items.length)
-                            .map(cat => `<div class="cv-skills-category"><b>${cat.label}:</b> ${cat.items.join(', ')}.</div>`)
-                            .join('');
-                        skillsHTML = categoriesHtml ? `
-                            <div class="cv-section-title">${sectionTitle}</div>
-                            ${categoriesHtml}
-                        ` : '';
-                    } else if (Array.isArray(cv.skills) && cv.skills.length) {
-                        skillsHTML = `
-                            <div class="cv-section-title">Habilidades Técnicas</div>
-                            <div class="cv-skills-text">${cv.skills.join(', ')}</div>
-                        `;
+            return {
+                header: {
+                    name: profile.name || '',
+                    title: profile.title || experiences[0]?.title || '',
+                    contact: {
+                        location: profile.location || '',
+                        phone: profile.phone || '',
+                        email: profile.email || '',
+                        linkedin: profile.linkedin || '',
+                        github: profile.github || '',
+                        portfolio: profile.portfolio || ''
                     }
+                },
+                summary: profile.summary || '',
+                experiences,
+                education,
+                skills: profile.skills || [],
+                languages,
+                projects,
+                certifications
+            };
+        }
+
+        // Helper: make a clickable blue link from a URL
+        function makeLink(label, url) {
+            if (!url) return '';
+            const href = url.startsWith('http') ? url : 'https://' + url;
+            return `<a href="${href}" target="_blank" style="color: #0066cc; text-decoration: none;">${label}</a>`;
+        }
+
+        function showLoadingOverlay(title, subtitle) {
+            let overlay = document.getElementById('cv-import-loading-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'cv-import-loading-overlay';
+                overlay.style.cssText = 'position:absolute; inset:0; background:rgba(255,255,255,0.94); z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(4px); border-radius:inherit;';
+                container.appendChild(overlay);
+            }
+            overlay.innerHTML = `
+                <div class="spinner" style="width:3rem; height:3rem; border-width:3px; border-color:#10b981; border-top-color:transparent; margin-bottom:1.25rem;"></div>
+                <h3 style="font-size:1.15rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem;">${title}</h3>
+                <p style="font-size:0.875rem; color:#64748b;">${subtitle}</p>
+            `;
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('cv-import-loading-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        // PDF direct import handler
+        async function handlePdfUpload(file) {
+            if (!file) return;
+            showLoadingOverlay('Lendo arquivo PDF...', 'Extraindo o conteúdo do documento.');
+
+            try {
+                const text = await extractTextFromPDF(file);
+                showLoadingOverlay('Estruturando com IA...', 'Identificando experiências, formação e links.');
+
+                const profileData = await parseProfileFromText(text);
+
+                // Normalize certifications
+                if (profileData.certifications) {
+                    profileData.certifications = profileData.certifications.map(c => ({
+                        title: c.title || c.name || '',
+                        name: c.name || c.title || '',
+                        issuer: c.issuer || c.institution || '',
+                        institution: c.institution || c.issuer || '',
+                        date: c.date || c.year || '',
+                        year: c.year || c.date || '',
+                    }));
                 }
 
-                // Languages section
-                const languagesHTML = (cv.languages && cv.languages.length) ? `
-                    <div class="cv-section-title">Idiomas</div>
-                    ${cv.languages.map(l => `<div class="cv-lang-item"><b>${l.name}</b> — ${l.level}</div>`).join('')}
-                ` : '';
+                const newCV = convertProfileToCV(profileData);
+                setState({
+                    profile: profileData,
+                    generatedCV: newCV
+                });
 
-                // Certifications section — robust normalization to prevent empty bullets
-                const rawCerts = cv.certifications || state.profile?.certifications || [];
-                const certList = rawCerts.map(c => ({
-                    name: (c.name || c.title || '').trim(),
-                    institution: (c.institution || c.issuer || '').trim(),
-                    year: (c.year || c.date || '').trim(),
-                })).filter(c => c.name.length > 0);
+                hideLoadingOverlay();
+                renderCV();
+            } catch (err) {
+                console.error('Erro ao importar PDF:', err);
+                hideLoadingOverlay();
+                alert('Erro ao processar PDF: ' + (err.message || 'Verifique se o arquivo está acessível.'));
+            }
+        }
 
-                const certsAdderPanel = `
-                    <div id="add-cert-form" class="cv-inline-adder-card cv-no-print" style="display: none; margin-bottom: 0.75rem;">
-                        <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
-                            <span>Adicionar Nova Certificação</span>
-                            <span id="btn-close-add-cert" style="cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1;">&times;</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr; gap: 0.5rem; margin-bottom: 0.5rem;">
-                            <input type="text" id="input-cert-title" placeholder="Nome da Certificação" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
-                            <input type="text" id="input-cert-issuer" placeholder="Emissor (ex: DIO, AWS)" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
-                            <input type="text" id="input-cert-year" placeholder="Ano (ex: 2026)" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
-                        </div>
-                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
-                            <button id="btn-save-new-cert" type="button" class="btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; border: none; cursor: pointer;">
-                                Adicionar ao CV
+        function renderEmptyImportState() {
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:42rem; padding:3rem 1.5rem; text-align:center;">
+                    <div style="width:5rem; height:5rem; background:rgba(16, 185, 129, 0.1); border:2px dashed #10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h2 style="font-size:1.6rem; font-weight:800; color:#0f172a; margin-bottom:0.75rem;">Importar PDF para Edição Direta</h2>
+                    <p style="max-width:28rem; font-size:0.925rem; color:#64748b; line-height:1.6; margin-bottom:2rem;">
+                        Envie seu currículo em PDF. Nossa IA vai estruturar todas as suas informações e abrir imediatamente esta tela de edição visual profissional para você alterar e baixar.
+                    </p>
+                    
+                    <label for="direct-pdf-upload" style="display:inline-flex; align-items:center; gap:0.6rem; padding:0.875rem 2.25rem; background:#0f172a; color:#ffffff; border-radius:9999px; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Selecionar arquivo PDF
+                    </label>
+                    <input type="file" id="direct-pdf-upload" accept="application/pdf" style="display:none;" />
+
+                    <p style="font-size:0.75rem; color:#94a3b8; margin-top:1.25rem;">Ou arraste e solte o arquivo PDF aqui nesta área.</p>
+
+                    <div style="margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid #e2e8f0; font-size:0.85rem; color:#94a3b8;">
+                        Deseja uma análise completa contra uma vaga? <a href="/pages/step-profile.html" style="color:#10b981; font-weight:700; text-decoration:underline;">Otimizar passo a passo com IA</a>
+                    </div>
+                </div>
+            `;
+
+            const fileInput = document.getElementById('direct-pdf-upload');
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) handlePdfUpload(file);
+                });
+            }
+        }
+
+        // Drag and drop setup on container
+        container.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            container.style.boxShadow = '0 0 0 3px #10b981, var(--shadow-lg)';
+        });
+        container.addEventListener('dragleave', () => {
+            container.style.boxShadow = 'var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.1)';
+        });
+        container.addEventListener('drop', (e) => {
+            e.preventDefault();
+            container.style.boxShadow = 'var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.1)';
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                const file = e.dataTransfer.files[0];
+                if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                    handlePdfUpload(file);
+                } else {
+                    alert('Por favor, selecione um arquivo em formato PDF.');
+                }
+            }
+        });
+
+        // Sidebar import button setup
+        const btnSidebarImport = document.getElementById('btn-sidebar-import-pdf');
+        const sidebarFileInput = document.getElementById('sidebar-pdf-upload');
+        if (btnSidebarImport && sidebarFileInput) {
+            btnSidebarImport.addEventListener('click', () => sidebarFileInput.click());
+            sidebarFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handlePdfUpload(file);
+            });
+        }
+
+        function renderCV() {
+            state = getState();
+            cv = state.generatedCV;
+            if (!cv) {
+                renderEmptyImportState();
+                return;
+            }
+
+            const h = cv.header || {};
+
+            // Build contact lines (stacked, left-aligned like reference)
+            const contactLine1Parts = [];
+            if (h.contact?.location) contactLine1Parts.push(h.contact.location);
+            const contactLine1 = contactLine1Parts.join('');
+
+            const contactLine2Parts = [];
+            if (h.contact?.phone) contactLine2Parts.push(h.contact.phone);
+            if (h.contact?.email) contactLine2Parts.push(h.contact.email);
+            const contactLine2 = contactLine2Parts.join('<span class="sep">|</span>');
+
+            const contactLine3Parts = [];
+            const linkedinUrl = h.contact?.linkedin || state.profile?.linkedin || '';
+            const githubUrl = h.contact?.github || state.profile?.github || '';
+            const portfolioUrl = h.contact?.portfolio || state.profile?.portfolio || '';
+            if (linkedinUrl) contactLine3Parts.push(makeLink('LinkedIn', linkedinUrl));
+            if (githubUrl) contactLine3Parts.push(makeLink('GitHub', githubUrl));
+            if (portfolioUrl) contactLine3Parts.push(makeLink('Portfólio', portfolioUrl));
+            const contactLine3 = contactLine3Parts.join('<span class="sep">|</span>');
+
+            // Identify missing links
+            const missingLinks = [];
+            if (!linkedinUrl) missingLinks.push('LinkedIn');
+            if (!githubUrl) missingLinks.push('GitHub');
+            if (!portfolioUrl) missingLinks.push('Portfólio');
+
+            const missingLinksBadge = missingLinks.length > 0 ? `
+                <button class="cv-missing-badge cv-no-print" id="btn-toggle-missing-links" type="button" title="Adicionar links faltantes">
+                    + Adicionar ${missingLinks.join(', ')}...
+                </button>
+            ` : '';
+
+            const missingLinksPanel = missingLinks.length > 0 ? `
+                <div id="missing-links-form" class="cv-inline-adder-card cv-no-print" style="display: none;">
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                        <span>Adicionar Links ao Cabeçalho</span>
+                        <span id="btn-close-missing-links" style="cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1;">&times;</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        ${!linkedinUrl ? `
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">LinkedIn:</label>
+                                <input type="text" id="input-add-linkedin" placeholder="ex: linkedin.com/in/seunome" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                            </div>
+                        ` : ''}
+                        ${!githubUrl ? `
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">GitHub:</label>
+                                <input type="text" id="input-add-github" placeholder="ex: github.com/seunome" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                            </div>
+                        ` : ''}
+                        ${!portfolioUrl ? `
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">Portfólio:</label>
+                                <input type="text" id="input-add-portfolio" placeholder="ex: seunome.dev" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                            </div>
+                        ` : ''}
+                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.25rem;">
+                            <button id="btn-save-missing-links" type="button" class="btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; border: none; cursor: pointer;">
+                                Salvar no CV
                             </button>
                         </div>
                     </div>
-                `;
+                </div>
+            ` : '';
 
-                const certificationsHTML = `
-                    <div class="cv-section-title" style="display: flex; align-items: center; justify-content: space-between;">
-                        <span>Certificações</span>
-                        <button class="cv-missing-badge cv-no-print" id="btn-toggle-add-cert" type="button" title="Adicionar certificação">
-                            + Adicionar Certificação
+            // Header
+            const headerHTML = `
+                <div class="cv-header">
+                    <div class="cv-name">${h.name || state.profile?.name || ''}</div>
+                    ${h.title ? `<div class="cv-title">${h.title}</div>` : ''}
+                    ${contactLine1 ? `<div class="cv-contact-line">${contactLine1}</div>` : ''}
+                    ${contactLine2 ? `<div class="cv-contact-line">${contactLine2}</div>` : ''}
+                    <div class="cv-contact-line">${contactLine3}${missingLinksBadge}</div>
+                    ${missingLinksPanel}
+                </div>
+            `;
+
+            // Summary section
+            const summaryHTML = cv.summary ? `
+                <div class="cv-section-title">Resumo Profissional</div>
+                <p class="cv-summary-text">${cv.summary}</p>
+            ` : '';
+
+            // Experience section
+            const experienceHTML = (cv.experiences && cv.experiences.length) ? `
+                <div class="cv-section-title">Experiência Profissional</div>
+                ${cv.experiences.map(exp => {
+                    const bullets = (exp.bullets || []).map(b => {
+                        let text = b.replace(/^[•\s]+/, '');
+                        if (cv.resultFormat) {
+                            text = text.replace(/(\d+[.,]?\d*\s*%|R\$\s*[\d.,]+|\d+[.,]?\d*\+?\s*(?:mil|M|K|projetos|clientes|equipes|pessoas|meses|anos|dias|horas|cidades|unidades|entregas))/gi, '<b>$1</b>');
+                        }
+                        return `<li>${text}</li>`;
+                    }).join('');
+
+                    return `
+                        <div class="cv-exp-item">
+                            <div class="cv-exp-header">
+                                <div class="cv-exp-company">${exp.company || ''}</div>
+                                <div class="cv-exp-period">${exp.period || ''}</div>
+                            </div>
+                            <div class="cv-exp-title">${exp.title || ''}</div>
+                            <ul class="cv-exp-bullets">${bullets}</ul>
+                        </div>
+                    `;
+                }).join('')}
+            ` : '';
+
+            // Education section
+            const educationHTML = (cv.education && cv.education.length) ? `
+                <div class="cv-section-title">Formação Acadêmica</div>
+                ${cv.education.map(edu => `
+                    <div class="cv-edu-item">
+                        <div class="cv-edu-header">
+                            <div class="cv-edu-inst">${edu.institution || ''}</div>
+                            <div class="cv-edu-period">${edu.period || ''}</div>
+                        </div>
+                        <div class="cv-edu-degree">${edu.degree || ''}</div>
+                    </div>
+                `).join('')}
+            ` : '';
+
+            // Skills section — categorized for IT, flat for non-IT
+            let skillsHTML = '';
+            if (cv.skills) {
+                if (cv.skills.categories && Array.isArray(cv.skills.categories)) {
+                    const sectionTitle = cv.skills.categorized ? 'Habilidades' : 'Competências';
+                    const categoriesHtml = cv.skills.categories
+                        .filter(cat => cat.items && cat.items.length)
+                        .map(cat => `<div class="cv-skills-category"><b>${cat.label}:</b> ${cat.items.join(', ')}.</div>`)
+                        .join('');
+                    skillsHTML = categoriesHtml ? `
+                        <div class="cv-section-title">${sectionTitle}</div>
+                        ${categoriesHtml}
+                    ` : '';
+                } else if (Array.isArray(cv.skills) && cv.skills.length) {
+                    skillsHTML = `
+                        <div class="cv-section-title">Habilidades Técnicas</div>
+                        <div class="cv-skills-text">${cv.skills.join(', ')}</div>
+                    `;
+                }
+            }
+
+            // Languages section
+            const languagesHTML = (cv.languages && cv.languages.length) ? `
+                <div class="cv-section-title">Idiomas</div>
+                ${cv.languages.map(l => `<div class="cv-lang-item"><b>${l.name}</b> — ${l.level}</div>`).join('')}
+            ` : '';
+
+            // Certifications section — robust normalization to prevent empty bullets
+            const rawCerts = cv.certifications || state.profile?.certifications || [];
+            const certList = rawCerts.map(c => ({
+                name: (c.name || c.title || '').trim(),
+                institution: (c.institution || c.issuer || '').trim(),
+                year: (c.year || c.date || '').trim(),
+            })).filter(c => c.name.length > 0);
+
+            const certsAdderPanel = `
+                <div id="add-cert-form" class="cv-inline-adder-card cv-no-print" style="display: none; margin-bottom: 0.75rem;">
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                        <span>Adicionar Nova Certificação</span>
+                        <span id="btn-close-add-cert" style="cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1;">&times;</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="text" id="input-cert-title" placeholder="Nome da Certificação" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                        <input type="text" id="input-cert-issuer" placeholder="Emissor (ex: DIO, AWS)" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                        <input type="text" id="input-cert-year" placeholder="Ano (ex: 2026)" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                        <button id="btn-save-new-cert" type="button" class="btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; border: none; cursor: pointer;">
+                            Adicionar ao CV
                         </button>
                     </div>
-                    ${certsAdderPanel}
-                    ${certList.length > 0 ? `
-                    <ul class="cv-cert-bullets">
-                    ${certList.map(c => {
-                        const inst = c.institution.toUpperCase();
-                        let cleanYear = c.year;
-                        if (cleanYear) {
-                            const yearMatch = cleanYear.match(/\b(19|20)\d{2}\b/);
-                            if (yearMatch) cleanYear = yearMatch[0];
-                        }
-                        let suffix = '';
-                        if (inst && cleanYear) suffix = ` (${inst}, ${cleanYear})`;
-                        else if (inst) suffix = ` (${inst})`;
-                        else if (cleanYear) suffix = ` (${cleanYear})`;
-                        return `<li>${c.name}${suffix}</li>`;
-                    }).join('')}
-                    </ul>` : '<p class="cv-no-print" style="font-size: 0.8rem; color: #94a3b8; font-style: italic; margin-top: 0.25rem;">Nenhuma certificação listada ainda.</p>'}
-                `;
+                </div>
+            `;
 
-                // Projects section
-                const projectsHTML = (cv.projects && cv.projects.length) ? `
-                    <div class="cv-section-title">Projetos</div>
-                    ${cv.projects.map(p => `
-                        <div class="cv-proj-item">
-                            <div class="cv-proj-title">${p.title} ${p.role ? `<span style="font-weight: 400; color: var(--color-gray-600); font-style: italic;">— ${p.role}</span>` : ''}</div>
-                            <div class="cv-proj-desc">${p.description}</div>
-                        </div>
-                    `).join('')}
-                ` : '';
+            const certificationsHTML = `
+                <div class="cv-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span>Certificações</span>
+                    <button class="cv-missing-badge cv-no-print" id="btn-toggle-add-cert" type="button" title="Adicionar certificação">
+                        + Adicionar Certificação
+                    </button>
+                </div>
+                ${certsAdderPanel}
+                ${certList.length > 0 ? `
+                <ul class="cv-cert-bullets">
+                ${certList.map(c => {
+                    const inst = c.institution.toUpperCase();
+                    let cleanYear = c.year;
+                    if (cleanYear) {
+                        const yearMatch = cleanYear.match(/\b(19|20)\d{2}\b/);
+                        if (yearMatch) cleanYear = yearMatch[0];
+                    }
+                    let suffix = '';
+                    if (inst && cleanYear) suffix = ` (${inst}, ${cleanYear})`;
+                    else if (inst) suffix = ` (${inst})`;
+                    else if (cleanYear) suffix = ` (${cleanYear})`;
+                    return `<li>${c.name}${suffix}</li>`;
+                }).join('')}
+                </ul>` : '<p class="cv-no-print" style="font-size: 0.8rem; color: #94a3b8; font-style: italic; margin-top: 0.25rem;">Nenhuma certificação listada ainda.</p>'}
+            `;
 
-                // Assemble the full CV
-                const fullCV = headerHTML + summaryHTML + experienceHTML + educationHTML + skillsHTML + languagesHTML + projectsHTML + certificationsHTML;
+            // Projects section
+            const projectsHTML = (cv.projects && cv.projects.length) ? `
+                <div class="cv-section-title">Projetos</div>
+                ${cv.projects.map(p => `
+                    <div class="cv-proj-item">
+                        <div class="cv-proj-title">${p.title} ${p.role ? `<span style="font-weight: 400; color: var(--color-gray-600); font-style: italic;">— ${p.role}</span>` : ''}</div>
+                        <div class="cv-proj-desc">${p.description}</div>
+                    </div>
+                `).join('')}
+            ` : '';
 
-                container.innerHTML = `<div class="cv-professional" contenteditable="true" spellcheck="false" style="outline:none; cursor:text;" title="Clique para editar">${fullCV}</div>`;
+            // Assemble the full CV
+            const fullCV = headerHTML + summaryHTML + experienceHTML + educationHTML + skillsHTML + languagesHTML + projectsHTML + certificationsHTML;
 
-                bindInteractiveBadges();
+            container.innerHTML = `<div class="cv-professional" contenteditable="true" spellcheck="false" style="outline:none; cursor:text;" title="Clique para editar">${fullCV}</div>`;
+
+            bindInteractiveBadges();
+            updateDashboardAndDownload();
+        }
+
+        function bindInteractiveBadges() {
+            const btnToggleLinks = document.getElementById('btn-toggle-missing-links');
+            const formLinks = document.getElementById('missing-links-form');
+            const btnCloseLinks = document.getElementById('btn-close-missing-links');
+            const btnSaveLinks = document.getElementById('btn-save-missing-links');
+
+            if (btnToggleLinks && formLinks) {
+                btnToggleLinks.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    formLinks.style.display = formLinks.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+            if (btnCloseLinks && formLinks) {
+                btnCloseLinks.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    formLinks.style.display = 'none';
+                });
+            }
+            if (btnSaveLinks) {
+                btnSaveLinks.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const linkedinVal = document.getElementById('input-add-linkedin')?.value.trim();
+                    const githubVal = document.getElementById('input-add-github')?.value.trim();
+                    const portfolioVal = document.getElementById('input-add-portfolio')?.value.trim();
+
+                    if (!cv.header) cv.header = {};
+                    if (!cv.header.contact) cv.header.contact = {};
+                    const curState = getState();
+                    const profile = curState.profile || {};
+
+                    if (linkedinVal) {
+                        cv.header.contact.linkedin = linkedinVal;
+                        profile.linkedin = linkedinVal;
+                    }
+                    if (githubVal) {
+                        cv.header.contact.github = githubVal;
+                        profile.github = githubVal;
+                    }
+                    if (portfolioVal) {
+                        cv.header.contact.portfolio = portfolioVal;
+                        profile.portfolio = portfolioVal;
+                    }
+
+                    setState({ generatedCV: cv, profile });
+                    renderCV();
+                });
             }
 
-            function bindInteractiveBadges() {
-                const btnToggleLinks = document.getElementById('btn-toggle-missing-links');
-                const formLinks = document.getElementById('missing-links-form');
-                const btnCloseLinks = document.getElementById('btn-close-missing-links');
-                const btnSaveLinks = document.getElementById('btn-save-missing-links');
+            // Certifications handlers
+            const btnToggleCert = document.getElementById('btn-toggle-add-cert');
+            const formCert = document.getElementById('add-cert-form');
+            const btnCloseCert = document.getElementById('btn-close-add-cert');
+            const btnSaveCert = document.getElementById('btn-save-new-cert');
 
-                if (btnToggleLinks && formLinks) {
-                    btnToggleLinks.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        formLinks.style.display = formLinks.style.display === 'none' ? 'block' : 'none';
-                    });
-                }
-                if (btnCloseLinks && formLinks) {
-                    btnCloseLinks.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        formLinks.style.display = 'none';
-                    });
-                }
-                if (btnSaveLinks) {
-                    btnSaveLinks.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const linkedinVal = document.getElementById('input-add-linkedin')?.value.trim();
-                        const githubVal = document.getElementById('input-add-github')?.value.trim();
-                        const portfolioVal = document.getElementById('input-add-portfolio')?.value.trim();
-
-                        if (!cv.header) cv.header = {};
-                        if (!cv.header.contact) cv.header.contact = {};
-                        const curState = getState();
-                        const profile = curState.profile || {};
-
-                        if (linkedinVal) {
-                            cv.header.contact.linkedin = linkedinVal;
-                            profile.linkedin = linkedinVal;
-                        }
-                        if (githubVal) {
-                            cv.header.contact.github = githubVal;
-                            profile.github = githubVal;
-                        }
-                        if (portfolioVal) {
-                            cv.header.contact.portfolio = portfolioVal;
-                            profile.portfolio = portfolioVal;
-                        }
-
-                        setState({ generatedCV: cv, profile });
-                        renderCV();
-                    });
-                }
-
-                // Certifications handlers
-                const btnToggleCert = document.getElementById('btn-toggle-add-cert');
-                const formCert = document.getElementById('add-cert-form');
-                const btnCloseCert = document.getElementById('btn-close-add-cert');
-                const btnSaveCert = document.getElementById('btn-save-new-cert');
-
-                if (btnToggleCert && formCert) {
-                    btnToggleCert.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        formCert.style.display = formCert.style.display === 'none' ? 'block' : 'none';
-                    });
-                }
-                if (btnCloseCert && formCert) {
-                    btnCloseCert.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        formCert.style.display = 'none';
-                    });
-                }
-                if (btnSaveCert) {
-                    btnSaveCert.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const titleVal = document.getElementById('input-cert-title')?.value.trim();
-                        const issuerVal = document.getElementById('input-cert-issuer')?.value.trim();
-                        const yearVal = document.getElementById('input-cert-year')?.value.trim();
-
-                        if (!titleVal) {
-                            alert('Informe o nome da certificação');
-                            return;
-                        }
-
-                        const newCert = {
-                            name: titleVal,
-                            title: titleVal,
-                            institution: issuerVal,
-                            issuer: issuerVal,
-                            year: yearVal,
-                            date: yearVal,
-                        };
-
-                        if (!cv.certifications) cv.certifications = [];
-                        cv.certifications.push(newCert);
-
-                        const curState = getState();
-                        const profile = curState.profile || {};
-                        if (!profile.certifications) profile.certifications = [];
-                        profile.certifications.push(newCert);
-
-                        setState({ generatedCV: cv, profile });
-                        renderCV();
-                    });
-                }
+            if (btnToggleCert && formCert) {
+                btnToggleCert.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    formCert.style.display = formCert.style.display === 'none' ? 'block' : 'none';
+                });
             }
+            if (btnCloseCert && formCert) {
+                btnCloseCert.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    formCert.style.display = 'none';
+                });
+            }
+            if (btnSaveCert) {
+                btnSaveCert.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const titleVal = document.getElementById('input-cert-title')?.value.trim();
+                    const issuerVal = document.getElementById('input-cert-issuer')?.value.trim();
+                    const yearVal = document.getElementById('input-cert-year')?.value.trim();
 
-            renderCV();
+                    if (!titleVal) {
+                        alert('Informe o nome da certificação');
+                        return;
+                    }
 
-            // ═══ KPI Dashboard — Post-optimization metrics ═══
+                    const newCert = {
+                        name: titleVal,
+                        title: titleVal,
+                        institution: issuerVal,
+                        issuer: issuerVal,
+                        year: yearVal,
+                        date: yearVal,
+                    };
+
+                    if (!cv.certifications) cv.certifications = [];
+                    cv.certifications.push(newCert);
+
+                    const curState = getState();
+                    const profile = curState.profile || {};
+                    if (!profile.certifications) profile.certifications = [];
+                    profile.certifications.push(newCert);
+
+                    setState({ generatedCV: cv, profile });
+                    renderCV();
+                });
+            }
+        }
+
+        function updateDashboardAndDownload() {
+            state = getState();
+            cv = state.generatedCV;
+            if (!cv) return;
+            const h = cv.header || {};
+
+            // ═══ KPI Dashboard ═══
             const analysisObj = state.analysisResult?.analysis || state.analysisResult || {};
             const scoreBefore = analysisObj.overallScore || analysisObj.score?.valor || analysisObj.ats?.score || state.analysisResult?.matchPercentage || 0;
 
@@ -708,16 +918,27 @@
             if (scoreBefore > 0) {
                 scoreAfter = Math.min(99, scoreBefore + (appliedCount * 2) + 4);
             } else {
-                scoreAfter = kwCoverage >= 70 ? 85 : 60;
+                scoreAfter = 85;
             }
 
             // Populate KPI cards
-            document.getElementById('kpi-score-before').textContent = scoreBefore + '%';
-            document.getElementById('kpi-score-after').textContent = scoreAfter + '%';
-            document.getElementById('kpi-score-after').style.color = scoreAfter >= 70 ? 'var(--color-success)' : scoreAfter >= 40 ? '#f59e0b' : 'var(--color-error)';
-            document.getElementById('kpi-kw-total').textContent = allKw.length;
-            document.getElementById('kpi-kw-used').textContent = kwUsed.length;
-            document.getElementById('kpi-kw-missing-fixed').textContent = missingNowFixed.length + '/' + missingBefore.length;
+            const scoreBeforeEl = document.getElementById('kpi-score-before');
+            if (scoreBeforeEl) scoreBeforeEl.textContent = scoreBefore > 0 ? (scoreBefore + '%') : '—';
+            
+            const scoreAfterEl = document.getElementById('kpi-score-after');
+            if (scoreAfterEl) {
+                scoreAfterEl.textContent = scoreAfter + '%';
+                scoreAfterEl.style.color = scoreAfter >= 70 ? 'var(--color-success)' : scoreAfter >= 40 ? '#f59e0b' : 'var(--color-error)';
+            }
+            
+            const kwTotalEl = document.getElementById('kpi-kw-total');
+            if (kwTotalEl) kwTotalEl.textContent = allKw.length;
+            
+            const kwUsedEl = document.getElementById('kpi-kw-used');
+            if (kwUsedEl) kwUsedEl.textContent = kwUsed.length;
+            
+            const kwMissingEl = document.getElementById('kpi-kw-missing-fixed');
+            if (kwMissingEl) kwMissingEl.textContent = allKw.length > 0 ? (missingNowFixed.length + '/' + missingBefore.length) : '—';
             
             // Progress bar
             const pctBar = document.getElementById('kpi-progress-fill');
@@ -725,33 +946,48 @@
                 pctBar.style.width = Math.min(100, kwCoverage) + '%';
                 pctBar.style.background = kwCoverage >= 70 ? 'var(--color-success)' : kwCoverage >= 40 ? '#f59e0b' : 'var(--color-error)';
             }
-            document.getElementById('kpi-progress-label').textContent = kwCoverage + '%';
+            const pctLabel = document.getElementById('kpi-progress-label');
+            if (pctLabel) pctLabel.textContent = kwCoverage + '%';
 
             // Keywords inserted list
             const kwListEl = document.getElementById('kpi-kw-list');
-            if (kwListEl && kwUsed.length) {
-                kwListEl.innerHTML = kwUsed.map(k => {
-                    const wasMissing = missingBefore.some(m => m.toLowerCase() === k.toLowerCase());
-                    return `<span style="display:inline-block;font-size:0.7rem;padding:2px 8px;margin:2px;border-radius:4px;border:1px solid var(--color-success);color:var(--color-success);font-weight:600;background:rgba(34,197,94,0.1);">${k} <span style="font-size:0.6rem;margin-left:2px;">✓</span></span>`;
-                }).join('');
+            if (kwListEl) {
+                if (kwUsed.length > 0) {
+                    kwListEl.innerHTML = kwUsed.map(k => {
+                        return `<span style="display:inline-block;font-size:0.7rem;padding:2px 8px;margin:2px;border-radius:4px;border:1px solid var(--color-success);color:var(--color-success);font-weight:600;background:rgba(34,197,94,0.1);">${k} <span style="font-size:0.6rem;margin-left:2px;">✓</span></span>`;
+                    }).join('');
+                } else {
+                    kwListEl.innerHTML = '<span style="font-size:0.75rem;color:var(--color-gray-400);font-style:italic;">Modo Edição Direta ativo</span>';
+                }
             }
 
-            // Setup PDF Download via native print (Guarantees selectable text for ATS)
-            document.getElementById('btn-download').addEventListener('click', () => {
-                const fileName = `${(h.name || 'CV').replace(/\s+/g, '_')}_Otimizado`;
-                const originalTitle = document.title;
-                
-                // Set title so the "Save as PDF" dialog suggests the right filename
-                document.title = fileName;
-                
-                // Trigger native print (which generates perfect selectable text)
-                window.print();
-                
-                // Restore title after a short delay (gives the print dialog time to grab it)
-                setTimeout(() => {
-                    document.title = originalTitle;
-                }, 1000);
-            });
+            // Setup PDF Download via native print
+            const btnDownload = document.getElementById('btn-download');
+            if (btnDownload) {
+                btnDownload.onclick = () => {
+                    const fileName = `${(h.name || 'CV').replace(/\s+/g, '_')}_Otimizado`;
+                    const originalTitle = document.title;
+                    document.title = fileName;
+                    window.print();
+                    setTimeout(() => {
+                        document.title = originalTitle;
+                    }, 1000);
+                };
+            }
+        }
+
+        // Initialize view
+        if (!cv) {
+            renderEmptyImportState();
+        } else {
+            renderCV();
+        }
+
+        // Check if query param ?import=1 was passed to auto-trigger file dialog
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('import') === '1') {
+            const input = document.getElementById('direct-pdf-upload') || sidebarFileInput;
+            if (input) setTimeout(() => input.click(), 300);
         }
     </script>
 
@@ -781,10 +1017,16 @@
                 <p style="color:rgba(255,255,255,0.7);font-size:0.875rem;margin-bottom:1.25rem;line-height:1.6;">Seu
                     currículo foi otimizado com foco em <b>Experiências Relevantes</b> para esta vaga específica.</p>
                 
-                <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);padding:0.75rem;border-radius:var(--radius-md);margin-bottom:2rem;display:flex;gap:0.75rem;align-items:flex-start;">
+                <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);padding:0.75rem;border-radius:var(--radius-md);margin-bottom:1.5rem;display:flex;gap:0.75rem;align-items:flex-start;">
                     <i class="pi pi-pencil" style="color:#3b82f6;margin-top:0.15rem;"></i>
                     <p style="font-size:0.8125rem;color:rgba(255,255,255,0.85);line-height:1.5;margin:0;">O currículo ao lado é <b>totalmente editável</b>! Clique em qualquer texto para fazer ajustes manuais antes de baixar.</p>
                 </div>
+
+                <button id="btn-sidebar-import-pdf" type="button" class="cv-no-print" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%;height:3rem;border-radius:var(--radius-lg);background:rgba(16, 185, 129, 0.1);color:#10b981;font-weight:700;font-size:0.875rem;border:1px dashed #10b981;cursor:pointer;margin-bottom:1.5rem;transition:all 0.2s;" onmouseover="this.style.background='rgba(16, 185, 129, 0.2)'" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Importar outro PDF para editar
+                </button>
+                <input type="file" id="sidebar-pdf-upload" accept="application/pdf" style="display:none;" />
                 <div style="margin-bottom: 1.5rem;">
                     <label style="display:block;font-size:0.875rem;font-weight:700;color:var(--color-gray-900);margin-bottom:0.5rem;">Traduzir Currículo (Automático)</label>
                     <div id="google_translate_element"></div>
