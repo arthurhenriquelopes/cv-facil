@@ -81,7 +81,19 @@ export async function parseProfileFromText(rawText) {
   try {
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('A resposta da IA não contém um JSON válido.');
-    return JSON.parse(jsonMatch[0]);
+    const parsed = JSON.parse(jsonMatch[0]);
+    if (parsed.certifications) {
+      parsed.certifications = parsed.certifications.map(c => ({
+        ...c,
+        title: c.title || c.name || '',
+        name: c.name || c.title || '',
+        issuer: c.issuer || c.institution || '',
+        institution: c.institution || c.issuer || '',
+        date: c.date || c.year || '',
+        year: c.year || c.date || ''
+      }));
+    }
+    return parsed;
   } catch (e) {
     console.error('Failed to parse profile JSON:', response);
     throw new Error('Erro ao interpretar os dados do currículo: ' + e.message);

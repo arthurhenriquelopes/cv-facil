@@ -15,6 +15,8 @@ Sua missão é analisar o currículo recebido como se estivesse preparando um pa
 
 Regras obrigatórias:
 
+0. DATA DE REFERÊNCIA TEMPORAL (OBRIGATÓRIO): Hoje é 02 de setembro de 2026. Portanto, qualquer experiência, projeto, curso ou certificado de 2024, 2025 ou 2026 é PRESENTE ou PASSADO perfeitamente legítimo. NUNCA critique datas de 2025 ou 2026 como 'futuras' nem alegue 'inconsistência temporal' ou 'quebra de credibilidade' para períodos até 2026.
+
 1. IDIOMA: DETECTE o idioma predominante do currículo (pt, en, es, ...) e responda TODA a análise nesse mesmo idioma. Preencha o campo "language" com o código ISO 639-1.
 
 2. ESTRUTURA DO FEEDBACK: Nunca produza feedback genérico do tipo "melhore seu resumo" ou "adicione mais detalhes". Todo issue precisa:
@@ -97,6 +99,7 @@ C. Otimização ATS e Eficiência: Se houver uma descrição de vaga com tecnolo
 D. Limpeza: Sugira REMOVE para experiências muito antigas ou irrelevantes. IMPORTANTE: JAMAIS sugira ADD, REMOVE, IMPROVE ou QUESTION para a seção de Certificados/Certificações. A curadoria de certificados será feita por outra IA em uma etapa dedicada, portanto IGNORE totalmente essa seção.
 
 Regras obrigatórias:
+0. DATA DE REFERÊNCIA TEMPORAL (OBRIGATÓRIO): Hoje é 02 de setembro de 2026. Portanto, qualquer experiência ou evento de 2024, 2025 ou 2026 é PRESENTE ou PASSADO legítimo. NUNCA sugira correções acusando anos de 2025 ou 2026 de serem "datas futuras".
 1. Responda no MESMO idioma do CV original (informado em language).
 2. Gere entre 5 e 12 sugestões, priorizadas por impacto real no objetivo profissional do candidato.
 3. Cada sugestão deve ser específica e acionável. Aponte o trecho exato e forneça o texto sugerido.
@@ -159,7 +162,7 @@ Analise o currículo acima seguindo rigorosamente suas diretrizes. Responda SOME
     { role: 'user', content: userMessage },
   ], {
     temperature: 0.3,
-    maxTokens: 4096,
+    maxTokens: 2048,
   });
 
   return parseJsonSafe(response);
@@ -188,7 +191,7 @@ Com base no parecer do recrutador e no currículo original, gere as sugestões p
     { role: 'user', content: userMessage },
   ], {
     temperature: 0.3,
-    maxTokens: 4096,
+    maxTokens: 2048,
   });
 
   return parseJsonSafe(response);
@@ -241,17 +244,18 @@ function parseJsonSafe(response) {
  * @returns {Promise<{analysis: object, improvements: object}>}
  */
 export async function analyzeJob({ cvText, profile, professionalGoal, targetRole, jobDescription, onStageChange }) {
-  if (!cvText || !professionalGoal) {
-    throw new Error('Texto do currículo e objetivo profissional são obrigatórios.');
+  const goal = professionalGoal || (profile?.summary ? 'Desenvolvimento de Carreira' : 'Oportunidade Profissional');
+  if (!cvText) {
+    throw new Error('Texto do currículo é obrigatório.');
   }
 
   // Stage 1: Recruiter Analysis
   if (onStageChange) onStageChange('recruiter');
-  const analysis = await recruiterAnalysis(cvText, professionalGoal, targetRole, jobDescription);
+  const analysis = await recruiterAnalysis(cvText, goal, targetRole, jobDescription);
 
   // Stage 2: Improvement Suggestions
   if (onStageChange) onStageChange('improvements');
-  const improvements = await improvementSuggestions(cvText, analysis, professionalGoal, targetRole, jobDescription);
+  const improvements = await improvementSuggestions(cvText, analysis, goal, targetRole, jobDescription);
 
   // DETERMINISTIC GUARD: If no job description was provided, strip ALL QUESTION actions.
   // The AI sometimes hallucinates technologies "that could be useful" even without a real job posting.

@@ -367,6 +367,7 @@ ESTRATÉGIA DE MÁXIMA EMPREGABILIDADE:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 DADOS IMUTÁVEIS — NUNCA ALTERE ESTES CAMPOS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DATA DE REFERÊNCIA: Hoje é 02 de setembro de 2026. Datas de 2024, 2025 e 2026 são recentes e legítimas.
 Nome, email, telefone, localização, nome das empresas anteriores, CARGOS DAS EXPERIÊNCIAS,
 nome dos cursos e instituições de ensino são FATOS VERIFICÁVEIS. Copie-os LITERALMENTE do perfil.
 

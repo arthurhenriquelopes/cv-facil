@@ -265,9 +265,73 @@
             }
 
             /* Ensure proper page breaks */
-            .cv-exp-item, .cv-edu-item {
-                break-inside: avoid;
+            .cv-section-title {
+                break-after: avoid;
+                page-break-after: avoid;
             }
+            .cv-exp-item, .cv-edu-item, .cv-proj-item, .cv-lang-item {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .cv-no-print, .cv-missing-badge, .cv-inline-adder-card {
+                display: none !important;
+            }
+        }
+
+        /* Screen styles for interactive quick-add badges */
+        .cv-missing-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border: 1px dashed #10b981;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+            vertical-align: middle;
+            font-family: inherit;
+        }
+        .cv-missing-badge:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-style: solid;
+            transform: translateY(-1px);
+        }
+        .cv-inline-adder-card {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+        .cv-inline-adder-card input,
+        .cv-inline-adder-card input.form-input {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 6px !important;
+            color: #0f172a !important;
+            box-shadow: none !important;
+        }
+        .cv-inline-adder-card input:focus,
+        .cv-inline-adder-card input.form-input:focus {
+            background: #ffffff !important;
+            border-color: #10b981 !important;
+            color: #0f172a !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+            outline: none !important;
+        }
+        .cv-inline-adder-card input::placeholder {
+            color: #94a3b8 !important;
+        }
+        .cv-inline-adder-card input::selection {
+            background: #a7f3d0 !important;
+            color: #065f46 !important;
         }
     </style>
 </head>
@@ -275,27 +339,16 @@
 <body >
     <script type="module">
         import { injectNavbar } from '/src/lib/layout.js';
-        import { getState } from '/src/lib/store.js';
+        import { getState, setState } from '/src/lib/store.js';
         injectNavbar();
 
-        const state = getState();
-        const cv = state.generatedCV;
+        let state = getState();
+        let cv = state.generatedCV;
 
         if (!cv) {
             document.getElementById('cv-preview').innerHTML = '<p style="text-align:center;padding:4rem;color:var(--color-gray-400);">Nenhum CV gerado. <a href="/pages/step-profile.html" style="color:var(--color-primary);font-weight:700;">Comece aqui</a></p>';
         } else {
-            const h = cv.header || {};
             const container = document.getElementById('cv-preview');
-
-            // Build contact lines (stacked, left-aligned like reference)
-            const contactLine1Parts = [];
-            if (h.contact?.location) contactLine1Parts.push(h.contact.location);
-            const contactLine1 = contactLine1Parts.join('');
-
-            const contactLine2Parts = [];
-            if (h.contact?.phone) contactLine2Parts.push(h.contact.phone);
-            if (h.contact?.email) contactLine2Parts.push(h.contact.email);
-            const contactLine2 = contactLine2Parts.join('<span class="sep">|</span>');
 
             // Helper: make a clickable blue link from a URL
             function makeLink(label, url) {
@@ -304,144 +357,334 @@
                 return `<a href="${href}" target="_blank" style="color: #0066cc; text-decoration: none;">${label}</a>`;
             }
 
-            const contactLine3Parts = [];
-            const linkedinUrl = h.contact?.linkedin || state.profile?.linkedin || '';
-            const githubUrl = h.contact?.github || state.profile?.github || '';
-            const portfolioUrl = h.contact?.portfolio || state.profile?.portfolio || '';
-            if (linkedinUrl) contactLine3Parts.push(makeLink('LinkedIn', linkedinUrl));
-            if (githubUrl) contactLine3Parts.push(makeLink('GitHub', githubUrl));
-            if (portfolioUrl) contactLine3Parts.push(makeLink('Portfólio', portfolioUrl));
-            const contactLine3 = contactLine3Parts.join('<span class="sep">|</span>');
+            function renderCV() {
+                state = getState();
+                cv = state.generatedCV;
+                const h = cv.header || {};
 
-            // Header
-            const headerHTML = `
-                <div class="cv-header">
-                    <div class="cv-name">${h.name || state.profile?.name || ''}</div>
-                    ${h.title ? `<div class="cv-title">${h.title}</div>` : ''}
-                    ${contactLine1 ? `<div class="cv-contact-line">${contactLine1}</div>` : ''}
-                    ${contactLine2 ? `<div class="cv-contact-line">${contactLine2}</div>` : ''}
-                    ${contactLine3 ? `<div class="cv-contact-line">${contactLine3}</div>` : ''}
-                </div>
-            `;
+                // Build contact lines (stacked, left-aligned like reference)
+                const contactLine1Parts = [];
+                if (h.contact?.location) contactLine1Parts.push(h.contact.location);
+                const contactLine1 = contactLine1Parts.join('');
 
-            // Summary section
-            const summaryHTML = cv.summary ? `
-                <div class="cv-section-title">Resumo Profissional</div>
-                <p class="cv-summary-text">${cv.summary}</p>
-            ` : '';
+                const contactLine2Parts = [];
+                if (h.contact?.phone) contactLine2Parts.push(h.contact.phone);
+                if (h.contact?.email) contactLine2Parts.push(h.contact.email);
+                const contactLine2 = contactLine2Parts.join('<span class="sep">|</span>');
 
-            // Experience section
-            const experienceHTML = (cv.experiences && cv.experiences.length) ? `
-                <div class="cv-section-title">Experiência Profissional</div>
-                ${cv.experiences.map(exp => {
-                    const bullets = (exp.bullets || []).map(b => {
-                        let text = b.replace(/^[•\s]+/, '');
-                        if (cv.resultFormat) {
-                            text = text.replace(/(\d+[.,]?\d*\s*%|R\$\s*[\d.,]+|\d+[.,]?\d*\+?\s*(?:mil|M|K|projetos|clientes|equipes|pessoas|meses|anos|dias|horas|cidades|unidades|entregas))/gi, '<b>$1</b>');
-                        }
-                        return `<li>${text}</li>`;
-                    }).join('');
+                const contactLine3Parts = [];
+                const linkedinUrl = h.contact?.linkedin || state.profile?.linkedin || '';
+                const githubUrl = h.contact?.github || state.profile?.github || '';
+                const portfolioUrl = h.contact?.portfolio || state.profile?.portfolio || '';
+                if (linkedinUrl) contactLine3Parts.push(makeLink('LinkedIn', linkedinUrl));
+                if (githubUrl) contactLine3Parts.push(makeLink('GitHub', githubUrl));
+                if (portfolioUrl) contactLine3Parts.push(makeLink('Portfólio', portfolioUrl));
+                const contactLine3 = contactLine3Parts.join('<span class="sep">|</span>');
 
-                    return `
-                        <div class="cv-exp-item">
-                            <div class="cv-exp-header">
-                                <div class="cv-exp-company">${exp.company || ''}</div>
-                                <div class="cv-exp-period">${exp.period || ''}</div>
+                // Identify missing links
+                const missingLinks = [];
+                if (!linkedinUrl) missingLinks.push('LinkedIn');
+                if (!githubUrl) missingLinks.push('GitHub');
+                if (!portfolioUrl) missingLinks.push('Portfólio');
+
+                const missingLinksBadge = missingLinks.length > 0 ? `
+                    <button class="cv-missing-badge cv-no-print" id="btn-toggle-missing-links" type="button" title="Adicionar links faltantes">
+                        + Adicionar ${missingLinks.join(', ')}...
+                    </button>
+                ` : '';
+
+                const missingLinksPanel = missingLinks.length > 0 ? `
+                    <div id="missing-links-form" class="cv-inline-adder-card cv-no-print" style="display: none;">
+                        <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                            <span>Adicionar Links ao Cabeçalho</span>
+                            <span id="btn-close-missing-links" style="cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1;">&times;</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            ${!linkedinUrl ? `
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">LinkedIn:</label>
+                                    <input type="text" id="input-add-linkedin" placeholder="ex: linkedin.com/in/seunome" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                                </div>
+                            ` : ''}
+                            ${!githubUrl ? `
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">GitHub:</label>
+                                    <input type="text" id="input-add-github" placeholder="ex: github.com/seunome" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                                </div>
+                            ` : ''}
+                            ${!portfolioUrl ? `
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <label style="font-size: 0.75rem; width: 70px; font-weight: 600; color: #334155;">Portfólio:</label>
+                                    <input type="text" id="input-add-portfolio" placeholder="ex: seunome.dev" class="form-input" style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                                </div>
+                            ` : ''}
+                            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.25rem;">
+                                <button id="btn-save-missing-links" type="button" class="btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; border: none; cursor: pointer;">
+                                    Salvar no CV
+                                </button>
                             </div>
-                            <div class="cv-exp-title">${exp.title || ''}</div>
-                            <ul class="cv-exp-bullets">${bullets}</ul>
                         </div>
-                    `;
-                }).join('')}
-            ` : '';
-
-            // Education section
-            const educationHTML = (cv.education && cv.education.length) ? `
-                <div class="cv-section-title">Formação Acadêmica</div>
-                ${cv.education.map(edu => `
-                    <div class="cv-edu-item">
-                        <div class="cv-edu-header">
-                            <div class="cv-edu-inst">${edu.institution || ''}</div>
-                            <div class="cv-edu-period">${edu.period || ''}</div>
-                        </div>
-                        <div class="cv-edu-degree">${edu.degree || ''}</div>
                     </div>
-                `).join('')}
-            ` : '';
+                ` : '';
 
-            // Skills section — categorized for IT, flat for non-IT
-            let skillsHTML = '';
-            if (cv.skills) {
-                // New categorized format: { categorized: bool, categories: [{label, items}] }
-                if (cv.skills.categories && Array.isArray(cv.skills.categories)) {
-                    const sectionTitle = cv.skills.categorized ? 'Habilidades' : 'Competências';
-                    const categoriesHtml = cv.skills.categories
-                        .filter(cat => cat.items && cat.items.length)
-                        .map(cat => `<div class="cv-skills-category"><b>${cat.label}:</b> ${cat.items.join(', ')}.</div>`)
-                        .join('');
-                    skillsHTML = categoriesHtml ? `
-                        <div class="cv-section-title">${sectionTitle}</div>
-                        ${categoriesHtml}
-                    ` : '';
+                // Header
+                const headerHTML = `
+                    <div class="cv-header">
+                        <div class="cv-name">${h.name || state.profile?.name || ''}</div>
+                        ${h.title ? `<div class="cv-title">${h.title}</div>` : ''}
+                        ${contactLine1 ? `<div class="cv-contact-line">${contactLine1}</div>` : ''}
+                        ${contactLine2 ? `<div class="cv-contact-line">${contactLine2}</div>` : ''}
+                        <div class="cv-contact-line">${contactLine3}${missingLinksBadge}</div>
+                        ${missingLinksPanel}
+                    </div>
+                `;
+
+                // Summary section
+                const summaryHTML = cv.summary ? `
+                    <div class="cv-section-title">Resumo Profissional</div>
+                    <p class="cv-summary-text">${cv.summary}</p>
+                ` : '';
+
+                // Experience section
+                const experienceHTML = (cv.experiences && cv.experiences.length) ? `
+                    <div class="cv-section-title">Experiência Profissional</div>
+                    ${cv.experiences.map(exp => {
+                        const bullets = (exp.bullets || []).map(b => {
+                            let text = b.replace(/^[•\s]+/, '');
+                            if (cv.resultFormat) {
+                                text = text.replace(/(\d+[.,]?\d*\s*%|R\$\s*[\d.,]+|\d+[.,]?\d*\+?\s*(?:mil|M|K|projetos|clientes|equipes|pessoas|meses|anos|dias|horas|cidades|unidades|entregas))/gi, '<b>$1</b>');
+                            }
+                            return `<li>${text}</li>`;
+                        }).join('');
+
+                        return `
+                            <div class="cv-exp-item">
+                                <div class="cv-exp-header">
+                                    <div class="cv-exp-company">${exp.company || ''}</div>
+                                    <div class="cv-exp-period">${exp.period || ''}</div>
+                                </div>
+                                <div class="cv-exp-title">${exp.title || ''}</div>
+                                <ul class="cv-exp-bullets">${bullets}</ul>
+                            </div>
+                        `;
+                    }).join('')}
+                ` : '';
+
+                // Education section
+                const educationHTML = (cv.education && cv.education.length) ? `
+                    <div class="cv-section-title">Formação Acadêmica</div>
+                    ${cv.education.map(edu => `
+                        <div class="cv-edu-item">
+                            <div class="cv-edu-header">
+                                <div class="cv-edu-inst">${edu.institution || ''}</div>
+                                <div class="cv-edu-period">${edu.period || ''}</div>
+                            </div>
+                            <div class="cv-edu-degree">${edu.degree || ''}</div>
+                        </div>
+                    `).join('')}
+                ` : '';
+
+                // Skills section — categorized for IT, flat for non-IT
+                let skillsHTML = '';
+                if (cv.skills) {
+                    if (cv.skills.categories && Array.isArray(cv.skills.categories)) {
+                        const sectionTitle = cv.skills.categorized ? 'Habilidades' : 'Competências';
+                        const categoriesHtml = cv.skills.categories
+                            .filter(cat => cat.items && cat.items.length)
+                            .map(cat => `<div class="cv-skills-category"><b>${cat.label}:</b> ${cat.items.join(', ')}.</div>`)
+                            .join('');
+                        skillsHTML = categoriesHtml ? `
+                            <div class="cv-section-title">${sectionTitle}</div>
+                            ${categoriesHtml}
+                        ` : '';
+                    } else if (Array.isArray(cv.skills) && cv.skills.length) {
+                        skillsHTML = `
+                            <div class="cv-section-title">Habilidades Técnicas</div>
+                            <div class="cv-skills-text">${cv.skills.join(', ')}</div>
+                        `;
+                    }
                 }
-                // Legacy flat array format: ["skill1", "skill2"]
-                else if (Array.isArray(cv.skills) && cv.skills.length) {
-                    skillsHTML = `
-                        <div class="cv-section-title">Habilidades Técnicas</div>
-                        <div class="cv-skills-text">${cv.skills.join(', ')}</div>
-                    `;
+
+                // Languages section
+                const languagesHTML = (cv.languages && cv.languages.length) ? `
+                    <div class="cv-section-title">Idiomas</div>
+                    ${cv.languages.map(l => `<div class="cv-lang-item"><b>${l.name}</b> — ${l.level}</div>`).join('')}
+                ` : '';
+
+                // Certifications section — robust normalization to prevent empty bullets
+                const rawCerts = cv.certifications || state.profile?.certifications || [];
+                const certList = rawCerts.map(c => ({
+                    name: (c.name || c.title || '').trim(),
+                    institution: (c.institution || c.issuer || '').trim(),
+                    year: (c.year || c.date || '').trim(),
+                })).filter(c => c.name.length > 0);
+
+                const certsAdderPanel = `
+                    <div id="add-cert-form" class="cv-inline-adder-card cv-no-print" style="display: none; margin-bottom: 0.75rem;">
+                        <div style="font-size: 0.75rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                            <span>Adicionar Nova Certificação</span>
+                            <span id="btn-close-add-cert" style="cursor: pointer; color: #64748b; font-size: 1.1rem; line-height: 1;">&times;</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <input type="text" id="input-cert-title" placeholder="Nome da Certificação" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                            <input type="text" id="input-cert-issuer" placeholder="Emissor (ex: DIO, AWS)" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                            <input type="text" id="input-cert-year" placeholder="Ano (ex: 2026)" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" />
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                            <button id="btn-save-new-cert" type="button" class="btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; border: none; cursor: pointer;">
+                                Adicionar ao CV
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                const certificationsHTML = `
+                    <div class="cv-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+                        <span>Certificações</span>
+                        <button class="cv-missing-badge cv-no-print" id="btn-toggle-add-cert" type="button" title="Adicionar certificação">
+                            + Adicionar Certificação
+                        </button>
+                    </div>
+                    ${certsAdderPanel}
+                    ${certList.length > 0 ? `
+                    <ul class="cv-cert-bullets">
+                    ${certList.map(c => {
+                        const inst = c.institution.toUpperCase();
+                        let cleanYear = c.year;
+                        if (cleanYear) {
+                            const yearMatch = cleanYear.match(/\b(19|20)\d{2}\b/);
+                            if (yearMatch) cleanYear = yearMatch[0];
+                        }
+                        let suffix = '';
+                        if (inst && cleanYear) suffix = ` (${inst}, ${cleanYear})`;
+                        else if (inst) suffix = ` (${inst})`;
+                        else if (cleanYear) suffix = ` (${cleanYear})`;
+                        return `<li>${c.name}${suffix}</li>`;
+                    }).join('')}
+                    </ul>` : '<p class="cv-no-print" style="font-size: 0.8rem; color: #94a3b8; font-style: italic; margin-top: 0.25rem;">Nenhuma certificação listada ainda.</p>'}
+                `;
+
+                // Projects section
+                const projectsHTML = (cv.projects && cv.projects.length) ? `
+                    <div class="cv-section-title">Projetos</div>
+                    ${cv.projects.map(p => `
+                        <div class="cv-proj-item">
+                            <div class="cv-proj-title">${p.title} ${p.role ? `<span style="font-weight: 400; color: var(--color-gray-600); font-style: italic;">— ${p.role}</span>` : ''}</div>
+                            <div class="cv-proj-desc">${p.description}</div>
+                        </div>
+                    `).join('')}
+                ` : '';
+
+                // Assemble the full CV
+                const fullCV = headerHTML + summaryHTML + experienceHTML + educationHTML + skillsHTML + languagesHTML + projectsHTML + certificationsHTML;
+
+                container.innerHTML = `<div class="cv-professional" contenteditable="true" spellcheck="false" style="outline:none; cursor:text;" title="Clique para editar">${fullCV}</div>`;
+
+                bindInteractiveBadges();
+            }
+
+            function bindInteractiveBadges() {
+                const btnToggleLinks = document.getElementById('btn-toggle-missing-links');
+                const formLinks = document.getElementById('missing-links-form');
+                const btnCloseLinks = document.getElementById('btn-close-missing-links');
+                const btnSaveLinks = document.getElementById('btn-save-missing-links');
+
+                if (btnToggleLinks && formLinks) {
+                    btnToggleLinks.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        formLinks.style.display = formLinks.style.display === 'none' ? 'block' : 'none';
+                    });
+                }
+                if (btnCloseLinks && formLinks) {
+                    btnCloseLinks.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        formLinks.style.display = 'none';
+                    });
+                }
+                if (btnSaveLinks) {
+                    btnSaveLinks.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const linkedinVal = document.getElementById('input-add-linkedin')?.value.trim();
+                        const githubVal = document.getElementById('input-add-github')?.value.trim();
+                        const portfolioVal = document.getElementById('input-add-portfolio')?.value.trim();
+
+                        if (!cv.header) cv.header = {};
+                        if (!cv.header.contact) cv.header.contact = {};
+                        const curState = getState();
+                        const profile = curState.profile || {};
+
+                        if (linkedinVal) {
+                            cv.header.contact.linkedin = linkedinVal;
+                            profile.linkedin = linkedinVal;
+                        }
+                        if (githubVal) {
+                            cv.header.contact.github = githubVal;
+                            profile.github = githubVal;
+                        }
+                        if (portfolioVal) {
+                            cv.header.contact.portfolio = portfolioVal;
+                            profile.portfolio = portfolioVal;
+                        }
+
+                        setState({ generatedCV: cv, profile });
+                        renderCV();
+                    });
+                }
+
+                // Certifications handlers
+                const btnToggleCert = document.getElementById('btn-toggle-add-cert');
+                const formCert = document.getElementById('add-cert-form');
+                const btnCloseCert = document.getElementById('btn-close-add-cert');
+                const btnSaveCert = document.getElementById('btn-save-new-cert');
+
+                if (btnToggleCert && formCert) {
+                    btnToggleCert.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        formCert.style.display = formCert.style.display === 'none' ? 'block' : 'none';
+                    });
+                }
+                if (btnCloseCert && formCert) {
+                    btnCloseCert.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        formCert.style.display = 'none';
+                    });
+                }
+                if (btnSaveCert) {
+                    btnSaveCert.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const titleVal = document.getElementById('input-cert-title')?.value.trim();
+                        const issuerVal = document.getElementById('input-cert-issuer')?.value.trim();
+                        const yearVal = document.getElementById('input-cert-year')?.value.trim();
+
+                        if (!titleVal) {
+                            alert('Informe o nome da certificação');
+                            return;
+                        }
+
+                        const newCert = {
+                            name: titleVal,
+                            title: titleVal,
+                            institution: issuerVal,
+                            issuer: issuerVal,
+                            year: yearVal,
+                            date: yearVal,
+                        };
+
+                        if (!cv.certifications) cv.certifications = [];
+                        cv.certifications.push(newCert);
+
+                        const curState = getState();
+                        const profile = curState.profile || {};
+                        if (!profile.certifications) profile.certifications = [];
+                        profile.certifications.push(newCert);
+
+                        setState({ generatedCV: cv, profile });
+                        renderCV();
+                    });
                 }
             }
 
-            // Languages section
-            const languagesHTML = (cv.languages && cv.languages.length) ? `
-                <div class="cv-section-title">Idiomas</div>
-                ${cv.languages.map(l => `<div class="cv-lang-item"><b>${l.name}</b> — ${l.level}</div>`).join('')}
-            ` : '';
-
-            // Certifications section
-            const certificationsHTML = (cv.certifications && cv.certifications.length) ? `
-                <div class="cv-section-title">Certificações</div>
-                <ul class="cv-cert-bullets">
-                ${cv.certifications.map(c => {
-                    const inst = (c.institution || '').trim().toUpperCase();
-                    let cleanYear = (c.year || c.date || '').trim();
-                    if (cleanYear) {
-                        const yearMatch = cleanYear.match(/\b(19|20)\d{2}\b/);
-                        if (yearMatch) {
-                            cleanYear = yearMatch[0];
-                        }
-                    }
-                    
-                    let suffix = '';
-                    if (inst && cleanYear) {
-                        suffix = ` (${inst}, ${cleanYear})`;
-                    } else if (inst) {
-                        suffix = ` (${inst})`;
-                    } else if (cleanYear) {
-                        suffix = ` (${cleanYear})`;
-                    }
-                    
-                    return `<li>${c.name}${suffix}</li>`;
-                }).join('')}
-                </ul>
-            ` : '';
-
-            // Projects section
-            const projectsHTML = (cv.projects && cv.projects.length) ? `
-                <div class="cv-section-title">Projetos</div>
-                ${cv.projects.map(p => `
-                    <div class="cv-proj-item">
-                        <div class="cv-proj-title">${p.title} ${p.role ? `<span style="font-weight: 400; color: var(--color-gray-600); font-style: italic;">— ${p.role}</span>` : ''}</div>
-                        <div class="cv-proj-desc">${p.description}</div>
-                    </div>
-                `).join('')}
-            ` : '';
-
-            // Assemble the full CV
-            const fullCV = headerHTML + summaryHTML + experienceHTML + educationHTML + skillsHTML + languagesHTML + projectsHTML + certificationsHTML;
-
-            container.innerHTML = `<div class="cv-professional" contenteditable="true" spellcheck="false" style="outline:none; cursor:text;" title="Clique para editar">${fullCV}</div>`;
+            renderCV();
 
             // ═══ KPI Dashboard — Post-optimization metrics ═══
             const analysisObj = state.analysisResult?.analysis || state.analysisResult || {};

@@ -1,9 +1,26 @@
 // api/chat.js — Gemini / OpenRouter / Groq / Cerebras / NVIDIA AI proxy
 
+function resolveProvider(provider, userKeys) {
+    if (Array.isArray(userKeys) && userKeys.length > 0) return provider || 'groq';
+
+    // If requested provider has env key, use it
+    if (provider === 'groq' && process.env.GROQ_API_KEY) return 'groq';
+    if (provider === 'nvidia' && process.env.NVIDIA_API_KEY) return 'nvidia';
+    if (provider === 'gemini' && process.env.GEMINI_API_KEY) return 'gemini';
+
+    // Auto-detect which env key is populated
+    if (process.env.GROQ_API_KEY) return 'groq';
+    if (process.env.NVIDIA_API_KEY) return 'nvidia';
+    if (process.env.GEMINI_API_KEY) return 'gemini';
+
+    return provider || 'groq';
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
 
-    const { messages, temperature, max_tokens, model, userKeys, provider } = req.body;
+    const { messages, temperature, max_tokens, model, userKeys } = req.body;
+    const provider = resolveProvider(req.body.provider, userKeys);
 
     try {
         let data;
@@ -302,17 +319,18 @@ async function callNvidia(messages, { temperature = 0.2, max_tokens = 4096, mode
 // ─── Groq (OpenAI-compatible) — Legacy ───────────────
 let currentKeyIndex = 0;
 
-async function callGroq(messages, { temperature = 0.2, max_tokens = 4096, model = 'llama-3.3-70b-versatile', userKeys } = {}) {
+async function callGroq(messages, { temperature = 0.2, max_tokens = 4096, model = 'qwen/qwen3.8-27b', userKeys } = {}) {
     // Prefer user-provided keys, then fall back to server env keys
     const envKeys = (process.env.GROQ_API_KEY || '').split(',').map(k => k.trim()).filter(Boolean);
     const clientKeys = Array.isArray(userKeys) ? userKeys.filter(Boolean) : [];
     const keys = [...clientKeys, ...envKeys];
 
     if (keys.length === 0) {
-        throw new Error("Nenhuma chave Groq configurada. Adicione sua chave nas Configurações (⚙️) ou use o Google AI Studio.");
+        throw new Error("Nenhuma chave Groq configurada. Adicione sua chave nas Configurações (⚙️).");
     }
 
     let lastError = null;
+    const chosenModel = model || 'qwen/qwen3.8-27b';
 
     for (let i = 0; i < keys.length; i++) {
         const key = keys[currentKeyIndex % keys.length];
@@ -324,7 +342,7 @@ async function callGroq(messages, { temperature = 0.2, max_tokens = 4096, model 
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model,
+                model: chosenModel,
                 messages,
                 temperature,
                 max_tokens,
@@ -338,9 +356,46 @@ async function callGroq(messages, { temperature = 0.2, max_tokens = 4096, model 
         const errText = await response.text();
         lastError = new Error(`Groq ${response.status}: ${errText}`);
         
-        // If Rate Limit (429) or Unauthorized (401), try the next key
-        if (response.status === 429 || response.status === 401) {
-            console.warn(`Key ${currentKeyIndex % keys.length} failed with ${response.status}. Rotating to next key...`);
+        // If Rate Limit (429), rotate or auto-wait and retry
+        if (response.status === 429) {
+            if (keys.length > 1 && i < keys.length - 1) {
+                console.warn(`Key ${currentKeyIndex % keys.length} hit 429 rate limit. Rotating to next key...`);
+                currentKeyIndex++;
+                continue;
+            }
+
+            // Inspect wait time in Groq error (e.g. "Please try again in 7.515s")
+            const waitMatch = errText.match(/try again in ([\d.]+)s/i);
+            const waitSec = waitMatch ? parseFloat(waitMatch[1]) + 0.5 : 7;
+            if (waitSec <= 15) {
+                console.warn(`Groq 429 Rate Limit. Aguardando ${waitSec.toFixed(1)}s antes de retentar automaticamente...`);
+                await new Promise(r => setTimeout(r, Math.ceil(waitSec * 1000)));
+
+                const retryRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${key}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: chosenModel,
+                        messages,
+                        temperature,
+                        max_tokens,
+                    }),
+                });
+
+                if (retryRes.ok) {
+                    return await retryRes.json();
+                }
+                const retryErr = await retryRes.text();
+                lastError = new Error(`Groq ${retryRes.status}: ${retryErr}`);
+                continue;
+            }
+        }
+
+        if (response.status === 401) {
+            console.warn(`Key ${currentKeyIndex % keys.length} failed with 401. Rotating...`);
             currentKeyIndex++;
             continue;
         }

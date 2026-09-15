@@ -140,19 +140,24 @@
 
         function renderCertifications() {
             const certs = getState().profile.certifications || [];
-            renderArr(certs, 'certifications-list', 'badge-cert', (cert, idx) => `
+            renderArr(certs, 'certifications-list', 'badge-cert', (cert, idx) => {
+                const titleVal = cert.title || cert.name || '';
+                const issuerVal = cert.issuer || cert.institution || '';
+                const dateVal = cert.date || cert.year || '';
+                return `
                 <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden; margin-bottom:1rem; background:var(--color-surface);">
-                    ${renderAccordionHeader(cert.title || 'Nova certificação', cert.issuer || 'Instituição emissora', cert._expanded, idx, 'cert')}
+                    ${renderAccordionHeader(titleVal || 'Nova certificação', issuerVal || 'Instituição emissora', cert._expanded, idx, 'cert')}
                     <div style="display: ${cert._expanded ? 'block' : 'none'}; padding:1.25rem; border-top:1px solid var(--color-gray-200);">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
-                            <input class="form-input ds-input" style="grid-column: 1 / -1;" data-type="cert" data-field="title" data-index="${idx}" value="${cert.title || ''}" placeholder="Nome da Certificação">
-                            <input class="form-input ds-input" data-type="cert" data-field="issuer" data-index="${idx}" value="${cert.issuer || ''}" placeholder="Instituição emissora">
-                            <input class="form-input ds-input" data-type="cert" data-field="date" data-index="${idx}" value="${cert.date || ''}" placeholder="Ano">
+                            <input class="form-input ds-input" style="grid-column: 1 / -1;" data-type="cert" data-field="title" data-index="${idx}" value="${titleVal.replace(/"/g, '&quot;')}" placeholder="Nome da Certificação">
+                            <input class="form-input ds-input" data-type="cert" data-field="issuer" data-index="${idx}" value="${issuerVal.replace(/"/g, '&quot;')}" placeholder="Instituição emissora">
+                            <input class="form-input ds-input" data-type="cert" data-field="date" data-index="${idx}" value="${dateVal.replace(/"/g, '&quot;')}" placeholder="Ano">
                         </div>
                         ${renderRemoveBtn('cert', idx)}
                     </div>
                 </div>
-            `);
+            `;
+            });
         }
 
         function renderSkills() {
@@ -264,6 +269,11 @@
                 const state = getState();
                 const obj = state.profile[prop][index];
                 obj[field] = e.target.value;
+                if (prop === 'certifications') {
+                    if (field === 'title') obj.name = e.target.value;
+                    if (field === 'issuer') obj.institution = e.target.value;
+                    if (field === 'date') obj.year = e.target.value;
+                }
                 updateProfile(state.profile);
 
                 // Partial update for smooth typing
@@ -361,7 +371,24 @@
                 // Append any existing non-empty expanded properties properly
                 const props = ['experiences', 'education', 'languages', 'projects', 'certifications'];
                 props.forEach(prop => {
-                    profileData[prop] = (profileData[prop] || []).map(item => ({ ...item, _expanded: false }));
+                    profileData[prop] = (profileData[prop] || []).map(item => {
+                        if (prop === 'certifications') {
+                            const title = item.title || item.name || '';
+                            const issuer = item.issuer || item.institution || '';
+                            const date = item.date || item.year || '';
+                            return {
+                                ...item,
+                                title,
+                                name: title,
+                                issuer,
+                                institution: issuer,
+                                date,
+                                year: date,
+                                _expanded: false
+                            };
+                        }
+                        return { ...item, _expanded: false };
+                    });
                 });
 
                 updateProfile(profileData);

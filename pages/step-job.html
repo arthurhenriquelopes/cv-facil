@@ -33,88 +33,24 @@
             </p>
             <h2 id="job-title"
                 style="font-size:clamp(1.5rem,4vw,2rem);font-weight:700;margin-bottom:0.75rem;letter-spacing:-0.025em;color:var(--color-text);">
-                Agora, a vaga que você quer</h2>
+                A vaga que você quer</h2>
             <p id="job-subtitle" style="color:var(--color-text-secondary);font-weight:500;font-size:1rem;margin:0;">
-                Cole a descrição da vaga e informe seu objetivo profissional.</p>
+                Informe a empresa e cole a descrição da vaga para otimizar seu currículo.</p>
         </div>
 
-        <!-- Professional Goal + Target Role -->
-        <div style="max-width:48rem;margin:0 auto 2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="max-width:48rem;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem;">
             <div>
-                <label class="form-label" for="professional-goal">Objetivo Profissional *</label>
-                <input type="text" class="form-input" id="professional-goal"
-                    placeholder="Ex: Desenvolvedor Backend Pleno com foco em Java e microsserviços"
-                    style="height:3rem;">
+                <label class="form-label" for="company-name">Nome da Empresa (Vaga) *</label>
+                <input type="text" class="form-input" id="company-name"
+                    placeholder="Ex: Nubank, Mercado Livre, Google, Midas..."
+                    style="height:3.25rem;font-size:0.9375rem;">
             </div>
-            <div>
-                <label class="form-label" for="target-role">Cargo Alvo <span
-                        style="color:var(--color-text-muted);">(opcional)</span></label>
-                <input type="text" class="form-input" id="target-role"
-                    placeholder="Ex: Desenvolvedor Java Sênior" style="height:3rem;">
-            </div>
-        </div>
 
-        <div style="display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:start;">
-            <div style="height:100%;">
-                <label class="form-label" for="job-desc">Descrição da Vaga <span
-                        style="color:var(--color-text-muted);">(opcional para análise geral)</span></label>
+            <div>
+                <label class="form-label" for="job-desc">Descrição da Vaga *</label>
                 <textarea class="form-input" id="job-desc"
-                    style="width:100%;height:100%;min-height:22rem;font-size:0.875rem;line-height:1.7;resize:vertical;padding:1.5rem;"
-                    placeholder="Requisitos:\n- Experiência sólida com Node.js e TypeScript\n- Conhecimento em bancos de dados SQL (PostgreSQL) e NoSQL (MongoDB)\n- Familiaridade com AWS (Lambda, S3, EC2)\n- Experiência com arquitetura de microsserviços e Docker\n- Boas práticas de código (SOLID, Clean Code, Testes Unitários)"></textarea>
-            </div>
-
-            <div style="display:flex;flex-direction:column;gap:1rem;">
-                <h4
-                    style="font-size:0.75rem;font-weight:700;color:var(--color-text-tertiary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;">
-                    OU USE UM MODELO</h4>
-
-                <div class="job-model-card"
-                    style="padding:1rem;border:1px solid var(--color-border);border-radius:0.75rem;cursor:pointer;transition:all 0.2s;"
-                    onclick="document.getElementById('job-desc').value='Requisitos:\\n- Experiência sólida com Node.js e TypeScript\\n- Conhecimento em bancos de dados SQL (PostgreSQL) e NoSQL (MongoDB)\\n- Familiaridade com AWS (Lambda, S3, EC2)\\n- Experiência com arquitetura de microsserviços e Docker\\n- Boas práticas de código (SOLID, Clean Code, Testes Unitários)'; document.getElementById('job-desc').dispatchEvent(new Event('input'))">
-                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-                        <i class="pi pi-briefcase" style="color:var(--color-text-tertiary);"></i>
-                        <h5 style="font-size:0.875rem;font-weight:700;margin:0;color:var(--color-text);">
-                            Desenvolvedor Backend</h5>
-                    </div>
-                    <p style="font-size:0.75rem;color:var(--color-text-tertiary);margin:0;line-height:1.5;">Requisitos: -
-                        Experiência sólida com Node.js e TypeScript - Conhecimento em bancos d...</p>
-                </div>
-
-                <div class="job-model-card"
-                    style="padding:1rem;border:1px solid var(--color-border);border-radius:0.75rem;cursor:pointer;transition:all 0.2s;"
-                    onclick="document.getElementById('job-desc').value='Responsabilidades:\\n- Gestão de redes sociais (Instagram, LinkedIn)\\n- Criação de conteúdo e copy\\n- Acompanhamento de métricas e ROI\\n- Conhecimento intermediário em tráfego pago (Meta Ads)'; document.getElementById('job-desc').dispatchEvent(new Event('input'))">
-                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-                        <i class="pi pi-briefcase" style="color:var(--color-text-tertiary);"></i>
-                        <h5 style="font-size:0.875rem;font-weight:700;margin:0;color:var(--color-text);">Analista de
-                            Marketing Jr</h5>
-                    </div>
-                    <p style="font-size:0.75rem;color:var(--color-text-tertiary);margin:0;line-height:1.5;">
-                        Responsabilidades: - Gestão de redes sociais (Instagram, LinkedIn) - Criação de...</p>
-                </div>
-
-                <div class="job-model-card"
-                    style="padding:1rem;border:1px solid var(--color-border);border-radius:0.75rem;cursor:pointer;transition:all 0.2s;"
-                    onclick="document.getElementById('job-desc').value='Atividades:\\n- Controle de fluxo de caixa e emissão de notas fiscais\\n- Atendimento a fornecedores\\n- Suporte nas rotinas administrativas diárias'; document.getElementById('job-desc').dispatchEvent(new Event('input'))">
-                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-                        <i class="pi pi-briefcase" style="color:var(--color-text-tertiary);"></i>
-                        <h5 style="font-size:0.875rem;font-weight:700;margin:0;color:var(--color-text);">Assistente
-                            Administrativo</h5>
-                    </div>
-                    <p style="font-size:0.75rem;color:var(--color-text-tertiary);margin:0;line-height:1.5;">Atividades: -
-                        Controle de fluxo de caixa e emissão de notas fiscais - Atendimento a...</p>
-                </div>
-
-                <div class="job-model-card"
-                    style="padding:1rem;border:1px solid var(--color-border);border-radius:0.75rem;cursor:pointer;transition:all 0.2s;"
-                    onclick="document.getElementById('job-desc').value='Atividades:\\n- Prospecção ativa de clientes via LinkedIn e Cold E-mail\\n- Qualificação de leads (BANT/SPIN)\\n- Agendamento de reuniões para os closers'; document.getElementById('job-desc').dispatchEvent(new Event('input'))">
-                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-                        <i class="pi pi-briefcase" style="color:var(--color-text-tertiary);"></i>
-                        <h5 style="font-size:0.875rem;font-weight:700;margin:0;color:var(--color-text);">Vendedor
-                            Interno (SDR)</h5>
-                    </div>
-                    <p style="font-size:0.75rem;color:var(--color-text-tertiary);margin:0;line-height:1.5;">Atividades: -
-                        Prospecção ativa de clientes via LinkedIn e Cold E-mail - Qualificaçã...</p>
-                </div>
+                    style="width:100%;min-height:22rem;font-size:0.875rem;line-height:1.7;resize:vertical;padding:1.5rem;"
+                    placeholder="Cole aqui os requisitos, responsabilidades e informações da vaga..."></textarea>
             </div>
         </div>
     </main>
@@ -124,8 +60,9 @@
         style="position:fixed;bottom:0;left:0;right:0;padding:1.5rem 1rem;display:flex;justify-content:center;border-top:1px solid var(--color-border);z-index:50;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);">
         <div style="width:100%;max-width:40rem;">
             <button id="btn-next" disabled
-                style="width:100%;height:3.5rem;border-radius:0.5rem;background:var(--color-text);color:var(--color-bg);font-size:1rem;font-weight:700;border:none;cursor:not-allowed;opacity:0.15;transition:all 0.2s;">Analisar
-                Compatibilidade</button>
+                style="width:100%;height:3.5rem;border-radius:0.5rem;background:var(--color-text);color:var(--color-bg);font-size:1rem;font-weight:700;border:none;cursor:not-allowed;opacity:0.15;transition:all 0.2s;">
+                Continuar
+            </button>
         </div>
     </div>
 
@@ -134,34 +71,34 @@
         import { injectSettingsGear } from '/src/lib/settings.js';
 
         const state = getState();
+        const companyInput = document.getElementById('company-name');
         const textarea = document.getElementById('job-desc');
-        const goalInput = document.getElementById('professional-goal');
-        const roleInput = document.getElementById('target-role');
 
         // Restore state
+        if (state.targetCompany) companyInput.value = state.targetCompany;
         if (state.jobDescription) textarea.value = state.jobDescription;
-        if (state.professionalGoal) goalInput.value = state.professionalGoal;
-        if (state.targetRole) roleInput.value = state.targetRole;
 
         // Flow logic
         if (state.flow === 'ats') {
             document.querySelector('header h1').textContent = 'ATS Scanner Pro';
-            document.getElementById('job-title').textContent = 'Agora, a vaga que você quer';
-            document.getElementById('job-subtitle').textContent = 'Informe seu objetivo profissional e, se quiser, cole a descrição de uma vaga específica.';
+            document.getElementById('job-title').textContent = 'A vaga que você quer';
+            document.getElementById('job-subtitle').textContent = 'Informe a empresa e cole a descrição da vaga para analisar compatibilidade.';
             document.getElementById('btn-next').textContent = 'Analisar Compatibilidade';
             document.getElementById('top-link').innerHTML = '<a href="/pages/step-ats-scanner.html" style="color:inherit;text-decoration:none;"><i class="pi pi-arrow-left"></i> Voltar e trocar arquivo</a>';
         } else {
             document.querySelector('header h1').textContent = 'Gerador CV Otimizado';
             document.getElementById('job-title').textContent = 'Onde você quer trabalhar?';
-            document.getElementById('job-subtitle').textContent = 'Informe seu objetivo profissional e cole a descrição da vaga para otimizar seu currículo.';
+            document.getElementById('job-subtitle').textContent = 'Informe a empresa e cole a descrição da vaga para otimizar seu currículo.';
             document.getElementById('btn-next').textContent = 'Continuar';
             document.getElementById('top-link').innerHTML = '<a href="/pages/step-profile.html" style="color:inherit;text-decoration:none;"><i class="pi pi-arrow-left"></i> Voltar à edição de perfil</a>';
         }
 
         function checkCanProceed() {
-            const goalFilled = goalInput.value.trim().length > 5;
+            const companyFilled = companyInput.value.trim().length >= 2;
+            const descFilled = textarea.value.trim().length >= 10;
             const btn = document.getElementById('btn-next');
-            if (goalFilled) {
+
+            if (companyFilled && descFilled) {
                 btn.style.pointerEvents = 'auto';
                 btn.style.opacity = '1';
                 btn.disabled = false;
@@ -174,7 +111,7 @@
             }
         }
 
-        goalInput.addEventListener('input', checkCanProceed);
+        companyInput.addEventListener('input', checkCanProceed);
         textarea.addEventListener('input', checkCanProceed);
 
         // Trigger check on load
@@ -185,10 +122,14 @@
 
         document.getElementById('btn-next').addEventListener('click', e => {
             e.preventDefault();
+            const company = companyInput.value.trim();
+            const desc = textarea.value.trim();
+
             setState({
-                jobDescription: textarea.value.trim(),
-                professionalGoal: goalInput.value.trim(),
-                targetRole: roleInput.value.trim(),
+                targetCompany: company,
+                jobDescription: desc,
+                professionalGoal: `Oportunidade na empresa ${company}`,
+                targetRole: '',
             });
 
             // Both flows go through step-ats-loading now

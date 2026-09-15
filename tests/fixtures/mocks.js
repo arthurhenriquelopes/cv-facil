@@ -34,6 +34,88 @@ export const PROFILE_FULLSTACK_JR = {
   certifications: [],
 };
 
+// Arthur's exact real CV parsed from PDF (with all projects, 14 DIO certifications, real dates)
+export const PROFILE_ARTHUR_CV_REAL = {
+  name: 'Arthur Henrique Lopes Feitosa',
+  title: 'Desenvolvedor Java Junior | Foco em Back-End com Spring Boot',
+  email: 'arthurhenriquelopesf@gmail.com',
+  phone: '(98) 99161-2062',
+  location: 'São José de Ribamar, MA',
+  linkedin: 'https://linkedin.com/in/arthurhenriquelopes',
+  github: 'https://github.com/arthurhenriquelopes',
+  portfolio: 'https://arthurhenriquelopes.dev',
+  summary: 'Estudante de Sistemas de Informação com experiência em desenvolvimento de software, especializado em back-end com Spring Boot, APIs RESTful, PostgreSQL e Docker. Atuou em ambiente produtivo real, contribuindo para a melhoria de qualidade de código e eficiência operacional em equipes ágeis multidisciplinares. Comprometido com boas práticas de desenvolvimento, testes automatizados e entrega contínua.',
+  skills: [
+    'Java', 'Spring Boot', 'APIs REST', 'Microsserviços', 'Spring Security', 'JWT', 'Redis', 'PostgreSQL', 'Docker',
+    'JUnit', 'Mockito', 'CI/CD', 'Gradle', 'SOLID', 'Clean Code', 'Design Patterns', 'Git', 'GitHub', 'Linux', 'Bash Scripting',
+    'React', 'Angular', 'TypeScript', 'Flutter', 'Dart',
+    'Python', 'SQL', 'Engenharia de Prompt', 'IA aplicada ao desenvolvimento', 'Swagger', 'Testes unitários', 'Testes de integração'
+  ],
+  experiences: [
+    {
+      title: 'Estagiário em Desenvolvimento de Software',
+      company: 'Midas Desenvolvimento de Sistemas',
+      startDate: '06/2025',
+      endDate: '06/2026',
+      isCurrent: true,
+      description: '• Desenvolveu um chatbot inteligente com Spring Boot e Flutter/Dart, melhorando a interação do usuário em 20%\n• Criou telas mobile e integrou LLM para processamento de documentos via OCR, aumentando a precisão em 15%\n• Colaborou em equipes ágeis, aprimorando a qualidade do código e a eficiência operacional\n• Implementou testes automatizados, reduzindo bugs em 30% e acelerando o ciclo de desenvolvimento',
+    },
+    {
+      title: 'Intérprete de Inglês',
+      company: 'FIRA RoboWorld Cup 2024',
+      startDate: '01/2024',
+      endDate: '12/2024',
+      isCurrent: false,
+      description: '• Atuou como intérprete em competição internacional de robótica, facilitando comunicação técnica em situações de alta pressão\n• Realizou tradução simultânea em eventos, promovendo comunicação eficiente entre participantes',
+    },
+  ],
+  education: [
+    {
+      degree: 'Bacharelado em Sistemas de Informação',
+      institution: 'Instituto Federal do Maranhão (IFMA)',
+      startDate: '03/2024',
+      endDate: '03/2028',
+    },
+  ],
+  languages: [
+    { name: 'Português', level: 'Nativo' },
+    { name: 'Inglês', level: 'C1 Avançado' },
+  ],
+  projects: [
+    {
+      title: 'DistroWiki',
+      role: 'Desenvolvedor',
+      description: 'Plataforma web open source para auxílio na escolha de distribuições Linux, permitindo comparar distribuições lado a lado com métricas padronizadas de desempenho. Construída com React, TypeScript, Tailwind CSS e Vite, com scraping diário dinâmico e deploy contínuo via Vercel.',
+    },
+    {
+      title: 'SIGAMA Vision',
+      role: 'Desenvolvedor',
+      description: 'Protótipo de plataforma web de gestão agropecuária com IA desenvolvido para o Edital AGED/FAPEMA 2025, com fluxo de análise de documentos (GTAs), geração de score de conformidade e detecção de fraudes. Construído com React 18, TypeScript e Tailwind CSS.',
+    },
+    {
+      title: 'LLMX',
+      role: 'Desenvolvedor',
+      description: 'Assistente pessoal de IA para ambientes Linux via terminal, permitindo executar comandos, buscar arquivos e gerar scripts através de linguagem natural com suporte a múltiplos providers de LLM. Construído com TypeScript, Node.js e React Ink.',
+    },
+  ],
+  certifications: [
+    { name: 'Introdução à AWS e ao Universo da Computação em Nuvem', institution: 'DIO', date: '2024' },
+    { name: 'Boas Práticas de Desenvolvimento de Aplicações Java', institution: 'DIO', date: '2024' },
+    { name: 'Boas Práticas Para APIs RESTful', institution: 'DIO', date: '2024' },
+    { name: 'Conectando sua API com Banco de Dados Através do Spring Data', institution: 'DIO', date: '2024' },
+    { name: 'Criando sua Primeira API REST com Spring Boot', institution: 'DIO', date: '2024' },
+    { name: 'Criando uma API REST Documentada com Spring Web e Swagger', institution: 'DIO', date: '2024' },
+    { name: 'Ecossistema Spring para Desenvolvimento de APIs', institution: 'DIO', date: '2024' },
+    { name: 'Entendendo as Instâncias EC2 e a Otimização de Recursos na AWS', institution: 'DIO', date: '2024' },
+    { name: 'Fundamentos da Sintaxe da Linguagem Java', institution: 'DIO', date: '2024' },
+    { name: 'Fundamentos de Desenvolvimento Java', institution: 'DIO', date: '2024' },
+    { name: 'Introdução a Spring Framework com Spring Boot', institution: 'DIO', date: '2024' },
+    { name: 'Programação Orientada a Objetos Com Java', institution: 'DIO', date: '2024' },
+    { name: 'SOLID e Clean Code em Java Escrevendo Código de Alta Qualidade', institution: 'DIO', date: '2024' },
+    { name: 'Trabalhando com Design Patterns em Aplicações Java', institution: 'DIO', date: '2024' },
+  ],
+};
+
 // Senior backend dev (high match expected)
 export const PROFILE_SENIOR_BACKEND = {
   name: 'Maria Silva',

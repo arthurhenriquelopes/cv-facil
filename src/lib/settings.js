@@ -16,7 +16,7 @@ const NVIDIA_CACHE_TTL_HOURS = 6; // Re-fetch after 6 hours
 // ─── Key Management ───────────────────────────────
 
 export function getAiProvider() {
-    return localStorage.getItem(PROVIDER_KEY) || 'gemini';
+    return localStorage.getItem(PROVIDER_KEY) || 'groq';
 }
 
 export function saveAiProvider(provider) {
@@ -95,40 +95,19 @@ export function getActiveGroqKey() {
 // ─── Provider Config ──────────────────────────────
 
 const PROVIDERS = {
-    gemini: {
-        name: 'Google AI Studio (Gemini)',
-        description: 'Free tier generoso. Melhor qualidade em Português.',
-        keyPrefix: 'AIza',
-        keyPlaceholder: 'AIzaSy...',
-        keyUrl: 'https://aistudio.google.com/apikey',
-        keyUrlLabel: 'aistudio.google.com/apikey',
-        badge: 'Recomendado',
-        hasModelSelector: false,
-    },
-    openrouter: {
-        name: 'OpenRouter',
-        description: 'Acesso a 500+ modelos. Muitos gratuitos.',
-        keyPrefix: 'sk-or-',
-        keyPlaceholder: 'sk-or-v1-xxxxxxxxxxxx',
-        keyUrl: 'https://openrouter.ai/keys',
-        keyUrlLabel: 'openrouter.ai/keys',
-        badge: null,
-        hasModelSelector: false,
-    },
-    cerebras: {
-        name: 'Cerebras',
-        description: 'Inferência ultra-rápida. Modelo gpt-oss-120b.',
-        keyPrefix: 'csk-',
-        keyPlaceholder: 'csk-xxxxxxxxxxxx',
-        keyUrl: 'https://cloud.cerebras.ai/platform',
-        keyUrlLabel: 'cloud.cerebras.ai',
-        badge: null,
-        hasModelSelector: false, // Fixed model: gpt-oss-120b
-        fixedModel: 'gpt-oss-120b',
+    groq: {
+        name: 'Groq',
+        description: 'Inferência ultra-rápida na nuvem. Modelos Qwen 3.8 e GPT-OSS 120B.',
+        keyPrefix: 'gsk_',
+        keyPlaceholder: 'gsk_xxxxxxxxxxxx',
+        keyUrl: 'https://console.groq.com/keys',
+        keyUrlLabel: 'console.groq.com/keys',
+        badge: 'RECOMENDADO',
+        hasModelSelector: true,
     },
     nvidia: {
         name: 'NVIDIA Build (NIM)',
-        description: 'Catálogo com 100+ modelos via NIM API.',
+        description: 'Catálogo com 100+ modelos via NIM API (DeepSeek, Mistral, Llama).',
         keyPrefix: 'nvapi-',
         keyPlaceholder: 'nvapi-xxxxxxxxxxxx',
         keyUrl: 'https://build.nvidia.com/explore/discover',
@@ -136,16 +115,37 @@ const PROVIDERS = {
         badge: null,
         hasModelSelector: true,
     },
+    gemini: {
+        name: 'Google AI Studio',
+        description: 'Free tier generoso. Modelo Gemini 2.5 Flash.',
+        keyPrefix: 'AIza',
+        keyPlaceholder: 'AIzaSy...',
+        keyUrl: 'https://aistudio.google.com/apikey',
+        keyUrlLabel: 'aistudio.google.com/apikey',
+        badge: null,
+        hasModelSelector: false,
+    },
 };
+
+// ─── Groq Models ──────────────────────────────────
+const GROQ_MODELS = [
+    { id: 'qwen/qwen3.8-27b', name: 'Qwen 3.8 27B (Recomendado — 3s)' },
+    { id: 'openai/gpt-oss-120b', name: 'GPT-OSS 120B (OpenAI — 5s)' },
+    { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B (Meta)' },
+    { id: 'qwen/qwen3.6-27b', name: 'Qwen 3.6 27B (Qwen)' },
+    { id: 'openai/gpt-oss-20b', name: 'GPT-OSS 20B (OpenAI)' },
+];
 
 // ─── NVIDIA Model Fallback List ───────────────────
 const NVIDIA_FALLBACK_MODELS = [
+    { id: 'deepseek-ai/deepseek-v4-flash-0731', name: 'DeepSeek V4 Flash (DeepSeek)' },
+    { id: 'deepseek-ai/deepseek-v3', name: 'DeepSeek V3 (DeepSeek)' },
+    { id: 'mistralai/mistral-large-2-instruct', name: 'Mistral Large 2 Instruct (Mistral)' },
+    { id: 'mistralai/mistral-large-3', name: 'Mistral Large 3 (Mistral)' },
     { id: 'openai/gpt-oss-120b', name: 'GPT-OSS 120B (OpenAI)' },
     { id: 'meta/llama-3.3-70b-instruct', name: 'Llama 3.3 70B Instruct (Meta)' },
     { id: 'meta/llama-4-maverick', name: 'Llama 4 Maverick (Meta)' },
     { id: 'qwen/qwen3-235b-a22b', name: 'Qwen3 235B A22B (Qwen)' },
-    { id: 'mistralai/mistral-large-3', name: 'Mistral Large 3 (Mistral)' },
-    { id: 'zai-org/glm-5.1', name: 'GLM 5.1 (ZAI)' },
 ];
 
 // Preferred models to prioritize in the NVIDIA dropdown
@@ -308,37 +308,29 @@ function openSettingsModal() {
                     </p>
                     
                     <div class="provider-select-group" style="display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;">
-                        <div class="provider-radio-card card" id="card-gemini" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative;">
+                        <div class="provider-radio-card card" id="card-groq" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative; cursor: pointer;">
                             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem;">
-                                <input type="radio" name="ai-provider" value="gemini" id="provider-gemini" style="accent-color: var(--color-accent);" />
-                                <span>Google AI Studio (Gemini)</span>
+                                <input type="radio" name="ai-provider" value="groq" id="provider-groq" style="accent-color: #10b981;" />
+                                <span style="font-weight: 700;">Groq</span>
                             </div>
-                            <span class="provider-badge" style="position: absolute; top: 8px; right: 8px; font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; background: var(--color-accent); color: #fff; font-weight: 600; letter-spacing: 0.3px;">RECOMENDADO</span>
-                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Free tier generoso. Melhor qualidade em Português para currículos ATS.</span>
-                        </div>
-                        
-                        <div class="provider-radio-card card" id="card-openrouter" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative;">
-                            <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem;">
-                                <input type="radio" name="ai-provider" value="openrouter" id="provider-openrouter" style="accent-color: var(--color-accent);" />
-                                <span>OpenRouter</span>
-                            </div>
-                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Acesso a 500+ modelos de IA. Muitos gratuitos, sem créditos que expiram.</span>
+                            <span class="provider-badge" style="position: absolute; top: 10px; right: 10px; font-size: 0.65rem; padding: 3px 8px; border-radius: 9999px; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); font-weight: 700; letter-spacing: 0.5px;">RECOMENDADO</span>
+                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Inferência ultrarrápida (~3s). Escolha entre Qwen 3.8, GPT-OSS 120B e outros.</span>
                         </div>
 
-                        <div class="provider-radio-card card" id="card-cerebras" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative;">
+                        <div class="provider-radio-card card" id="card-nvidia" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative; cursor: pointer;">
                             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem;">
-                                <input type="radio" name="ai-provider" value="cerebras" id="provider-cerebras" style="accent-color: var(--color-accent);" />
-                                <span>Cerebras</span>
+                                <input type="radio" name="ai-provider" value="nvidia" id="provider-nvidia" style="accent-color: #10b981;" />
+                                <span style="font-weight: 700;">NVIDIA Build (NIM)</span>
                             </div>
-                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Inferência ultra-rápida com modelo gpt-oss-120b.</span>
+                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Catálogo com 100+ modelos via NIM API (DeepSeek, Mistral, Llama).</span>
                         </div>
 
-                        <div class="provider-radio-card card" id="card-nvidia" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative;">
+                        <div class="provider-radio-card card" id="card-gemini" style="flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 1rem; position: relative; cursor: pointer;">
                             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem;">
-                                <input type="radio" name="ai-provider" value="nvidia" id="provider-nvidia" style="accent-color: var(--color-accent);" />
-                                <span>NVIDIA Build (NIM)</span>
+                                <input type="radio" name="ai-provider" value="gemini" id="provider-gemini" style="accent-color: #10b981;" />
+                                <span style="font-weight: 700;">Google AI Studio</span>
                             </div>
-                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Catálogo com 100+ modelos via NIM API. Escolha o modelo ideal.</span>
+                            <span style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 0.5rem; margin-left: 1.5rem; line-height: 1.3;">Free tier generoso com limite diário alto. Modelo Gemini 2.5 Flash.</span>
                         </div>
                     </div>
                 </div>
@@ -375,7 +367,7 @@ function openSettingsModal() {
                     </div>
                 </div>
 
-                <!-- Model Selector Section (shown only for NVIDIA) -->
+                <!-- Model Selector Section -->
                 <div id="model-selector-section" class="settings-section" style="display: none;">
                     <label class="settings-label">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -389,14 +381,16 @@ function openSettingsModal() {
                         Selecione o modelo de IA para gerar currículos.
                     </p>
 
-                    <!-- Cerebras fixed model display -->
-                    <div id="cerebras-model-info" class="model-fixed-info" style="display: none;">
-                        <div class="model-fixed-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            </svg>
-                            <code>gpt-oss-120b</code>
-                            <span class="key-active-badge" style="margin-left: auto;">Fixo</span>
+                    <!-- Groq model selector -->
+                    <div id="groq-model-selector" style="display: none;">
+                        <div class="model-select-row">
+                            <select id="groq-model-select" class="form-input settings-select" style="width: 100%;">
+                                <option value="qwen/qwen3.8-27b">Qwen 3.8 27B (Recomendado — 3s)</option>
+                                <option value="openai/gpt-oss-120b">GPT-OSS 120B (OpenAI — 5s)</option>
+                                <option value="llama-3.3-70b-versatile">Llama 3.3 70B (Meta)</option>
+                                <option value="qwen/qwen3.6-27b">Qwen 3.6 27B (Qwen)</option>
+                                <option value="openai/gpt-oss-20b">GPT-OSS 20B (OpenAI)</option>
+                            </select>
                         </div>
                     </div>
 
@@ -430,16 +424,14 @@ function openSettingsModal() {
 
     // Setup Provider state UI
     const allCards = {
-        gemini: overlay.querySelector('#card-gemini'),
-        openrouter: overlay.querySelector('#card-openrouter'),
-        cerebras: overlay.querySelector('#card-cerebras'),
+        groq: overlay.querySelector('#card-groq'),
         nvidia: overlay.querySelector('#card-nvidia'),
+        gemini: overlay.querySelector('#card-gemini'),
     };
     const allRadios = {
-        gemini: overlay.querySelector('#provider-gemini'),
-        openrouter: overlay.querySelector('#provider-openrouter'),
-        cerebras: overlay.querySelector('#provider-cerebras'),
+        groq: overlay.querySelector('#provider-groq'),
         nvidia: overlay.querySelector('#provider-nvidia'),
+        gemini: overlay.querySelector('#provider-gemini'),
     };
 
     // Set initial selection
@@ -447,8 +439,8 @@ function openSettingsModal() {
         allRadios[currentProvider].checked = true;
         allCards[currentProvider].classList.add('selected');
     } else {
-        allRadios.gemini.checked = true;
-        allCards.gemini.classList.add('selected');
+        allRadios.groq.checked = true;
+        allCards.groq.classList.add('selected');
     }
 
     const handleProviderChange = (newProvider) => {
@@ -541,30 +533,42 @@ function updateKeysSection(overlay, provider) {
  */
 function updateModelSection(overlay, provider) {
     const section = overlay.querySelector('#model-selector-section');
-    const cerebrasInfo = overlay.querySelector('#cerebras-model-info');
+    const groqSelector = overlay.querySelector('#groq-model-selector');
     const nvidiaSelector = overlay.querySelector('#nvidia-model-selector');
     const modelTitle = overlay.querySelector('#model-section-title');
     const modelHint = overlay.querySelector('#model-section-hint');
 
     if (!section) return;
 
-    // Hide model section for providers without model selection
-    if (provider !== 'cerebras' && provider !== 'nvidia') {
+    // Hide model section for providers without model selection (Gemini)
+    if (provider !== 'groq' && provider !== 'nvidia') {
         section.style.display = 'none';
         return;
     }
 
     section.style.display = '';
 
-    if (provider === 'cerebras') {
-        cerebrasInfo.style.display = '';
-        nvidiaSelector.style.display = 'none';
-        if (modelTitle) modelTitle.textContent = 'Modelo Cerebras';
-        if (modelHint) modelHint.textContent = 'Modelo fixo para inferência Cerebras.';
-        saveSelectedModel('gpt-oss-120b', 'cerebras');
+    if (provider === 'groq') {
+        if (groqSelector) groqSelector.style.display = '';
+        if (nvidiaSelector) nvidiaSelector.style.display = 'none';
+        if (modelTitle) modelTitle.textContent = 'Modelo Groq';
+        if (modelHint) modelHint.textContent = 'Escolha o modelo de IA. O Qwen 3.8 obteve a melhor velocidade (~3s) e notas nos testes.';
+
+        const groqSelect = overlay.querySelector('#groq-model-select');
+        if (groqSelect) {
+            const currentGroq = getSelectedModel('groq') || 'qwen/qwen3.8-27b';
+            groqSelect.innerHTML = GROQ_MODELS.map(m => `
+                <option value="${m.id}" ${m.id === currentGroq ? 'selected' : ''}>${m.name}</option>
+            `).join('');
+            saveSelectedModel(groqSelect.value, 'groq');
+
+            groqSelect.onchange = (e) => {
+                saveSelectedModel(e.target.value, 'groq');
+            };
+        }
     } else if (provider === 'nvidia') {
-        cerebrasInfo.style.display = 'none';
-        nvidiaSelector.style.display = '';
+        if (groqSelector) groqSelector.style.display = 'none';
+        if (nvidiaSelector) nvidiaSelector.style.display = '';
         if (modelTitle) modelTitle.textContent = 'Modelo NVIDIA';
         if (modelHint) modelHint.textContent = 'Selecione o modelo de IA. Modelos recomendados aparecem primeiro.';
         loadNvidiaModels(overlay, false);

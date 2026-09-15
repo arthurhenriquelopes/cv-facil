@@ -174,8 +174,8 @@
                     cvText = parts.join('\n');
                 }
 
-                if (!cvText || !state.professionalGoal) {
-                    throw new Error('Faltam dados do currículo ou objetivo profissional');
+                if (!cvText) {
+                    throw new Error('Faltam dados do currículo');
                 }
 
                 // Stage tracking via onStageChange callback
