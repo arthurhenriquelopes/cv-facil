@@ -16,14 +16,20 @@
     <style>
         /* ========================================
            PROFESSIONAL TEMPLATE — PDF-faithful, single-column
-           Based on the example CV (serif, centered header, letter-spaced sections)
+           Uses CSS custom properties injected from PDF metadata
            ======================================== */
         .cv-professional {
             --cv-font: 'Arial', 'Helvetica', sans-serif;
+            /* ── Overridable font-size variables (defaults if no PDF metadata) ── */
+            --cv-name-size: 20pt;
+            --cv-title-size: 10.5pt;
+            --cv-contact-size: 8.5pt;
+            --cv-section-size: 10pt;
+            --cv-body-size: 10pt;
             font-family: var(--cv-font);
             color: #1a1a1a;
             line-height: 1.35;
-            font-size: 10pt;
+            font-size: var(--cv-body-size);
         }
 
         .cv-professional * {
@@ -40,7 +46,7 @@
         }
 
         .cv-professional .cv-name {
-            font-size: 20pt;
+            font-size: var(--cv-name-size);
             font-weight: 700;
             letter-spacing: -0.01em;
             line-height: 1.15;
@@ -49,14 +55,14 @@
         }
 
         .cv-professional .cv-title {
-            font-size: 10.5pt;
+            font-size: var(--cv-title-size);
             font-weight: 700;
             color: #222;
             margin-bottom: 3px;
         }
 
         .cv-professional .cv-contact-line {
-            font-size: 8.5pt;
+            font-size: var(--cv-contact-size);
             color: #333;
             line-height: 1.4;
         }
@@ -68,7 +74,7 @@
 
         /* — Section Titles — */
         .cv-professional .cv-section-title {
-            font-size: 10pt;
+            font-size: var(--cv-section-size);
             font-weight: 700;
             text-transform: uppercase;
             color: #1a1a1a;
@@ -78,9 +84,14 @@
             margin-bottom: 6px;
         }
 
+        /* When PDF has no HR under section titles */
+        .cv-professional.no-section-hr .cv-section-title {
+            border-bottom: none;
+        }
+
         /* — Summary — */
         .cv-professional .cv-summary-text {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             color: #1a1a1a;
             line-height: 1.4;
             text-align: justify;
@@ -99,19 +110,19 @@
         }
 
         .cv-professional .cv-exp-company {
-            font-size: 10pt;
+            font-size: var(--cv-body-size);
             font-weight: 700;
             color: #1a1a1a;
         }
 
         .cv-professional .cv-exp-period {
-            font-size: 9pt;
+            font-size: calc(var(--cv-body-size) - 1pt);
             color: #333;
             white-space: nowrap;
         }
 
         .cv-professional .cv-exp-title {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             font-style: italic;
             color: #333;
             margin-bottom: 2px;
@@ -123,7 +134,7 @@
         }
 
         .cv-professional .cv-exp-bullets li {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             color: #1a1a1a;
             margin-bottom: 2px;
             line-height: 1.35;
@@ -142,40 +153,40 @@
         }
 
         .cv-professional .cv-edu-inst {
-            font-size: 10pt;
+            font-size: var(--cv-body-size);
             font-weight: 700;
             color: #1a1a1a;
         }
 
         .cv-professional .cv-edu-period {
-            font-size: 9pt;
+            font-size: calc(var(--cv-body-size) - 1pt);
             color: #333;
             white-space: nowrap;
         }
 
         .cv-professional .cv-edu-degree {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             font-style: italic;
             color: #333;
         }
 
         /* — Skills — */
         .cv-professional .cv-skills-category {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             color: #1a1a1a;
             line-height: 1.45;
             margin-bottom: 1px;
         }
 
         .cv-professional .cv-skills-text {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             color: #1a1a1a;
             line-height: 1.45;
         }
 
         /* — Languages — */
         .cv-professional .cv-lang-item {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             color: #1a1a1a;
             margin-bottom: 2px;
         }
@@ -187,7 +198,7 @@
         }
 
         .cv-professional .cv-cert-bullets li {
-            font-size: 9pt;
+            font-size: calc(var(--cv-body-size) - 1pt);
             color: #1a1a1a;
             margin-bottom: 2px;
             line-height: 1.3;
@@ -200,13 +211,13 @@
         }
 
         .cv-professional .cv-proj-title {
-            font-size: 9.5pt;
+            font-size: var(--cv-body-size);
             font-weight: 700;
             color: #1a1a1a;
         }
 
         .cv-professional .cv-proj-desc {
-            font-size: 9pt;
+            font-size: calc(var(--cv-body-size) - 1pt);
             color: #222;
             line-height: 1.3;
         }
@@ -230,7 +241,7 @@
 
             @page {
                 size: A4;
-                margin: 10mm 14mm;
+                margin: 8mm 10mm;
             }
 
             html, body {
@@ -788,7 +799,19 @@
             // Assemble the full CV
             const fullCV = headerHTML + summaryHTML + experienceHTML + educationHTML + skillsHTML + languagesHTML + projectsHTML + certificationsHTML;
 
-            container.innerHTML = `<div class="cv-professional" contenteditable="true" spellcheck="false" style="outline:none; cursor:text;" title="Clique para editar">${fullCV}</div>`;
+            // Build CSS custom properties from extracted PDF styling
+            const s = cv.styling || {};
+            const styleVars = [
+                s.nameSize ? `--cv-name-size: ${s.nameSize}pt` : '',
+                s.titleSize ? `--cv-title-size: ${s.titleSize}pt` : '',
+                s.contactSize ? `--cv-contact-size: ${s.contactSize}pt` : '',
+                s.sectionSize ? `--cv-section-size: ${s.sectionSize}pt` : '',
+                s.bodySize ? `--cv-body-size: ${s.bodySize}pt` : '',
+            ].filter(Boolean).join('; ');
+
+            const hrClass = (s.sectionHasHr === false) ? ' no-section-hr' : '';
+
+            container.innerHTML = `<div class="cv-professional${hrClass}" contenteditable="true" spellcheck="false" style="outline:none; cursor:text; ${styleVars}" title="Clique para editar">${fullCV}</div>`;
 
             bindInteractiveBadges();
             updateDashboardAndDownload();
