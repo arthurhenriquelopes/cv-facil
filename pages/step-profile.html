@@ -12,9 +12,10 @@
 <body>
     <script type="module">
         import { injectStepHeader, injectStepFooter } from '/src/lib/layout.js';
-        import { getState, updateProfile } from '/src/lib/store.js';
+        import { getState, updateProfile, setState } from '/src/lib/store.js';
         import { extractTextFromPDF } from '/src/lib/pdf.js';
         import { parseProfileFromText } from '/src/prompts/parse-profile.js';
+        import { extractDeterministicCVFromPDF } from '/src/lib/deterministic-pdf.js';
         import { parseCertificateFiles, terminateOCR } from '/src/prompts/parse-certificates.js';
 
         injectStepHeader({ step: 1, backHref: '/pages/dashboard.html' });
@@ -420,7 +421,7 @@
             }
         });
 
-        // Direct import and go straight to CV result view
+        // Direct import and go straight to CV result view (100% deterministic, high fidelity)
         const directBtn = document.getElementById('btn-import-direct');
         const directFileInput = document.getElementById('file-upload-direct');
         if (directBtn && directFileInput) {
@@ -432,62 +433,16 @@
                 importBtn.style.display = 'none';
                 directBtn.style.display = 'none';
                 importStatus.style.display = 'flex';
-                importStatus.innerHTML = '<div class="spinner" style="width:1.25rem;height:1.25rem;border-width:2px;"></div> <span style="font-size:0.875rem;font-weight:700;">Lendo arquivo PDF...</span>';
+                importStatus.innerHTML = '<div class="spinner" style="width:1.25rem;height:1.25rem;border-width:2px;border-top-color:var(--color-primary);"></div> <span style="font-size:0.875rem;font-weight:700;">Extraindo conteúdo fidedigno do PDF...</span>';
 
                 try {
-                    const text = await extractTextFromPDF(file);
-                    importStatus.innerHTML = '<div class="spinner" style="width:1.25rem;height:1.25rem;border-width:2px;border-top-color:var(--color-primary);"></div> <span style="font-size:0.875rem;font-weight:700;">Estruturando com IA...</span>';
+                    const { profile, generatedCV } = await extractDeterministicCVFromPDF(file);
 
-                    const profileData = await parseProfileFromText(text);
-
-                    // Normalize certifications
-                    const normCerts = (profileData.certifications || []).map(c => ({
-                        title: c.title || c.name || '',
-                        name: c.title || c.name || '',
-                        issuer: c.issuer || c.institution || '',
-                        institution: c.issuer || c.institution || '',
-                        date: c.date || c.year || '',
-                        year: c.date || c.year || '',
-                        _expanded: false
-                    }));
-                    profileData.certifications = normCerts;
-
-                    const generatedCV = {
-                        header: {
-                            name: profileData.name || '',
-                            title: profileData.title || profileData.experiences?.[0]?.title || '',
-                            contact: {
-                                location: profileData.location || '',
-                                phone: profileData.phone || '',
-                                email: profileData.email || '',
-                                linkedin: profileData.linkedin || '',
-                                github: profileData.github || '',
-                                portfolio: profileData.portfolio || ''
-                            }
-                        },
-                        summary: profileData.summary || '',
-                        experiences: (profileData.experiences || []).map(exp => ({
-                            company: exp.company || '',
-                            title: exp.title || '',
-                            period: exp.period || (exp.startDate ? `${exp.startDate} – ${exp.isCurrent ? 'Atual' : (exp.endDate || '')}` : ''),
-                            bullets: exp.bullets || (exp.description ? [exp.description] : [])
-                        })),
-                        education: (profileData.education || []).map(edu => ({
-                            institution: edu.institution || '',
-                            degree: edu.degree || '',
-                            period: edu.period || (edu.startDate ? `${edu.startDate} – ${edu.endDate || ''}` : '')
-                        })),
-                        skills: profileData.skills || [],
-                        languages: profileData.languages || [],
-                        projects: profileData.projects || [],
-                        certifications: normCerts
-                    };
-
-                    updateProfile(profileData);
+                    updateProfile(profile);
                     setState({ generatedCV });
                     window.location.href = '/pages/result.html';
                 } catch (err) {
-                    console.error('Erro na importação direta:', err);
+                    console.error('Erro na importação direta determinística:', err);
                     alert('Erro ao importar PDF: ' + (err.message || 'Verifique o arquivo'));
                     importBtn.style.display = 'flex';
                     directBtn.style.display = 'flex';

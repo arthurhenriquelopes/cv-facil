@@ -340,8 +340,7 @@
     <script type="module">
         import { injectNavbar } from '/src/lib/layout.js';
         import { getState, setState } from '/src/lib/store.js';
-        import { extractTextFromPDF } from '/src/lib/pdf.js';
-        import { parseProfileFromText } from '/src/prompts/parse-profile.js';
+        import { extractDeterministicCVFromPDF } from '/src/lib/deterministic-pdf.js';
         injectNavbar();
 
         const container = document.getElementById('cv-preview');
@@ -448,39 +447,23 @@
             if (overlay) overlay.style.display = 'none';
         }
 
-        // PDF direct import handler
+        // PDF direct import handler — 100% deterministic, preserving structure, verbatim words & blue hyperlinks
         async function handlePdfUpload(file) {
             if (!file) return;
-            showLoadingOverlay('Lendo arquivo PDF...', 'Extraindo o conteúdo do documento.');
+            showLoadingOverlay('Lendo documento PDF...', 'Extraindo estrutura, texto original e hyperlinks em alta fidelidade...');
 
             try {
-                const text = await extractTextFromPDF(file);
-                showLoadingOverlay('Estruturando com IA...', 'Identificando experiências, formação e links.');
+                const { profile, generatedCV } = await extractDeterministicCVFromPDF(file);
 
-                const profileData = await parseProfileFromText(text);
-
-                // Normalize certifications
-                if (profileData.certifications) {
-                    profileData.certifications = profileData.certifications.map(c => ({
-                        title: c.title || c.name || '',
-                        name: c.name || c.title || '',
-                        issuer: c.issuer || c.institution || '',
-                        institution: c.institution || c.issuer || '',
-                        date: c.date || c.year || '',
-                        year: c.year || c.date || '',
-                    }));
-                }
-
-                const newCV = convertProfileToCV(profileData);
                 setState({
-                    profile: profileData,
-                    generatedCV: newCV
+                    profile,
+                    generatedCV
                 });
 
                 hideLoadingOverlay();
                 renderCV();
             } catch (err) {
-                console.error('Erro ao importar PDF:', err);
+                console.error('Erro ao importar PDF determinístico:', err);
                 hideLoadingOverlay();
                 alert('Erro ao processar PDF: ' + (err.message || 'Verifique se o arquivo está acessível.'));
             }
@@ -499,7 +482,7 @@
                     </div>
                     <h2 style="font-size:1.6rem; font-weight:800; color:#0f172a; margin-bottom:0.75rem;">Importar PDF para Edição Direta</h2>
                     <p style="max-width:28rem; font-size:0.925rem; color:#64748b; line-height:1.6; margin-bottom:2rem;">
-                        Envie seu currículo em PDF. Nossa IA vai estruturar todas as suas informações e abrir imediatamente esta tela de edição visual profissional para você alterar e baixar.
+                        Envie seu currículo em PDF. O sistema importa de forma determinística e com fidelidade absoluta a estrutura, texto original e hyperlinks azuis para você editar e exportar imediatamente.
                     </p>
                     
                     <label for="direct-pdf-upload" style="display:inline-flex; align-items:center; gap:0.6rem; padding:0.875rem 2.25rem; background:#0f172a; color:#ffffff; border-radius:9999px; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 12px rgba(0,0,0,0.12);">
@@ -574,7 +557,9 @@
 
             const contactLine2Parts = [];
             if (h.contact?.phone) contactLine2Parts.push(h.contact.phone);
-            if (h.contact?.email) contactLine2Parts.push(h.contact.email);
+            if (h.contact?.email) {
+                contactLine2Parts.push(`<a href="mailto:${h.contact.email}" target="_blank" style="color: #0066cc; text-decoration: none;">${h.contact.email}</a>`);
+            }
             const contactLine2 = contactLine2Parts.join('<span class="sep">|</span>');
 
             const contactLine3Parts = [];
