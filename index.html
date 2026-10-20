@@ -12,6 +12,9 @@
 </head>
 
 <body>
+    <!-- Moldura Perfeita da Viewport (Unificada, Zero Sobreposição) -->
+    <div class="screen-frame-viewport"></div>
+
     <!-- React Bits WebGL Dither Shader Canvas -->
     <div id="dither-bg" class="dither-bg-canvas"></div>
 
@@ -63,7 +66,7 @@
 
     <!-- Demonstração Real de Produto: Antes vs Depois no Robô ATS -->
     <section class="landing-comparison-section">
-        <div class="comparison-card dither-border-top">
+        <div class="comparison-card">
             <div class="comparison-grid">
                 <!-- Antes: CV Genérico Descartado -->
                 <div class="comparison-pane before">
@@ -141,9 +144,9 @@
     <!-- Explicação do ATS -->
     <section class="landing-ats">
         <div class="ats-explanation">
-            <div class="ats-explanation-label">
+            <div class="ats-explanation-label type-redacted" style="font-size:0.95rem;letter-spacing:0.18em;color:var(--palette-aqua);">
                 <span class="ats-dot"></span>
-                FILTROS AUTOMÁTICOS
+                CLASSIFIED // CENSURA DE CANDIDATOS
             </div>
             <h2>O algoritmo invisível que elimina <span class="text-error">98% dos candidatos</span></h2>
             <div class="ats-card dither-card">
@@ -151,6 +154,9 @@
                 <p>
                     É o sistema que corporações globais usam para <strong>escanear e classificar currículos automaticamente</strong> antes de um humano avaliar. Se o documento não contiver a nomenclatura técnica e o contexto exato da vaga, a candidatura é descartada sem aviso.
                 </p>
+                <div class="ats-redaction-sample type-redacted" style="margin-top:1.25rem;padding:0.75rem 1rem;background:rgba(19,21,21,0.8);border:1px dashed rgba(248,113,113,0.35);color:#f87171;font-size:1.15rem;letter-spacing:0.15em;">
+                    REDACTED CANDIDATE // MISSING KEYWORDS // FILTER REJECTED
+                </div>
             </div>
         </div>
     </section>

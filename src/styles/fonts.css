@@ -17,7 +17,24 @@
   font-display: swap;
 }
 
-/* ─── 2. Jacquard 12 (Pixel Dither Display exclusivo) ─── */
+/* ─── 2. Leluja Original (Monospace Tech / Intermediária Brutalista) ─── */
+@font-face {
+  font-family: 'Leluja';
+  src: url('../assets/fonts/LelujaOriginal-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Leluja';
+  src: url('../assets/fonts/LelujaOriginal-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── 3. Jacquard 12 (Pixel Dither Display exclusivo) ─── */
 @font-face {
   font-family: 'Jacquard 12';
   src: url('../assets/fonts/Jacquard12-Regular.ttf') format('truetype');
@@ -56,15 +73,83 @@
   font-display: swap;
 }
 
-/* ─── Tipografia Auxiliar & Utilitários Semânticos ─── */
+/* ─── 5. Resistance Générale (Censura / Redacted Secret Document) ─── */
+@font-face {
+  font-family: 'Resistance';
+  src: url('../assets/fonts/ResistanceGenerale.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Tipografia Auxiliar & Utilitários Semânticos (5 Classes de Função) ─── */
 :root {
+  /* 1. Clássica Monumental (Hero principal & CTA de encerramento) */
+  --font-statement: 'UnifrakturMaguntia', serif;
+  
+  /* 2. Censura & Auditoria (Alertas ATS, métricas de corte, palavras secretas) */
+  --font-redacted: 'Resistance', monospace;
+  
+  /* 3. Intermediária Brutalista (Títulos de seções, cartões, etapas do fluxo) */
+  --font-section: 'Leluja', monospace;
+  
+  /* 4. Editorial Histórica (Cargos de currículo, auditoria formal antes/depois) */
+  --font-editorial: 'Montagu Slab', Georgia, serif;
+  
+  /* 5. Leitura & Interface (Parágrafos longos, formulários, inputs e botões) */
+  --font-body: 'Clash Grotesk', system-ui, -apple-system, sans-serif;
+  
+  /* ─── Aliases retrocompatíveis ─── */
   --font-hero-cv: 'Jacquard 12', cursive, sans-serif;
-  --font-hero-brand: 'UnifrakturMaguntia', serif;
-  --font-display: 'UnifrakturMaguntia', 'Montagu Slab', serif;
+  --font-hero-brand: var(--font-statement);
+  --font-leluja: var(--font-section);
+  --font-display: var(--font-statement);
   --font-tasa: 'TASA Explorer', sans-serif;
-  --font-sans: 'Clash Grotesk', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Montagu Slab', Georgia, serif;
-  --font-mono: 'TASA Explorer', 'Clash Grotesk', monospace;
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-editorial);
+  --font-mono: var(--font-section);
+}
+
+/* ═════════════════════════════════════════════════════════════
+   AS 5 CLASSES TIPOGRÁFICAS OFICIAIS DO SISTEMA
+   ═════════════════════════════════════════════════════════════ */
+
+/* Classe 1: Statement Monumental (Impacto visual raro) */
+.type-statement {
+  font-family: var(--font-statement) !important;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+/* Classe 2: Redacted / Censura ATS (Aspecto de arquivo confidencial) */
+.type-redacted {
+  font-family: var(--font-redacted) !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Classe 3: Section Brutalista (H2, H3, Passos 01, 02, Badges de Navegação) */
+.type-section {
+  font-family: var(--font-section) !important;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+/* Classe 4: Editorial Clássica (Comparações, cargos e citações) */
+.type-editorial {
+  font-family: var(--font-editorial) !important;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+/* Classe 5: Interface & Corpo (Leitura confortável sem fadiga) */
+.type-body {
+  font-family: var(--font-body) !important;
+  line-height: 1.65;
+}
+
+.font-leluja {
+  font-family: var(--font-leluja) !important;
 }
 
 .font-display {

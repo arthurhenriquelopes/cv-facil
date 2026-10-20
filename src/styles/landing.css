@@ -3,33 +3,32 @@
  * @description Landing page estilo Hermes Agent / Nous Research com moldura brutalista e fontes autênticas.
  */
 
-/* ─── Moldura Lateral Estilo Hermes Agent (Bordas Sólidas) ─── */
+/* ─── Moldura da Tela Completa Unificada Estilo Hermes Agent (Zero Sobreposição nos Cantos) ─── */
+.screen-frame-top,
+.screen-frame-bottom {
+  display: none;
+}
+
 body::before,
 body::after {
-  content: '';
+  display: none;
+}
+
+.screen-frame-viewport {
   position: fixed;
-  top: 0;
-  bottom: 0;
-  width: 14px;
-  z-index: 100;
+  inset: 0;
+  border: 14px solid var(--palette-pine);
+  outline: 2px solid var(--palette-aqua);
+  outline-offset: -14px;
   pointer-events: none;
-  background-color: var(--palette-pine);
-}
-
-body::before {
-  left: 0;
-  border-right: 2px solid var(--palette-aqua);
-}
-
-body::after {
-  right: 0;
-  border-left: 2px solid var(--palette-aqua);
+  z-index: 100;
+  box-sizing: border-box;
 }
 
 /* ─── Navbar Estilo Hermes Agent ─── */
 .hermes-navbar {
   position: sticky;
-  top: 0;
+  top: 14px;
   z-index: 50;
   background: rgba(19, 21, 21, 0.95);
   backdrop-filter: blur(16px);
@@ -67,6 +66,7 @@ body::after {
   letter-spacing: 0.15em;
   color: var(--color-text-secondary);
   text-decoration: none;
+  padding: 0.25rem 0.75rem;
   transition: color 150ms ease;
 }
 /* ─── Efeito de Quadrado no Hover para Todos os Elementos Interativos ─── */
@@ -125,21 +125,24 @@ a.btn,
   border-color: var(--palette-aqua);
 }
 
-/* ─── Hero Section 50/50 Estilo Hermes Agent ─── */
+/* ─── Hero Section 50/50 Estilo Hermes Agent (100% Viewport Inicial) ─── */
 .hermes-hero {
   max-width: 78rem;
   margin: 0 auto;
-  padding: 4rem 2rem 5rem;
+  min-height: calc(100vh - 4.5rem - 28px);
+  padding: 2rem 2rem;
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   align-items: center;
   gap: 4rem;
   position: relative;
   z-index: 2;
+  box-sizing: border-box;
 }
 
 @media (max-width: 960px) {
   .hermes-hero {
+    min-height: auto;
     grid-template-columns: 1fr;
     padding: 3rem 1.5rem;
     gap: 3rem;
@@ -393,52 +396,9 @@ a.btn,
 .comparison-card {
   position: relative;
   background: #101313;
-  border: 1px solid rgba(125, 226, 209, 0.25);
+  border: 1px solid rgba(125, 226, 209, 0.35);
   border-radius: 0 !important;
-  box-shadow: 
-    0 24px 60px rgba(0, 0, 0, 0.75),
-    0 0 30px rgba(51, 153, 137, 0.12);
-}
-
-/* Moldura interna dupla renascentista */
-.comparison-card::before {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px solid rgba(51, 153, 137, 0.28);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.comparison-header {
-  position: relative;
-  z-index: 3;
-  padding: 1.1rem 1.75rem;
-  background: #141817;
-  border-bottom: 1px solid rgba(125, 226, 209, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.comparison-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--palette-aqua);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.comparison-label::before {
-  content: '§';
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  color: var(--palette-pine);
-  line-height: 1;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
 }
 
 .comparison-grid {
@@ -460,14 +420,14 @@ a.btn,
 }
 
 .comparison-pane.before {
-  border-right: 1px solid rgba(125, 226, 209, 0.15);
+  border-right: 1px solid rgba(125, 226, 209, 0.35);
   background: rgba(16, 18, 18, 0.75);
 }
 
 @media (max-width: 768px) {
   .comparison-pane.before {
     border-right: none;
-    border-bottom: 1px solid rgba(125, 226, 209, 0.15);
+    border-bottom: 1px solid rgba(125, 226, 209, 0.35);
   }
 }
 
@@ -651,9 +611,10 @@ a.btn,
 }
 
 .editorial-step-title {
-  font-family: var(--font-display);
+  font-family: var(--font-leluja);
   font-size: 1.35rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--palette-snow);
 }
 
@@ -701,10 +662,10 @@ a.btn,
 }
 
 .ats-explanation h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.625rem, 3.5vw, 2.25rem);
+  font-family: var(--font-leluja);
+  font-size: clamp(1.85rem, 3.8vw, 2.6rem);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   color: var(--palette-snow);
   margin-bottom: 1.25rem;
 }
@@ -745,15 +706,18 @@ a.btn,
 /* ─── Final CTA ─── */
 .landing-final-cta {
   text-align: center;
-  padding: 2rem 2rem 6rem;
+  padding: 3rem 2rem 6.5rem;
   position: relative;
   z-index: 2;
 }
 .landing-final-cta h2 {
-  font-family: var(--font-kobata);
-  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-family: var(--font-hero-brand);
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
   color: var(--palette-snow);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 /* ─── Footer ─── */

@@ -24,11 +24,26 @@ body {
   line-height: 1.6;
 }
 
+/* ============ TYPOGRAPHY PRESETS ============ */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-leluja);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   color: var(--color-text);
+}
+
+.step-content h1,
+.step-title,
+.page-title {
+  font-family: var(--font-leluja) !important;
+  letter-spacing: 0.02em;
+}
+
+.card h3,
+.card-title,
+.section-subtitle {
+  font-family: var(--font-leluja) !important;
+  letter-spacing: 0.03em;
 }
 
 a {
@@ -86,9 +101,9 @@ button, input, textarea, select {
 .onboarding-header,
 .step-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 14px;
+  left: 14px;
+  right: 14px;
   background: rgba(19, 21, 21, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
