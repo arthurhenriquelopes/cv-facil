@@ -707,3 +707,35 @@ svg { stroke-width: 1.5 !important; }
   background: linear-gradient(90deg, transparent, var(--color-border), transparent);
   margin: 3rem 0;
 }
+
+/* ============ EDITORIAL MANIFESTO / HERALDIC LION ============ */
+.manifesto-card {
+  position: relative;
+  border: 1px solid rgba(125, 226, 209, 0.35);
+  background: rgba(19, 21, 21, 0.95);
+  padding: 3rem 2.5rem;
+  overflow: visible;
+}
+
+.manifesto-lion-wrap {
+  position: absolute;
+  right: -2rem;
+  top: -3.5rem;
+  width: 320px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.85;
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.9));
+}
+
+@media (max-width: 860px) {
+  .manifesto-lion-wrap {
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    width: 240px !important;
+    margin: -1.5rem auto 1.5rem !important;
+    opacity: 0.9 !important;
+  }
+}
+
