@@ -650,7 +650,6 @@ a.btn,
   font-size: 1rem;
   font-weight: 600;
   color: var(--palette-aqua);
-  text-transform: uppercase;
   letter-spacing: 0.16em;
   margin-bottom: 0.75rem;
 }
