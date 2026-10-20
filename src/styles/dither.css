@@ -1,0 +1,110 @@
+/**
+ * @file dither.css
+ * @description Texturas Dither & Halftone Marcantes do CV Fácil com Legibilidade Otimizada.
+ * 
+ * Estratégia de Readability:
+ * 1. O padrão de halftone continua forte e marcante nos cantos e áreas externas.
+ * 2. Um gradiente radial suave em #131515 sólido sob o texto (vignette invertida)
+ *    acalma o centro onde fica a leitura, garantindo contraste nítido e zero fadiga visual.
+ * 3. O texto secundário é calibrado para brilho ideal sobre o fundo pontilhado.
+ */
+
+:root {
+  /* ─── Padrão Halftone / Dither Marcante ─── */
+  --dither-halftone-rich: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Ccircle cx='2' cy='2' r='1.1' fill='%23339989' fill-opacity='0.20'/%3E%3Ccircle cx='7' cy='7' r='1.2' fill='%23339989' fill-opacity='0.24'/%3E%3Ccircle cx='7' cy='2' r='0.6' fill='%237de2d1' fill-opacity='0.22'/%3E%3Ccircle cx='2' cy='7' r='0.6' fill='%237de2d1' fill-opacity='0.22'/%3E%3Crect x='4.5' y='4.5' width='1' height='1' fill='%23fffafb' fill-opacity='0.06'/%3E%3C/svg%3E");
+
+  /* ─── Malha Secundária de Dither Fino para Seções e Cards ─── */
+  --dither-fine-matrix: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23339989' fill-opacity='0.12'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%237de2d1' fill-opacity='0.15'/%3E%3C/svg%3E");
+
+  /* ─── Retícula Gradual para Bordas e Divisores ─── */
+  --dither-line-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='1' viewBox='0 0 6 1'%3E%3Crect x='0' y='0' width='3' height='1' fill='%237de2d1' fill-opacity='0.4'/%3E%3C/svg%3E");
+}
+
+/* ─── React Bits WebGL Dither Shader Canvas Container ─── */
+.dither-bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─── Fundo Global: cor sólida no html (fallback), body transparente para o WebGL ─── */
+html {
+  background-color: var(--color-bg);
+}
+
+body {
+  background-color: transparent;
+  background-attachment: fixed;
+  background-repeat: repeat;
+}
+
+/* ─── Filtro de Legibilidade (Readability Mask / Vignette Suave) ───
+ * Cria uma camada que suaviza os micropontos especificamente atrás do texto principal
+ * e do conteúdo central, mantendo as bordas e o background 100% pontilhados e táteis.
+ */
+.dither-mesh {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: 
+    /* Calmaria sob o centro da leitura (protege o texto da vibração óptica) */
+    radial-gradient(circle at 50% 25%, rgba(19, 21, 21, 0.55) 0%, rgba(19, 21, 21, 0.30) 45%, transparent 75%),
+    radial-gradient(circle at 50% 65%, rgba(19, 21, 21, 0.45) 0%, transparent 60%);
+}
+
+/* ─── Cards com Textura Dither Integrada ─── */
+.dither-card {
+  position: relative;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  overflow: hidden;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dither-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--dither-fine-matrix);
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.dither-card:hover {
+  border-color: rgba(125, 226, 209, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(51, 153, 137, 0.15);
+}
+
+/* ─── Borda Dithered Superior com Acento da Paleta ─── */
+.dither-border-top {
+  position: relative;
+}
+.dither-border-top::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--palette-pine), var(--palette-aqua), transparent);
+}
+
+/* ─── Divisor com Retícula Pontilhada ─── */
+.dither-divider {
+  width: 100%;
+  height: 1px;
+  margin: 3rem 0;
+  background-image: var(--dither-line-pattern);
+  background-repeat: repeat-x;
+  background-size: 6px 1px;
+  border: none;
+}

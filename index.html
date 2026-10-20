@@ -4,312 +4,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CvPorVaga — Currículo otimizado por IA para cada vaga</title>
+    <title>CV Fácil — Arquitetura de Currículos Otimizados para ATS</title>
     <meta name="description"
-        content="Gere currículos otimizados para ATS automaticamente. Nossa IA adapta seu CV para cada vaga, aumentando suas chances de entrevista.">
+        content="Gere currículos otimizados para ATS automaticamente com rigor técnico e estética clássica dithered.">
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
-    <style>
-        .hero-title {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.035em;
-            color: var(--color-text);
-        }
-        .hero-title .dim {
-            color: var(--color-text-secondary);
-        }
-        .hero-subtitle {
-            font-size: 1.0625rem;
-            color: var(--color-text-secondary);
-            line-height: 1.7;
-            max-width: 30rem;
-            font-weight: 400;
-        }
-        .hero-cta {
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            height: 3.25rem; padding: 0 2rem;
-            background: var(--color-text); color: var(--color-bg);
-            font-weight: 700; font-size: 0.9375rem;
-            border-radius: var(--radius-lg);
-            transition: all var(--transition-base);
-            border: none; cursor: pointer;
-        }
-        .hero-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255,255,255,0.12);
-        }
-        .hero-cta-secondary {
-            display: inline-flex; align-items: center; justify-content: center;
-            height: 3.25rem; padding: 0 1.5rem;
-            font-weight: 500; font-size: 0.9375rem;
-            border-radius: var(--radius-lg);
-            color: var(--color-text-secondary);
-            border: 1px solid var(--color-border);
-            background: transparent;
-            transition: all var(--transition-base);
-        }
-        .hero-cta-secondary:hover {
-            border-color: var(--color-border-hover);
-            color: var(--color-text);
-            background: var(--color-accent-dim);
-        }
-
-        .preview-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .preview-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-        }
-
-        .preview-line {
-            height: 6px; border-radius: 3px; margin-bottom: 8px;
-            background: var(--color-border);
-            animation: shimmer 3s ease-in-out infinite;
-            background-size: 200% 100%;
-            background-image: linear-gradient(90deg, var(--color-border), rgba(255,255,255,0.06), var(--color-border));
-        }
-
-        .ats-badge {
-            position: absolute; top: 1rem; right: 1rem;
-            background: var(--color-success-dim);
-            color: var(--color-success);
-            padding: 0.375rem 0.875rem;
-            border-radius: var(--radius-full);
-            font-weight: 700; font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .feature-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-            background: var(--color-border);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            border: 1px solid var(--color-border);
-        }
-        .feature-item {
-            background: var(--color-bg);
-            padding: 2rem;
-            transition: background var(--transition-base);
-        }
-        .feature-item:hover { background: var(--color-bg-card); }
-        .feature-icon {
-            width: 2.5rem; height: 2.5rem;
-            border-radius: var(--radius-md);
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1rem;
-            background: var(--color-accent-dim);
-            color: var(--color-text-secondary);
-        }
-        .feature-item h3 { font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.375rem; }
-        .feature-item p { font-size: 0.8125rem; color: var(--color-text-secondary); line-height: 1.6; }
-
-        .ats-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .ats-card::before {
-            content: '';
-            position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-            background: linear-gradient(180deg, var(--color-error), transparent);
-        }
-
-        footer a:hover { color: var(--color-text); }
-
-        @media (max-width: 768px) {
-            .feature-grid { grid-template-columns: 1fr; }
-            .hero-layout { flex-direction: column; }
-        }
-    </style>
 </head>
 
 <body>
+    <!-- React Bits WebGL Dither Shader Canvas -->
+    <div id="dither-bg" class="dither-bg-canvas"></div>
+
+    <script type="module" src="/src/dither-mount.jsx"></script>
+
     <script type="module">
         import { injectNavbar } from '/src/lib/layout.js';
         injectNavbar({ activePage: 'landing' });
     </script>
 
-    <!-- Hero -->
-    <section style="max-width:var(--max-width);margin:0 auto;padding:6rem 1.5rem 5rem;">
-        <div class="hero-layout" style="display:flex;flex-wrap:wrap;align-items:center;gap:4rem;">
-            <div style="flex:1;min-width:300px;" class="animate-fade-in-up">
-                <div style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.375rem 0.875rem;background:var(--color-accent-dim);border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:0.75rem;font-weight:600;color:var(--color-text-secondary);margin-bottom:2rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3Z"/></svg>
-                    Powered by AI
+    <!-- Hero Estilo Hermes Agent (Nous Research): Split 50/50 com Escultura Clássica e Terminal Técnico -->
+    <section class="hermes-hero">
+        <div class="hermes-hero-left">
+            <h1 class="hermes-hero-title">
+                O Currículo que Cresce com Sua Carreira.
+            </h1>
+            <p class="hermes-hero-desc">
+                Engenharia de precisão para romper os filtros da Gupy, Workday e Greenhouse. Adapte suas experiências para aprovação máxima em minutos.
+            </p>
+
+            <div class="hermes-btn-row">
+                <a href="/pages/step-profile.html" class="hermes-btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    CRIAR NOVO CURRÍCULO
+                </a>
+                <a href="/pages/result.html?import=1" id="btn-hero-edit-pdf" class="hermes-btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    IMPORTAR PDF EXISTENTE
+                </a>
+                <input type="file" id="landing-pdf-input" accept="application/pdf" style="display:none;" />
+            </div>
+
+            <!-- Removido o terminal box técnico conforme solicitado -->
+        </div>
+
+        <!-- Hero Right: Arte Clássica Grega Dithered -->
+        <div class="hermes-hero-right">
+            <div class="hermes-art-container">
+                <div class="hermes-statue-card">
+                    <span class="hermes-corner tl"></span>
+                    <span class="hermes-corner tr"></span>
+                    <span class="hermes-corner bl"></span>
+                    <span class="hermes-corner br"></span>
+                    <img src="/src/assets/greek-statue-dither.png" alt="Classical Sculpture Dithered" class="hermes-statue-img" />
                 </div>
-                <h1 class="hero-title" style="margin-bottom:1.5rem;">
-                    Chega de enviar CVs<br>
-                    <span class="dim">e nunca receber resposta.</span>
-                </h1>
-                <p class="hero-subtitle" style="margin-bottom:2.5rem;">
-                    Você já perdeu vagas incríveis porque seu currículo foi rejeitado antes de um humano ler. Nossa IA
-                    adapta seu CV para cada vaga, aumentando suas chances de ser chamado.
+            </div>
+        </div>
+    </section>
+
+    <!-- Demonstração Real de Produto: Antes vs Depois no Robô ATS -->
+    <section class="landing-comparison-section">
+        <div class="comparison-card dither-border-top">
+            <div class="comparison-grid">
+                <!-- Antes: CV Genérico Descartado -->
+                <div class="comparison-pane before">
+                    <span class="pane-badge weak">✕ CV Original (Genérico)</span>
+                    <div class="pane-role">Desenvolvedor Backend</div>
+                    <div class="pane-company">Tech Solutions • 2022 - 2024</div>
+                    <p class="pane-text">
+                        "Responsável pelo desenvolvimento de novas features e correção de bugs no backend da plataforma web. Trabalhei com a equipe de engenharia em entregas contínuas e melhorias no banco de dados."
+                    </p>
+                    <div class="pane-footer">
+                        <span style="color:var(--color-text-tertiary);">Faltam 4 keywords críticas</span>
+                        <span class="score red">Score ATS: 38% (Descartado)</span>
+                    </div>
+                </div>
+
+                <!-- Depois: Otimizado pelo CV Fácil -->
+                <div class="comparison-pane">
+                    <span class="pane-badge optimized">✓ Otimizado pelo CV Fácil</span>
+                    <div class="pane-role">Engenheiro de Software Backend</div>
+                    <div class="pane-company">Tech Solutions • 2022 - 2024</div>
+                    <p class="pane-text">
+                        "Arquitetei microsserviços de alta disponibilidade em <span class="kw-match">Go</span> e <span class="kw-match">PostgreSQL</span>, reduzindo a latência de consultas em 35%. Implementei pipelines automatizados de <span class="kw-match">CI/CD</span> em contêineres <span class="kw-match">Docker</span> na nuvem <span class="kw-match">AWS</span>."
+                    </p>
+                    <div class="pane-footer">
+                        <span style="color:var(--color-text-secondary);">Todas as keywords no contexto</span>
+                        <span class="score green">Score ATS: 96% (Aprovado)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Números — Prova Social Direta -->
+    <section class="landing-stats">
+        <div class="stat-item">
+            <span class="stat-number">2min</span>
+            <span class="stat-label">TEMPO DE GERAÇÃO</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">96%+</span>
+            <span class="stat-label">ADERÊNCIA ATS MÉDIA</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">PDF</span>
+            <span class="stat-label">EXPORTAÇÃO DETERMINÍSTICA</span>
+        </div>
+    </section>
+
+    <!-- Como Funciona — Fluxo Editorial -->
+    <section class="landing-features">
+        <h2 class="section-title">FLUXO DO SISTEMA // PIPELINE</h2>
+        <div class="editorial-flow">
+            <div class="editorial-step">
+                <div class="editorial-step-num">01</div>
+                <div class="editorial-step-title">Extração e Perfil</div>
+                <p class="editorial-step-desc">Importe seu currículo em PDF ou preencha suas experiências. Seus dados são processados localmente no navegador, sem vazamentos.</p>
+            </div>
+            <div class="editorial-step">
+                <div class="editorial-step-num">02</div>
+                <div class="editorial-step-title">Cruzamento com a Vaga</div>
+                <p class="editorial-step-desc">Cole a descrição do cargo desejado. O sistema disseca os requisitos exigidos pelos filtros da Gupy, Workday e Greenhouse.</p>
+            </div>
+            <div class="editorial-step">
+                <div class="editorial-step-num">03</div>
+                <div class="editorial-step-title">Redação STAR & PDF</div>
+                <p class="editorial-step-desc">Sua experiência é reescrita com métricas concretas de impacto, diagramada com rigor tipográfico e pronta para envio imediato.</p>
+            </div>
+        </div>
+    </section>
+
+    <hr class="dither-divider" style="max-width:78rem;margin:0 auto 4rem;">
+
+    <!-- Explicação do ATS -->
+    <section class="landing-ats">
+        <div class="ats-explanation">
+            <div class="ats-explanation-label">
+                <span class="ats-dot"></span>
+                FILTROS AUTOMÁTICOS
+            </div>
+            <h2>O algoritmo invisível que elimina <span class="text-error">98% dos candidatos</span></h2>
+            <div class="ats-card dither-card">
+                <h3>O que é ATS (Applicant Tracking System)?</h3>
+                <p>
+                    É o sistema que corporações globais usam para <strong>escanear e classificar currículos automaticamente</strong> antes de um humano avaliar. Se o documento não contiver a nomenclatura técnica e o contexto exato da vaga, a candidatura é descartada sem aviso.
                 </p>
-                <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
-                    <a href="/pages/step-profile.html" class="hero-cta">
-                        Gerar CV Otimizado
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
-                    </a>
-                    <a href="/pages/result.html?import=1" id="btn-hero-edit-pdf" class="hero-cta-secondary" style="border-color:rgba(16,185,129,0.3);color:#34d399;gap:0.4rem;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                        Editar PDF Direto
-                    </a>
-                    <input type="file" id="landing-pdf-input" accept="application/pdf" style="display:none;" />
-                    <a href="/pages/dashboard.html" class="hero-cta-secondary">
-                        Ver Dashboard
-                    </a>
-                </div>
-            </div>
-            <div style="flex:1;min-width:300px;" class="animate-fade-in" style="animation-delay:200ms;">
-                <div class="preview-card">
-                    <div class="ats-badge">ATS 98%</div>
-                    <!-- Simulated CV skeleton -->
-                    <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;">
-                        <div style="width:2.5rem;height:2.5rem;background:var(--color-border);border-radius:50%;flex-shrink:0;"></div>
-                        <div style="flex:1;">
-                            <div class="preview-line" style="width:60%;height:10px;margin-bottom:6px;"></div>
-                            <div class="preview-line" style="width:35%;height:6px;opacity:0.5;"></div>
-                        </div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:1.5rem;">
-                        <div>
-                            <div class="preview-line" style="width:40%;height:5px;margin-bottom:12px;"></div>
-                            <div class="preview-line" style="width:100%;"></div>
-                            <div class="preview-line" style="width:90%;"></div>
-                            <div class="preview-line" style="width:75%;margin-bottom:16px;"></div>
-                            <div class="preview-line" style="width:100%;"></div>
-                            <div class="preview-line" style="width:85%;"></div>
-                            <div class="preview-line" style="width:60%;margin-bottom:16px;"></div>
-                            <div class="preview-line" style="width:40%;height:5px;margin-bottom:12px;"></div>
-                            <div class="preview-line" style="width:100%;"></div>
-                            <div class="preview-line" style="width:70%;"></div>
-                        </div>
-                        <div>
-                            <div class="preview-line" style="width:50%;height:5px;margin-bottom:12px;"></div>
-                            <div class="preview-line" style="width:100%;"></div>
-                            <div class="preview-line" style="width:80%;"></div>
-                            <div class="preview-line" style="width:60%;margin-bottom:16px;"></div>
-                            <div style="display:flex;flex-wrap:wrap;gap:4px;">
-                                <div style="height:16px;width:50px;background:var(--color-border);border-radius:4px;"></div>
-                                <div style="height:16px;width:38px;background:var(--color-border);border-radius:4px;"></div>
-                                <div style="height:16px;width:45px;background:var(--color-border);border-radius:4px;"></div>
-                                <div style="height:16px;width:55px;background:var(--color-border);border-radius:4px;"></div>
-                                <div style="height:16px;width:42px;background:var(--color-border);border-radius:4px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <hr class="section-divider" style="max-width:var(--max-width);margin:0 auto;">
-
-    <!-- Features -->
-    <section style="max-width:var(--max-width);margin:0 auto;padding:5rem 1.5rem;">
-        <div style="text-align:center;margin-bottom:3rem;">
-            <h2 style="font-size:clamp(1.5rem,3.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;">
-                Como funciona
-            </h2>
-            <p style="color:var(--color-text-secondary);max-width:28rem;margin:0 auto;font-size:0.9375rem;">
-                Três passos para um CV que passa em qualquer filtro ATS.
-            </p>
-        </div>
-        <div class="feature-grid">
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v6h6"/><path d="m3 15 2 2 4-4"/></svg>
-                </div>
-                <h3>Cole a vaga</h3>
-                <p>Copie a descrição da vaga e cole no sistema. A IA extrai automaticamente todas as keywords e requisitos.</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <h3>Análise ATS</h3>
-                <p>Algoritmo determinístico calcula seu score, identifica gaps críticos e mostra exatamente o que falta.</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-                </div>
-                <h3>CV gerado</h3>
-                <p>Um currículo otimizado com keywords injetadas organicamente. Baixe como PDF pronto para envio.</p>
-            </div>
-        </div>
-    </section>
-
-    <hr class="section-divider" style="max-width:var(--max-width);margin:0 auto;">
-
-    <!-- ATS Explanation -->
-    <section style="max-width:48rem;margin:0 auto;padding:5rem 1.5rem;text-align:center;">
-        <h2 style="font-size:clamp(1.5rem,3.5vw,2.25rem);font-weight:700;margin-bottom:2rem;letter-spacing:-0.025em;">
-            O "robô" que elimina <span style="color:var(--color-error);">98% dos candidatos</span>
-        </h2>
-        <div class="ats-card" style="text-align:left;">
-            <h3 style="font-weight:700;font-size:1.125rem;margin-bottom:0.75rem;padding-left:1.5rem;">
-                O que é ATS (Applicant Tracking System)?
-            </h3>
-            <p style="font-size:0.9375rem;color:var(--color-text-secondary);line-height:1.8;padding-left:1.5rem;">
-                É o software que as empresas usam para <strong style="color:var(--color-text);">ler e filtrar currículos automaticamente</strong>
-                antes de qualquer humano. Ele busca palavras-chave específicas da vaga. Se seu CV não tiver as keywords certas, ele é descartado — mesmo que você seja o candidato ideal.
-            </p>
-        </div>
+    <!-- CTA Final -->
+    <section class="landing-final-cta">
+        <h2>Pronto para romper os filtros ATS?</h2>
+        <a href="/pages/step-profile.html" class="hermes-btn-primary" style="margin-top:1rem;display:inline-flex;">
+            INICIAR AGORA // CRIAR CURRÍCULO
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
     </section>
 
     <!-- Footer -->
-    <footer style="border-top:1px solid var(--color-border);padding:3rem 1.5rem;margin-top:2rem;">
-        <div style="max-width:var(--max-width);margin:0 auto;display:flex;flex-wrap:wrap;gap:4rem;font-size:0.8125rem;">
-            <div>
-                <h4 style="font-weight:700;color:var(--color-text-tertiary);margin-bottom:0.75rem;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.12em;">
-                    Serviços</h4>
-                <a href="/pages/step-profile.html" style="display:block;margin-bottom:0.5rem;color:var(--color-text-secondary);transition:color 150ms;">Gerador de CV</a>
-                <a href="/pages/dashboard.html" style="display:block;color:var(--color-text-secondary);transition:color 150ms;">Dashboard</a>
+    <footer class="landing-footer">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <div>
+                    <h4>SISTEMA</h4>
+                    <a href="/pages/step-profile.html">Gerador de Currículo</a>
+                    <a href="/pages/dashboard.html">Dashboard</a>
+                </div>
+                <div>
+                    <h4>SEGURANÇA</h4>
+                    <span>Privacidade Local</span>
+                    <span>Zero Tracking</span>
+                </div>
+                <div>
+                    <h4>FORMATOS</h4>
+                    <span>PDF Determinístico</span>
+                    <span>Modelos ATS Compliant</span>
+                </div>
             </div>
-            <div>
-                <h4 style="font-weight:700;color:var(--color-text-tertiary);margin-bottom:0.75rem;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.12em;">
-                    Empresa</h4>
-                <span style="display:block;margin-bottom:0.5rem;color:var(--color-text-muted);">Sobre nós</span>
-                <span style="display:block;color:var(--color-text-muted);">Contato</span>
+            <div class="footer-bottom">
+                <p>CV FÁCIL // ATS ARCHITECT © 2026</p>
             </div>
-            <div>
-                <h4 style="font-weight:700;color:var(--color-text-tertiary);margin-bottom:0.75rem;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.12em;">
-                    Legal</h4>
-                <span style="display:block;margin-bottom:0.5rem;color:var(--color-text-muted);">Termos de uso</span>
-                <span style="display:block;color:var(--color-text-muted);">Privacidade</span>
-            </div>
-        </div>
-        <div style="max-width:var(--max-width);margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--color-border-subtle);text-align:center;">
-            <p style="font-size:0.75rem;color:var(--color-text-muted);">© 2026 CvPorVaga. Todos os direitos reservados.</p>
         </div>
     </footer>
+
     <script type="module">
         import { extractDeterministicCVFromPDF } from '/src/lib/deterministic-pdf.js';
         import { updateProfile, setState } from '/src/lib/store.js';
+
+        // Terminal copy button
+        const btnCopy = document.getElementById('btn-copy-terminal');
+        if (btnCopy) {
+            btnCopy.addEventListener('click', () => {
+                navigator.clipboard.writeText('cv-facil optimize --model=star --ats=greenhouse');
+                btnCopy.innerHTML = '<span style="color:var(--palette-aqua);font-size:0.6875rem;">COPIADO</span>';
+                setTimeout(() => {
+                    btnCopy.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+                }, 2000);
+            });
+        }
 
         const btnEditPdf = document.getElementById('btn-hero-edit-pdf');
         const inputPdf = document.getElementById('landing-pdf-input');
 
         if (btnEditPdf && inputPdf) {
             btnEditPdf.addEventListener('click', (e) => {
-                // If user clicks normally (not right-click / ctrl-click), open file dialog immediately
                 if (e.button === 0 && !e.ctrlKey && !e.metaKey) {
                     e.preventDefault();
                     inputPdf.click();
@@ -321,7 +222,7 @@
                 if (!file) return;
 
                 const origHtml = btnEditPdf.innerHTML;
-                btnEditPdf.innerHTML = '<div class="spinner" style="width:1.1rem;height:1.1rem;border-width:2px;border-top-color:#34d399;margin-right:0.4rem;"></div> Lendo PDF...';
+                btnEditPdf.innerHTML = '<div class="spinner" style="width:1rem;height:1rem;border-width:2px;margin-right:0.4rem;"></div> LENDO PDF...';
                 btnEditPdf.style.pointerEvents = 'none';
 
                 try {

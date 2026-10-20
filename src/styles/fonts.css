@@ -1,0 +1,94 @@
+/**
+ * @file fonts.css
+ * @description Tipografia Oficial do CV Fácil.
+ * 
+ * 1. Kobata (Display / Modular Dither Pixel) -> Títulos Hero, branding e impacto visual.
+ * 2. TASA Explorer (Display Secundário / Tech) -> Subtítulos com precisão geométrica.
+ * 3. Clash Grotesk (Sans Serif / Neutral & Friendly) -> Interface, botões, inputs, textos do currículo.
+ * 4. Montagu Slab (Slab Serif / Editorial & Classic) -> Citações e templates clássicos.
+ */
+
+/* ─── 1. UnifrakturMaguntia (Blackletter / Gothic Renascentista) ─── */
+@font-face {
+  font-family: 'UnifrakturMaguntia';
+  src: url('../assets/fonts/UnifrakturMaguntia.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── 2. Jacquard 12 (Pixel Dither Display exclusivo) ─── */
+@font-face {
+  font-family: 'Jacquard 12';
+  src: url('../assets/fonts/Jacquard12-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── 3. TASA Explorer (Display Secundário / Tech) ─── */
+@font-face {
+  font-family: 'TASA Explorer';
+  src: url('../assets/fonts/TASAExplorer-Variable.woff2') format('woff2-variations'),
+       url('../assets/fonts/TASAExplorer-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── 3. Clash Grotesk (Primary Sans / UI) ─── */
+@font-face {
+  font-family: 'Clash Grotesk';
+  src: url('../assets/fonts/ClashGrotesk-Variable.woff2') format('woff2-variations'),
+       url('../assets/fonts/ClashGrotesk-Variable.ttf') format('truetype');
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── 4. Montagu Slab (Editorial / Classic Serif) ─── */
+@font-face {
+  font-family: 'Montagu Slab';
+  src: url('../assets/fonts/MontaguSlab-Variable.woff2') format('woff2-variations'),
+       url('../assets/fonts/MontaguSlab-Variable.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Tipografia Auxiliar & Utilitários Semânticos ─── */
+:root {
+  --font-hero-cv: 'Jacquard 12', cursive, sans-serif;
+  --font-hero-brand: 'UnifrakturMaguntia', serif;
+  --font-display: 'UnifrakturMaguntia', 'Montagu Slab', serif;
+  --font-tasa: 'TASA Explorer', sans-serif;
+  --font-sans: 'Clash Grotesk', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Montagu Slab', Georgia, serif;
+  --font-mono: 'TASA Explorer', 'Clash Grotesk', monospace;
+}
+
+.font-display {
+  font-family: var(--font-display) !important;
+  letter-spacing: -0.01em;
+}
+
+.font-hero-cv {
+  font-family: var(--font-hero-cv) !important;
+}
+
+.font-hero-brand {
+  font-family: var(--font-hero-brand) !important;
+}
+
+.font-sans {
+  font-family: var(--font-sans) !important;
+}
+
+.font-serif,
+.font-slab {
+  font-family: var(--font-serif) !important;
+}
+
+.font-mono {
+  font-family: var(--font-mono) !important;
+}

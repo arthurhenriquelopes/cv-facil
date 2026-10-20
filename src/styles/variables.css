@@ -1,0 +1,94 @@
+/**
+ * @file variables.css
+ * @description Design System Tokens & Cores Oficiais do CV Fácil.
+ * 
+ * Paleta Oficial (Coolors: ["131515","2b2c28","339989","7de2d1","fffafb"]):
+ * - #131515: Obsidian Dark (Fundo Principal / Canvas)
+ * - #2b2c28: Charcoal Slate (Superfícies, Cards, Painéis e Bordas base)
+ * - #339989: Deep Mint Pine (Acento Principal, Ações, Botões Primários)
+ * - #7de2d1: Aquamarine Glow (Destaques, Glows, Dither Accents, Badges)
+ * - #fffafb: Pure Snow White (Textos de Alto Contraste e Títulos)
+ */
+
+:root {
+  /* ─── Paleta Primária Oficial ─── */
+  --palette-black: #131515;
+  --palette-charcoal: #2b2c28;
+  --palette-pine: #339989;
+  --palette-aqua: #7de2d1;
+  --palette-snow: #fffafb;
+
+  /* ─── Tokens de Superfície e Fundo ─── */
+  --color-bg: #131515;
+  --color-bg-elevated: #1a1c1a;
+  --color-bg-card: #20221e;
+  --color-bg-card-hover: #2b2c28;
+  --color-bg-hover: rgba(125, 226, 209, 0.08);
+  --color-bg-input: #171918;
+
+  /* ─── Bordas ─── */
+  --color-border: rgba(255, 250, 251, 0.08);
+  --color-border-subtle: rgba(255, 250, 251, 0.04);
+  --color-border-hover: rgba(125, 226, 209, 0.35);
+  --color-border-focus: #339989;
+
+  /* ─── Tipografia e Cores de Texto ─── */
+  --color-text: #fffafb;
+  --color-text-secondary: rgba(255, 250, 251, 0.72);
+  --color-text-tertiary: rgba(255, 250, 251, 0.48);
+  --color-text-muted: rgba(255, 250, 251, 0.32);
+
+  /* ─── Acentos de Marca e Interação ─── */
+  --color-accent: #7de2d1;
+  --color-accent-primary: #339989;
+  --color-accent-dim: rgba(51, 153, 137, 0.16);
+  --color-accent-glow: rgba(125, 226, 209, 0.15);
+  --color-accent-bright: #7de2d1;
+
+  /* ─── Feedback Semântico ─── */
+  --color-success: #7de2d1;
+  --color-success-dim: rgba(125, 226, 209, 0.14);
+  --color-warning: #facc15;
+  --color-error: #f87171;
+  --color-error-dim: rgba(248, 113, 113, 0.12);
+
+  /* ─── Aliases para Compatibilidade Retroativa ─── */
+  --color-primary: #7de2d1;
+  --color-primary-light: #339989;
+  --color-primary-dark: #20221e;
+  --color-success-light: #163630;
+  --color-gray-50: #131515;
+  --color-gray-100: #1a1c1a;
+  --color-gray-200: #2b2c28;
+  --color-gray-300: #3a3b36;
+  --color-gray-400: rgba(255, 250, 251, 0.48);
+  --color-gray-500: rgba(255, 250, 251, 0.72);
+  --color-gray-600: #9a9b96;
+  --color-gray-700: #cbccc7;
+  --color-gray-800: #e8e9e5;
+  --color-gray-900: #fffafb;
+
+  /* ─── Raios e Espaçamentos: ZERO ROUNDED BORDERS ─── */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 0px;
+
+  /* ─── Sombras & Brilhos Dither / Modernos ─── */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--color-border);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--color-border);
+  --shadow-glow: 0 0 24px rgba(125, 226, 209, 0.12);
+  --shadow-glow-accent: 0 0 40px rgba(51, 153, 137, 0.25);
+  --shadow-glow-active: 0 0 30px rgba(125, 226, 209, 0.35);
+
+  /* ─── Layout ─── */
+  --max-width: 68rem;
+
+  /* ─── Transições & Molas (Motion Curves) ─── */
+  --transition-fast: 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}

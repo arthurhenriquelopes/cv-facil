@@ -1,0 +1,807 @@
+/**
+ * @file landing.css
+ * @description Landing page estilo Hermes Agent / Nous Research com moldura brutalista e fontes autênticas.
+ */
+
+/* ─── Moldura Lateral Estilo Hermes Agent (Bordas Sólidas) ─── */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  z-index: 100;
+  pointer-events: none;
+  background-color: var(--palette-pine);
+}
+
+body::before {
+  left: 0;
+  border-right: 2px solid var(--palette-aqua);
+}
+
+body::after {
+  right: 0;
+  border-left: 2px solid var(--palette-aqua);
+}
+
+/* ─── Navbar Estilo Hermes Agent ─── */
+.hermes-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(19, 21, 21, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.hermes-navbar-inner {
+  max-width: 78rem;
+  margin: 0 auto;
+  height: 4.5rem;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hermes-nav-left,
+.hermes-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+}
+
+.hermes-nav-right {
+  justify-content: flex-end;
+}
+
+.hermes-nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+/* ─── Efeito de Quadrado no Hover para Todos os Elementos Interativos ─── */
+.hermes-nav-link,
+.hermes-cta-btn,
+.hermes-btn-primary,
+.hermes-btn-ghost,
+.editorial-step,
+.stat-item,
+.comparison-pane,
+button,
+a.btn,
+.btn {
+  position: relative;
+}
+
+.hermes-nav-link:hover,
+.hermes-cta-btn:hover,
+.hermes-btn-primary:hover,
+.hermes-btn-ghost:hover {
+  outline: 2px solid var(--palette-aqua);
+  outline-offset: 2px;
+}
+
+.hermes-brand-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.hermes-brand-title {
+  font-family: var(--font-hero-brand);
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--palette-snow);
+}
+
+.hermes-cta-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--palette-snow);
+  border: 1px solid rgba(125, 226, 209, 0.4);
+  background: rgba(51, 153, 137, 0.12);
+  padding: 0.5rem 1rem;
+  transition: all 150ms ease;
+  text-decoration: none;
+}
+.hermes-cta-btn:hover {
+  background: var(--palette-aqua);
+  color: var(--palette-black);
+  border-color: var(--palette-aqua);
+}
+
+/* ─── Hero Section 50/50 Estilo Hermes Agent ─── */
+.hermes-hero {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 4rem 2rem 5rem;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 960px) {
+  .hermes-hero {
+    grid-template-columns: 1fr;
+    padding: 3rem 1.5rem;
+    gap: 3rem;
+  }
+}
+
+.hermes-hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hermes-brand-badge {
+  font-family: var(--font-hero-cv);
+  font-size: 1.85rem;
+  line-height: 1;
+  color: var(--palette-aqua);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(125, 226, 209, 0.35);
+  background: rgba(51, 153, 137, 0.15);
+  display: inline-block;
+}
+
+.hermes-hero-title {
+  font-family: var(--font-hero-brand);
+  font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--palette-snow);
+  margin-bottom: 1.5rem;
+}
+
+.hermes-hero-desc {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  color: #c9cbcf;
+  line-height: 1.7;
+  max-width: 32rem;
+  margin-bottom: 2rem;
+}
+
+/* Botões de Ação estilo Hermes */
+.hermes-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.hermes-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  background: rgba(43, 44, 40, 0.7);
+  border: 1px solid rgba(125, 226, 209, 0.35);
+  border-radius: var(--radius-xs);
+  color: var(--palette-snow);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+.hermes-btn-primary:hover {
+  background: rgba(51, 153, 137, 0.25);
+  border-color: var(--palette-aqua);
+  color: var(--palette-aqua);
+}
+
+.hermes-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+.hermes-btn-ghost:hover {
+  border-color: var(--color-border-hover);
+  color: var(--palette-snow);
+}
+
+/* Terminal Box estilo Hermes */
+.hermes-terminal-box {
+  width: 100%;
+  max-width: 32rem;
+  background: #0d0f0f;
+  border: 1px solid rgba(125, 226, 209, 0.25);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.85rem;
+  background: #181a1a;
+  border-bottom: 1px solid rgba(255, 250, 251, 0.06);
+}
+
+.terminal-title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--palette-aqua);
+  text-transform: uppercase;
+}
+
+.terminal-tabs {
+  display: flex;
+  gap: 0.35rem;
+}
+.terminal-tab {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+}
+.terminal-tab.active {
+  color: var(--palette-snow);
+  background: rgba(255, 250, 251, 0.08);
+}
+
+.terminal-body {
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.terminal-code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--palette-aqua);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.terminal-code .dim {
+  color: var(--color-text-tertiary);
+}
+
+.terminal-copy-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 150ms ease;
+  flex-shrink: 0;
+}
+.terminal-copy-btn:hover {
+  color: var(--palette-snow);
+}
+
+/* ─── Hero Right: Arte Clássica Dithered ─── */
+.hermes-hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.hermes-art-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1 / 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Raios pontilhados/dithered no fundo da estátua - desativado conforme solicitado */
+.hermes-rays {
+  display: none;
+}
+
+.hermes-statue-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border: 6px solid var(--palette-pine);
+  outline: 3px solid rgba(125, 226, 209, 0.4);
+  background: #111313;
+  border-radius: 0 !important; /* Totalmente reto, sem cantos arredondados */
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.hermes-statue-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 0 !important;
+}
+
+/* Moldura brutalista com marcadores */
+.hermes-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--palette-aqua);
+  z-index: 3;
+}
+.hermes-corner.tl { top: -2px; left: -2px; border-top: 2px solid; border-left: 2px solid; }
+.hermes-corner.tr { top: -2px; right: -2px; border-top: 2px solid; border-right: 2px solid; }
+.hermes-corner.bl { bottom: -2px; left: -2px; border-bottom: 2px solid; border-left: 2px solid; }
+.hermes-corner.br { bottom: -2px; right: -2px; border-bottom: 2px solid; border-right: 2px solid; }
+
+/* ─── Comparativo Real de Produto — Estilo Renascentista / Manuscrito Arquitetônico ─── */
+.landing-comparison-section {
+  max-width: 78rem;
+  margin: 1.5rem auto 5rem;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.comparison-card {
+  position: relative;
+  background: #101313;
+  border: 1px solid rgba(125, 226, 209, 0.25);
+  border-radius: 0 !important;
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.75),
+    0 0 30px rgba(51, 153, 137, 0.12);
+}
+
+/* Moldura interna dupla renascentista */
+.comparison-card::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(51, 153, 137, 0.28);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.comparison-header {
+  position: relative;
+  z-index: 3;
+  padding: 1.1rem 1.75rem;
+  background: #141817;
+  border-bottom: 1px solid rgba(125, 226, 209, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.comparison-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--palette-aqua);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.comparison-label::before {
+  content: '§';
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--palette-pine);
+  line-height: 1;
+}
+
+.comparison-grid {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.comparison-pane {
+  padding: 2.5rem 2.25rem;
+  position: relative;
+}
+
+.comparison-pane.before {
+  border-right: 1px solid rgba(125, 226, 209, 0.15);
+  background: rgba(16, 18, 18, 0.75);
+}
+
+@media (max-width: 768px) {
+  .comparison-pane.before {
+    border-right: none;
+    border-bottom: 1px solid rgba(125, 226, 209, 0.15);
+  }
+}
+
+.pane-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0 !important;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.25rem;
+}
+.pane-badge.weak {
+  background: rgba(248, 113, 113, 0.08);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.25);
+}
+.pane-badge.optimized {
+  background: rgba(51, 153, 137, 0.15);
+  color: var(--palette-aqua);
+  border: 1px solid rgba(125, 226, 209, 0.35);
+}
+
+/* Tipografia Renascentista: Montagu Slab com proporção clássica */
+.pane-role {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--palette-snow);
+  margin-bottom: 0.35rem;
+  line-height: 1.25;
+}
+
+.pane-company {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin-bottom: 1.5rem;
+}
+
+/* Citações textuais com borda de tratado clássico */
+.pane-text {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  color: rgba(255, 250, 251, 0.88);
+  margin-bottom: 1.75rem;
+  position: relative;
+  padding-left: 1.25rem;
+  border-left: 2px solid rgba(125, 226, 209, 0.25);
+}
+
+.comparison-pane.before .pane-text {
+  border-left-color: rgba(248, 113, 113, 0.25);
+  color: rgba(255, 250, 251, 0.6);
+}
+
+.pane-text .kw-match {
+  background: rgba(51, 153, 137, 0.3);
+  color: var(--palette-aqua);
+  padding: 0.15rem 0.45rem;
+  border-radius: 0;
+  border-bottom: 1px solid var(--palette-aqua);
+  font-weight: 600;
+}
+
+.pane-footer {
+  padding-top: 1.25rem;
+  border-top: 1px dashed rgba(255, 250, 251, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+.pane-footer .score {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.pane-footer .score.red { color: #f87171; }
+.pane-footer .score.green { color: var(--palette-aqua); }
+
+/* ─── Stats strip ─── */
+.landing-stats {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 2rem 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.stat-number {
+  font-family: var(--font-kobata);
+  font-size: 2.25rem;
+  font-weight: 400;
+  color: var(--palette-snow);
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+.stat-divider {
+  width: 1px;
+  height: 2.5rem;
+  background: var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .landing-stats {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .stat-divider {
+    width: 3rem;
+    height: 1px;
+  }
+}
+
+/* ─── Fluxo Editorial (Zero Cardocalypse) ─── */
+.landing-features {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.section-title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--palette-aqua);
+  margin-bottom: 2rem;
+}
+
+.editorial-flow {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--color-border);
+}
+
+.editorial-step {
+  display: grid;
+  grid-template-columns: 80px 1.5fr 2fr;
+  align-items: baseline;
+  padding: 2.25rem 0;
+  border-bottom: 1px solid var(--color-border);
+  gap: 2rem;
+  transition: background 150ms ease;
+}
+
+.editorial-step-num {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--palette-aqua);
+}
+
+.editorial-step-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--palette-snow);
+}
+
+.editorial-step-desc {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+}
+
+@media (max-width: 768px) {
+  .editorial-step {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1.5rem 0;
+  }
+}
+
+/* ─── ATS Explanation ─── */
+.landing-ats {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 2rem 5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.ats-explanation-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--palette-aqua);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+}
+.ats-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-error);
+}
+
+.ats-explanation h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 3.5vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--palette-snow);
+  margin-bottom: 1.25rem;
+}
+.text-error { color: var(--color-error); }
+
+.ats-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2rem;
+  position: relative;
+}
+.ats-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--color-error);
+}
+.ats-card h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1rem;
+  color: var(--palette-snow);
+}
+.ats-card p {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  padding-left: 1rem;
+}
+.ats-card strong {
+  color: var(--palette-snow);
+}
+
+/* ─── Final CTA ─── */
+.landing-final-cta {
+  text-align: center;
+  padding: 2rem 2rem 6rem;
+  position: relative;
+  z-index: 2;
+}
+.landing-final-cta h2 {
+  font-family: var(--font-kobata);
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  color: var(--palette-snow);
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Footer ─── */
+.landing-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 3.5rem 2rem;
+  position: relative;
+  z-index: 2;
+}
+.footer-inner {
+  max-width: 78rem;
+  margin: 0 auto;
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+  font-size: 0.8125rem;
+  margin-bottom: 2rem;
+}
+.footer-links h4 {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--palette-aqua);
+  margin-bottom: 0.75rem;
+}
+.footer-links a,
+.footer-links span {
+  display: block;
+  margin-bottom: 0.375rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  transition: color 150ms ease;
+}
+.footer-links a:hover {
+  color: var(--palette-snow);
+}
+.footer-bottom {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+.footer-bottom p {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
