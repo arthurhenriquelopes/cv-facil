@@ -1,23 +1,41 @@
 /**
  * @file fonts.css
- * @description Tipografia Oficial do CV Fácil.
+ * @description Sistema Tipográfico Oficial CV Fácil — 6 Classes Generalistas.
  * 
- * 1. Kobata (Display / Modular Dither Pixel) -> Títulos Hero, branding e impacto visual.
- * 2. TASA Explorer (Display Secundário / Tech) -> Subtítulos com precisão geométrica.
- * 3. Clash Grotesk (Sans Serif / Neutral & Friendly) -> Interface, botões, inputs, textos do currículo.
- * 4. Montagu Slab (Slab Serif / Editorial & Classic) -> Citações e templates clássicos.
+ * As 6 Classes Generalistas cobrem todas as páginas do sistema com base em:
+ *  1. Função do texto na interface
+ *  2. Escala e peso visual
+ *  3. Fonte atribuída
+ * 
+ * 1. .type-hero        -> UnifrakturMaguntia (Monumental / Título Hero / Grande Impacto)
+ * 2. .type-resistance  -> Resistance (Censura ATS / Alerta de Algoritmo / Carimbo Confidencial)
+ * 3. .type-heading     -> Leluja Original (Estrutura / Seções / Passos / Módulos / Modais)
+ * 4. .type-editorial   -> Montagu Slab (Formal / Currículo / Cargos / Relatório / Credenciais)
+ * 5. .type-tech        -> TASA Explorer / Jacquard 12 (Telemetria / Badges / Scores / Metadados)
+ * 6. .type-body        -> Clash Grotesk (Interface Geral / Leitura / Formulários / Botões)
  */
 
-/* ─── 1. UnifrakturMaguntia (Blackletter / Gothic Renascentista) ─── */
+/* ─── 1. UnifrakturMaguntia (Blackletter / Gothic Monumental) ─── */
 @font-face {
   font-family: 'UnifrakturMaguntia';
   src: url('../assets/fonts/UnifrakturMaguntia.ttf') format('truetype');
-  font-weight: 400;
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
-/* ─── 2. Leluja Original (Monospace Tech / Intermediária Brutalista) ─── */
+/* ─── 2. Resistance Générale (Anti-ATS / Classified / Underground Stencil) ─── */
+/* Inlined Base64 para disponibilidade instantânea em qualquer página sem bloqueio */
+@font-face {
+  font-family: 'Resistance';
+  src: url('data:font/otf;base64,T1RUTwAKAIAAAwAgQ0ZGIMN9Q30AAAqkAAAwxEdTVUInD/I9AAA9nAAAAGRPUy8yRT8IZQAAARAAAABgY21hcNPXUGIAAAgEAAACfmhlYWQOv/amAAAArAAAADZoaGVhEk8KjwAAAOQAAAAkaG10eGRXQhoAADtoAAACNG1heHAAj1AAAAABCAAAAAZuYW1lLGplNQAAAXAAAAaTcG9zdP91AJYAAAqEAAAAIAABAAAAAQAANJWydl8PPPUAAwgAAAAAANJyVlMAAAAA0nJWU/8U/gALsAcIAAAAAwACAAAAAAAAAAEAAAa0/l4A1AxH/xT/XguwAAEAAAAAAAAAAAAAAAAAAACLAABQAACPAAAAAwRXAZAABQAIBTMEzAAAAJkFMwTMAAACzACWAmYAAAILBQADAAAAAAAAAACngAAATgAAAAIAAAAASEwgIABAAB0iEgWa/mYAzQcIAgAAAAABAAAAAAQABXgAAAAgAAEAAAAYASYAAQAAAAAAAAEQAAAAAQAAAAAAAQAKARAAAQAAAAAAAgAHARoAAQAAAAAAAwAdASEAAQAAAAAABAAKARAAAQAAAAAABQBDAT4AAQAAAAAABgASAYEAAQAAAAAACAAWAZMAAQAAAAAACQAWAZMAAQAAAAAACwATAakAAQAAAAAADAATAakAAQAAAAAADQAHAbwAAwABBAkAAAIgAcMAAwABBAkAAQAUA+MAAwABBAkAAgAOA/cAAwABBAkAAwA6BAUAAwABBAkABAAkBD8AAwABBAkABQCGBGMAAwABBAkABgAkBOkAAwABBAkACAAsBQ0AAwABBAkACQAsBQ0AAwABBAkACwAmBTkAAwABBAkADAAmBTkAAwABBAkADQAOBV9SZXNpc3RhbmNlLCBjcmVhdGVkIGJ5IFBhdWxpbmUgQ29ybWF1bHQsIEVzdGhlciBNaWNoYXVkLCBDbGFpcmUgTXVjY2hpZWxpLCBNZXJsaW4gQW5kcmVhZSwgUmFwaGGRbCBNYW1hbiwgUGVkcm8gR29tZXMtQ2FyZG9zbywgSnVsaWV0dGUgTmllciwgR2FicmllbGxlIE1laXN0cmV0dHksIERhbWllbiBCYXV6YSBkdXJpbmcgYSAzIGRheXMgd29ya3Nob3Agd2l0aCBNYXJ0aW4gRGVzaW5kZSwgSnVsaWVuIEltYmVydCwgUmFwYWiRbCBCYXN0aWRlIGFuZCBKjnKObXkgTGFuZGVzLlJlc2lzdGFuY2VSZWd1bGFyMS4wMDA7SEwgIDtSZXNpc3RhbmNlLVJlZ3VsYXJWZXJzaW9uIDEuMDAwO1BTIDEuMDtob3Rjb252IDEuMC43MjttYWtlb3RmLmxpYjIuNS41OTAwIERFVkVMT1BNRU5UUmVzaXN0YW5jZS1SZWd1bGFyVmVsdmV0eW5lIFR5cGUgRm91bmRyeWh0dHA6Ly92ZWx2ZXR5bmUuZnJTSUwgT0ZMAFIAZQBzAGkAcwB0AGEAbgBjAGUALAAgAGMAcgBlAGEAdABlAGQAIABiAHkAIABQAGEAdQBsAGkAbgBlACAAQwBvAHIAbQBhAHUAbAB0ACwAIABFAHMAdABoAGUAcgAgAE0AaQBjAGgAYQB1AGQALAAgAEMAbABhAGkAcgBlACAATQB1AGMAYwBoAGkAZQBsAGkALAAgAE0AZQByAGwAaQBuACAAQQBuAGQAcgBlAGEAZQAsACAAUgBhAHAAaABhAOsAbAAgAE0AYQBtAGEAbgAsACAAUABlAGQAcgBvACAARwBvAG0AZQBzAC0AQwBhAHIAZABvAHMAbwAsACAASgB1AGwAaQBlAHQAdABlACAATgBpAGUAcgAsACAARwBhAGIAcgBpAGUAbABsAGUAIABNAGUAaQBzAHQAcgBlAHQAdAB5ACwAIABEAGEAbQBpAGUAbgAgAEIAYQB1AHoAYQAgAGQAdQByAGkAbgBnACAAYQAgADMAIABkAGEAeQBzACAAdwBvAHIAawBzAGgAbwBwACAAdwBpAHQAaAAgAE0AYQByAHQAaQBuACAARABlAHMAaQBuAGQAZQAsACAASgB1AGwAaQBlAG4AIABJAG0AYgBlAHIAdAAsACAAUgBhAHAAYQBoAOsAbAAgAEIAYQBzAHQAaQBkAGUAIABhAG4AZAAgAEoA6QByAOkAbQB5ACAATABhAG4AZABlAHMALgBSAGUAcwBpAHMAdABhAG4AYwBlAFIAZQBnAHUAbABhAHIAMQAuADAAMAAwADsASABMACAAIAA7AFIAZQBzAGkAcwB0AGEAbgBjAGUALQBSAGUAZwB1AGwAYQByAFIAZQBzAGkAcwB0AGEAbgBjAGUAIABSAGUAZwB1AGwAYQByAFYAZQByAHMAaQBvAG4A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') format('opentype'),
+       url('../assets/fonts/ResistanceGenerale.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+/* ─── 3. Leluja Original (Monospace Tech / Brutalista Estrutural) ─── */
 @font-face {
   font-family: 'Leluja';
   src: url('../assets/fonts/LelujaOriginal-Regular.woff2') format('woff2');
@@ -34,7 +52,7 @@
   font-display: swap;
 }
 
-/* ─── 3. Jacquard 12 (Pixel Dither Display exclusivo) ─── */
+/* ─── 4. Jacquard 12 (Dither Pixel Display) ─── */
 @font-face {
   font-family: 'Jacquard 12';
   src: url('../assets/fonts/Jacquard12-Regular.ttf') format('truetype');
@@ -43,7 +61,7 @@
   font-display: swap;
 }
 
-/* ─── 3. TASA Explorer (Display Secundário / Tech) ─── */
+/* ─── 5. TASA Explorer (Display Geométrico / Telemetria Tech) ─── */
 @font-face {
   font-family: 'TASA Explorer';
   src: url('../assets/fonts/TASAExplorer-Variable.woff2') format('woff2-variations'),
@@ -53,7 +71,7 @@
   font-display: swap;
 }
 
-/* ─── 3. Clash Grotesk (Primary Sans / UI) ─── */
+/* ─── 6. Clash Grotesk (Primary Sans / UI / Ergonomia de Leitura) ─── */
 @font-face {
   font-family: 'Clash Grotesk';
   src: url('../assets/fonts/ClashGrotesk-Variable.woff2') format('woff2-variations'),
@@ -63,7 +81,7 @@
   font-display: swap;
 }
 
-/* ─── 4. Montagu Slab (Editorial / Classic Serif) ─── */
+/* ─── 7. Montagu Slab (Editorial / Classic Serif / Currículo Executivo) ─── */
 @font-face {
   font-family: 'Montagu Slab';
   src: url('../assets/fonts/MontaguSlab-Variable.woff2') format('woff2-variations'),
@@ -73,107 +91,147 @@
   font-display: swap;
 }
 
-/* ─── 5. Resistance Générale (Censura / Redacted Secret Document) ─── */
-@font-face {
-  font-family: 'Resistance';
-  src: url('../assets/fonts/ResistanceGenerale.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ─── Tipografia Auxiliar & Utilitários Semânticos (5 Classes de Função) ─── */
+/* ═════════════════════════════════════════════════════════════
+   TOKENS DE TIPOGRAFIA (ROOT)
+   ═════════════════════════════════════════════════════════════ */
 :root {
-  /* 1. Clássica Monumental (Hero principal & CTA de encerramento) */
-  --font-statement: 'UnifrakturMaguntia', serif;
-  
-  /* 2. Censura & Auditoria (Alertas ATS, métricas de corte, palavras secretas) */
-  --font-redacted: 'Resistance', monospace;
-  
-  /* 3. Intermediária Brutalista (Títulos de seções, cartões, etapas do fluxo) */
-  --font-section: 'Leluja', monospace;
-  
-  /* 4. Editorial Histórica (Cargos de currículo, auditoria formal antes/depois) */
+  /* 6 Tokens Fundamentais */
+  --font-hero: 'UnifrakturMaguntia', serif;
+  --font-resistance: 'Resistance', monospace;
+  --font-heading: 'Leluja', monospace;
   --font-editorial: 'Montagu Slab', Georgia, serif;
-  
-  /* 5. Leitura & Interface (Parágrafos longos, formulários, inputs e botões) */
+  --font-tech: 'TASA Explorer', monospace, sans-serif;
   --font-body: 'Clash Grotesk', system-ui, -apple-system, sans-serif;
-  
-  /* ─── Aliases retrocompatíveis ─── */
+
+  /* Aliases retrocompatíveis */
+  --font-statement: var(--font-hero);
+  --font-redacted: var(--font-resistance);
+  --font-section: var(--font-heading);
+  --font-meta: var(--font-tech);
   --font-hero-cv: 'Jacquard 12', cursive, sans-serif;
-  --font-hero-brand: var(--font-statement);
-  --font-leluja: var(--font-section);
-  --font-display: var(--font-statement);
-  --font-tasa: 'TASA Explorer', sans-serif;
+  --font-hero-brand: var(--font-hero);
+  --font-leluja: var(--font-heading);
+  --font-display: var(--font-hero);
+  --font-tasa: var(--font-tech);
   --font-sans: var(--font-body);
   --font-serif: var(--font-editorial);
-  --font-mono: var(--font-section);
+  --font-mono: var(--font-heading);
 }
 
 /* ═════════════════════════════════════════════════════════════
-   AS 5 CLASSES TIPOGRÁFICAS OFICIAIS DO SISTEMA
+   AS 6 CLASSES TIPOGRÁFICAS GENERALISTAS OFICIAIS DO CV FÁCIL
    ═════════════════════════════════════════════════════════════ */
 
-/* Classe 1: Statement Monumental (Impacto visual raro) */
+/**
+ * CLASSE 1: .type-hero
+ * Função: Monumental Display, Slogans Épicos, Hero da Landing, Vitória/Sucesso.
+ * Escala: Gigante / Display (2.25rem a 4.5rem).
+ * Fonte:  UnifrakturMaguntia
+ */
+.type-hero,
+.type-monumental,
+.type-display,
 .type-statement {
-  font-family: var(--font-statement) !important;
+  font-family: var(--font-hero) !important;
+  font-size: clamp(2rem, 4.5vw, 3.85rem);
   line-height: 1.1;
   letter-spacing: 0.02em;
 }
 
-/* Classe 2: Redacted / Censura ATS (Aspecto de arquivo confidencial) */
-.type-redacted {
-  font-family: var(--font-redacted) !important;
+/**
+ * CLASSE 2: .type-resistance
+ * Função: Alertas ATS, Advertências Anti-Robô, Carimbos de Auditoria,
+ *         Termos Confidenciais/Censurados, Status de Resistência em qualquer página.
+ * Escala: Médio Destaque (1rem a 1.45rem).
+ * Fonte:  Resistance (Resistance Générale)
+ */
+.type-resistance,
+.type-classified,
+.type-redacted,
+.type-audit {
+  font-family: var(--font-resistance) !important;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/**
+ * CLASSE 3: .type-heading
+ * Função: Títulos Estruturais de Seções (H1, H2, H3), Passos 01/02, Módulos,
+ *         Títulos de Modais, Cabeçalhos de Cards e Seções de Currículo.
+ * Escala: Grande Estrutural (1.2rem a 2.1rem).
+ * Fonte:  Leluja (Leluja Original Bold/Regular)
+ */
+.type-heading,
+.type-section,
+.type-title {
+  font-family: var(--font-heading) !important;
+  font-size: clamp(1.15rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+/**
+ * CLASSE 4: .type-editorial
+ * Função: Credenciais Profissionais, Cargos de Currículo, Resumo Formal,
+ *         Citações Executivas, Comparações Antes/Depois, Textos de Autoridade.
+ * Escala: Médio Clássico (1rem a 1.3rem).
+ * Fonte:  Montagu Slab
+ */
+.type-editorial,
+.type-credential,
+.type-resume {
+  font-family: var(--font-editorial) !important;
+  font-size: clamp(1rem, 1.4vw, 1.22rem);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+/**
+ * CLASSE 5: .type-tech
+ * Função: Telemetria, Pontuações ATS, Badges Técnicos, Timestamps,
+ *         Atalhos de Teclado, Labels Numéricos e Metadados do Sistema.
+ * Escala: Micro / Técnico (0.72rem a 0.88rem).
+ * Fonte:  TASA Explorer (com suporte a Jacquard 12 para números dither)
+ */
+.type-tech,
+.type-meta,
+.type-telemetry,
+.type-code {
+  font-family: var(--font-tech) !important;
+  font-size: clamp(0.72rem, 0.95vw, 0.88rem);
+  font-weight: 600;
+  line-height: 1.35;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-/* Classe 3: Section Brutalista (H2, H3, Passos 01, 02, Badges de Navegação) */
-.type-section {
-  font-family: var(--font-section) !important;
-  letter-spacing: -0.01em;
-  font-weight: 700;
-}
-
-/* Classe 4: Editorial Clássica (Comparações, cargos e citações) */
-.type-editorial {
-  font-family: var(--font-editorial) !important;
-  letter-spacing: -0.01em;
-  font-weight: 600;
-}
-
-/* Classe 5: Interface & Corpo (Leitura confortável sem fadiga) */
-.type-body {
+/**
+ * CLASSE 6: .type-body
+ * Função: Interface Geral, Parágrafos de Leitura, Formulários (inputs/textarea),
+ *         Botões de Ação, Opções de Seleção, Tooltips e Mensagens do Sistema.
+ * Escala: Base Confortável (0.9rem a 1.05rem).
+ * Fonte:  Clash Grotesk
+ */
+.type-body,
+.type-copy,
+.type-ui {
   font-family: var(--font-body) !important;
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+  font-weight: 400;
   line-height: 1.65;
 }
 
-.font-leluja {
-  font-family: var(--font-leluja) !important;
-}
-
-.font-display {
-  font-family: var(--font-display) !important;
-  letter-spacing: -0.01em;
-}
-
-.font-hero-cv {
-  font-family: var(--font-hero-cv) !important;
-}
-
-.font-hero-brand {
-  font-family: var(--font-hero-brand) !important;
-}
-
-.font-sans {
-  font-family: var(--font-sans) !important;
-}
-
-.font-serif,
-.font-slab {
-  font-family: var(--font-serif) !important;
-}
-
-.font-mono {
-  font-family: var(--font-mono) !important;
-}
+/* ─── Utilitários complementares de fonte direta ─── */
+.font-leluja { font-family: var(--font-heading) !important; }
+.font-display { font-family: var(--font-hero) !important; letter-spacing: -0.01em; }
+.font-hero-cv { font-family: var(--font-hero-cv) !important; }
+.font-hero-brand { font-family: var(--font-hero) !important; }
+.font-resistance { font-family: var(--font-resistance) !important; }
+.font-sans { font-family: var(--font-body) !important; }
+.font-serif, .font-slab { font-family: var(--font-editorial) !important; }
+.font-mono { font-family: var(--font-heading) !important; }
+.font-tech { font-family: var(--font-tech) !important; }

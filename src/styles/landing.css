@@ -540,9 +540,9 @@ a.btn,
   gap: 0.25rem;
 }
 .stat-number {
-  font-family: var(--font-kobata);
+  font-family: var(--font-heading);
   font-size: 2.25rem;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--palette-snow);
   letter-spacing: -0.02em;
 }
@@ -646,12 +646,12 @@ a.btn,
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-resistance);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--palette-aqua);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   margin-bottom: 0.75rem;
 }
 .ats-dot {

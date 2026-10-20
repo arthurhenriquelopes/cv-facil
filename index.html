@@ -28,26 +28,28 @@
     <!-- Hero Estilo Hermes Agent (Nous Research): Split 50/50 com Escultura Clássica e Terminal Técnico -->
     <section class="hermes-hero">
         <div class="hermes-hero-left">
-            <h1 class="hermes-hero-title">
+            <div class="type-resistance" style="margin-bottom:1rem;color:var(--palette-aqua);font-size:0.95rem;letter-spacing:0.18em;border:1px solid rgba(125,226,209,0.35);padding:0.35rem 0.75rem;background:rgba(51,153,137,0.12);display:inline-flex;align-items:center;gap:0.5rem;">
+                <span class="ats-dot"></span>
+                PROTOCOLO DE RESISTÊNCIA ATS // ANTI-BLOQUEIO
+            </div>
+            <h1 class="hermes-hero-title type-hero">
                 O Currículo que Cresce com Sua Carreira.
             </h1>
-            <p class="hermes-hero-desc">
+            <p class="hermes-hero-desc type-body">
                 Engenharia de precisão para romper os filtros da Gupy, Workday e Greenhouse. Adapte suas experiências para aprovação máxima em minutos.
             </p>
 
             <div class="hermes-btn-row">
-                <a href="/pages/step-profile.html" class="hermes-btn-primary">
+                <a href="/pages/step-profile.html" class="hermes-btn-primary type-tech">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                     CRIAR NOVO CURRÍCULO
                 </a>
-                <a href="/pages/result.html?import=1" id="btn-hero-edit-pdf" class="hermes-btn-ghost">
+                <a href="/pages/result.html?import=1" id="btn-hero-edit-pdf" class="hermes-btn-ghost type-tech">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg>
                     IMPORTAR PDF EXISTENTE
                 </a>
                 <input type="file" id="landing-pdf-input" accept="application/pdf" style="display:none;" />
             </div>
-
-            <!-- Removido o terminal box técnico conforme solicitado -->
         </div>
 
         <!-- Hero Right: Arte Clássica Grega Dithered -->
@@ -70,13 +72,13 @@
             <div class="comparison-grid">
                 <!-- Antes: CV Genérico Descartado -->
                 <div class="comparison-pane before">
-                    <span class="pane-badge weak">✕ CV Original (Genérico)</span>
-                    <div class="pane-role">Desenvolvedor Backend</div>
-                    <div class="pane-company">Tech Solutions • 2022 - 2024</div>
-                    <p class="pane-text">
+                    <span class="pane-badge weak type-tech">✕ CV Original (Genérico)</span>
+                    <div class="pane-role type-editorial">Desenvolvedor Backend</div>
+                    <div class="pane-company type-tech">Tech Solutions • 2022 - 2024</div>
+                    <p class="pane-text type-body">
                         "Responsável pelo desenvolvimento de novas features e correção de bugs no backend da plataforma web. Trabalhei com a equipe de engenharia em entregas contínuas e melhorias no banco de dados."
                     </p>
-                    <div class="pane-footer">
+                    <div class="pane-footer type-tech">
                         <span style="color:var(--color-text-tertiary);">Faltam 4 keywords críticas</span>
                         <span class="score red">Score ATS: 38% (Descartado)</span>
                     </div>
@@ -84,13 +86,13 @@
 
                 <!-- Depois: Otimizado pelo CV Fácil -->
                 <div class="comparison-pane">
-                    <span class="pane-badge optimized">✓ Otimizado pelo CV Fácil</span>
-                    <div class="pane-role">Engenheiro de Software Backend</div>
-                    <div class="pane-company">Tech Solutions • 2022 - 2024</div>
-                    <p class="pane-text">
+                    <span class="pane-badge optimized type-tech">✓ Otimizado pelo CV Fácil</span>
+                    <div class="pane-role type-editorial">Engenheiro de Software Backend</div>
+                    <div class="pane-company type-tech">Tech Solutions • 2022 - 2024</div>
+                    <p class="pane-text type-body">
                         "Arquitetei microsserviços de alta disponibilidade em <span class="kw-match">Go</span> e <span class="kw-match">PostgreSQL</span>, reduzindo a latência de consultas em 35%. Implementei pipelines automatizados de <span class="kw-match">CI/CD</span> em contêineres <span class="kw-match">Docker</span> na nuvem <span class="kw-match">AWS</span>."
                     </p>
-                    <div class="pane-footer">
+                    <div class="pane-footer type-tech">
                         <span style="color:var(--color-text-secondary);">Todas as keywords no contexto</span>
                         <span class="score green">Score ATS: 96% (Aprovado)</span>
                     </div>
@@ -102,39 +104,39 @@
     <!-- Números — Prova Social Direta -->
     <section class="landing-stats">
         <div class="stat-item">
-            <span class="stat-number">2min</span>
-            <span class="stat-label">TEMPO DE GERAÇÃO</span>
+            <span class="stat-number type-heading">2min</span>
+            <span class="stat-label type-tech">TEMPO DE GERAÇÃO</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-            <span class="stat-number">96%+</span>
-            <span class="stat-label">ADERÊNCIA ATS MÉDIA</span>
+            <span class="stat-number type-heading">96%+</span>
+            <span class="stat-label type-tech">ADERÊNCIA ATS MÉDIA</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-            <span class="stat-number">PDF</span>
-            <span class="stat-label">EXPORTAÇÃO DETERMINÍSTICA</span>
+            <span class="stat-number type-heading">PDF</span>
+            <span class="stat-label type-tech">EXPORTAÇÃO DETERMINÍSTICA</span>
         </div>
     </section>
 
     <!-- Como Funciona — Fluxo Editorial -->
     <section class="landing-features">
-        <h2 class="section-title">FLUXO DO SISTEMA // PIPELINE</h2>
+        <h2 class="section-title type-tech">FLUXO DO SISTEMA // PIPELINE</h2>
         <div class="editorial-flow">
             <div class="editorial-step">
-                <div class="editorial-step-num">01</div>
-                <div class="editorial-step-title">Extração e Perfil</div>
-                <p class="editorial-step-desc">Importe seu currículo em PDF ou preencha suas experiências. Seus dados são processados localmente no navegador, sem vazamentos.</p>
+                <div class="editorial-step-num type-tech">01</div>
+                <div class="editorial-step-title type-heading">Extração e Perfil</div>
+                <p class="editorial-step-desc type-body">Importe seu currículo em PDF ou preencha suas experiências. Seus dados são processados localmente no navegador, sem vazamentos.</p>
             </div>
             <div class="editorial-step">
-                <div class="editorial-step-num">02</div>
-                <div class="editorial-step-title">Cruzamento com a Vaga</div>
-                <p class="editorial-step-desc">Cole a descrição do cargo desejado. O sistema disseca os requisitos exigidos pelos filtros da Gupy, Workday e Greenhouse.</p>
+                <div class="editorial-step-num type-tech">02</div>
+                <div class="editorial-step-title type-heading">Cruzamento com a Vaga</div>
+                <p class="editorial-step-desc type-body">Cole a descrição do cargo desejado. O sistema disseca os requisitos exigidos pelos filtros da Gupy, Workday e Greenhouse.</p>
             </div>
             <div class="editorial-step">
-                <div class="editorial-step-num">03</div>
-                <div class="editorial-step-title">Redação STAR & PDF</div>
-                <p class="editorial-step-desc">Sua experiência é reescrita com métricas concretas de impacto, diagramada com rigor tipográfico e pronta para envio imediato.</p>
+                <div class="editorial-step-num type-tech">03</div>
+                <div class="editorial-step-title type-heading">Redação STAR & PDF</div>
+                <p class="editorial-step-desc type-body">Sua experiência é reescrita com métricas concretas de impacto, diagramada com rigor tipográfico e pronta para envio imediato.</p>
             </div>
         </div>
     </section>
@@ -144,17 +146,17 @@
     <!-- Explicação do ATS -->
     <section class="landing-ats">
         <div class="ats-explanation">
-            <div class="ats-explanation-label type-redacted" style="font-size:0.95rem;letter-spacing:0.18em;color:var(--palette-aqua);">
+            <div class="ats-explanation-label type-resistance">
                 <span class="ats-dot"></span>
                 CLASSIFIED // CENSURA DE CANDIDATOS
             </div>
-            <h2>O algoritmo invisível que elimina <span class="text-error">98% dos candidatos</span></h2>
+            <h2 class="type-heading">O algoritmo invisível que elimina <span class="text-error">98% dos candidatos</span></h2>
             <div class="ats-card dither-card">
-                <h3>O que é ATS (Applicant Tracking System)?</h3>
-                <p>
+                <h3 class="type-heading">O que é ATS (Applicant Tracking System)?</h3>
+                <p class="type-body">
                     É o sistema que corporações globais usam para <strong>escanear e classificar currículos automaticamente</strong> antes de um humano avaliar. Se o documento não contiver a nomenclatura técnica e o contexto exato da vaga, a candidatura é descartada sem aviso.
                 </p>
-                <div class="ats-redaction-sample type-redacted" style="margin-top:1.25rem;padding:0.75rem 1rem;background:rgba(19,21,21,0.8);border:1px dashed rgba(248,113,113,0.35);color:#f87171;font-size:1.15rem;letter-spacing:0.15em;">
+                <div class="ats-redaction-sample type-resistance" style="margin-top:1.25rem;padding:0.75rem 1rem;background:rgba(19,21,21,0.85);border:1px dashed rgba(248,113,113,0.45);color:#f87171;">
                     REDACTED CANDIDATE // MISSING KEYWORDS // FILTER REJECTED
                 </div>
             </div>
@@ -163,8 +165,8 @@
 
     <!-- CTA Final -->
     <section class="landing-final-cta">
-        <h2>Pronto para romper os filtros ATS?</h2>
-        <a href="/pages/step-profile.html" class="hermes-btn-primary" style="margin-top:1rem;display:inline-flex;">
+        <h2 class="type-hero">Pronto para romper os filtros ATS?</h2>
+        <a href="/pages/step-profile.html" class="hermes-btn-primary type-tech" style="margin-top:1rem;display:inline-flex;">
             INICIAR AGORA // CRIAR CURRÍCULO
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>

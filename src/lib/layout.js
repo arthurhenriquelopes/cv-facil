@@ -34,13 +34,13 @@ export function injectStepHeader({ step, total = 7, backHref = '/pages/dashboard
 
       <div class="onboarding-center">
         <a href="/" class="hermes-nav-brand">
-          <span class="hermes-logo-title">CV FÁCIL</span>
-          <span class="hermes-logo-sub">ATS ARCHITECT</span>
+          <span class="hermes-logo-title type-hero">CV FÁCIL</span>
+          <span class="hermes-logo-sub type-tech">ATS ARCHITECT</span>
         </a>
         <div class="onboarding-step-pill">
-          <span class="step-num">${step}/${total}</span>
+          <span class="step-num type-tech">${step}/${total}</span>
           <span class="step-divider">•</span>
-          <span class="step-name">${stepLabel}</span>
+          <span class="step-name type-heading">${stepLabel}</span>
         </div>
       </div>
 
@@ -63,10 +63,10 @@ export function injectStepFooter({ label = 'Salvar e Continuar', id = 'btn-conti
   footer.className = 'onboarding-footer';
   footer.innerHTML = `
     <div class="onboarding-footer-inner">
-      <div class="onboarding-footer-hint">
+      <div class="onboarding-footer-hint type-tech">
         <span>Pressione Enter para avançar</span>
       </div>
-      <button id="${id}" class="onboarding-btn-continue" ${disabled ? 'disabled' : ''}>
+      <button id="${id}" class="onboarding-btn-continue type-body" ${disabled ? 'disabled' : ''}>
         <span>${label}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
@@ -88,19 +88,19 @@ export function injectNavbar({ activePage = 'landing' } = {}) {
   nav.innerHTML = `
     <div class="hermes-navbar-inner">
       <div class="hermes-nav-left">
-        <a href="/" class="hermes-nav-link ${activePage === 'landing' ? 'active' : ''}">SISTEMA</a>
-        <a href="/pages/step-profile.html" class="hermes-nav-link">GERADOR</a>
+        <a href="/" class="hermes-nav-link type-tech ${activePage === 'landing' ? 'active' : ''}">SISTEMA</a>
+        <a href="/pages/step-profile.html" class="hermes-nav-link type-tech">GERADOR</a>
       </div>
 
       <div class="hermes-nav-center">
         <a href="/" class="hermes-brand-stacked">
-          <span class="hermes-brand-title">CV FÁCIL</span>
+          <span class="hermes-brand-title type-hero">CV FÁCIL</span>
         </a>
       </div>
 
       <div class="hermes-nav-right">
-        <a href="/pages/dashboard.html" class="hermes-nav-link ${activePage === 'dashboard' ? 'active' : ''}">DASHBOARD</a>
-        <a href="/pages/step-profile.html" class="hermes-cta-btn">CRIAR CURRÍCULO</a>
+        <a href="/pages/dashboard.html" class="hermes-nav-link type-tech ${activePage === 'dashboard' ? 'active' : ''}">DASHBOARD</a>
+        <a href="/pages/step-profile.html" class="hermes-cta-btn type-tech">CRIAR CURRÍCULO</a>
         <span id="navbar-gear-mount"></span>
       </div>
     </div>
