@@ -199,17 +199,23 @@
             font-weight: 600;
             color: var(--color-text-secondary);
         }
+
+        @media (max-width: 860px) {
+            .manifesto-lion-wrap {
+                position: relative !important;
+                right: auto !important;
+                top: auto !important;
+                width: 240px !important;
+                margin: -2rem auto 1.5rem !important;
+                opacity: 0.9 !important;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Moldura Perfeita da Viewport (Unificada, Zero Sobreposição) -->
     <div class="screen-frame-viewport"></div>
-
-    <!-- React Bits WebGL Dither Shader Canvas -->
-    <div id="dither-bg" class="dither-bg-canvas"></div>
-
-    <script type="module" src="/src/dither-mount.jsx"></script>
     <script type="module">
         import { injectNavbar } from '/src/lib/layout.js';
         import { getState, resetFlow, resetJobState } from '/src/lib/store.js';
@@ -367,25 +373,45 @@
             </div>
         </div>
 
-        <!-- Seção Editorial / Manifesto de Blindagem com o Leão Medieval Dithered -->
-        <article class="dash-manifesto animate-fade-in-up" style="max-width:52rem;margin:3rem auto 5rem;padding:0 1.25rem;">
-            <div style="border:1px solid rgba(125,226,209,0.3);background:rgba(19,21,21,0.85);padding:2.5rem 2rem;text-align:center;position:relative;">
-                <div style="display:flex;justify-content:center;margin-bottom:1.5rem;">
-                    <img src="/src/assets/pngegg-dithered.svg" alt="Leão Medieval Dithered" style="width:160px;height:auto;display:block;image-rendering:pixelated;image-rendering:crisp-edges;" />
+        <!-- Seção Editorial / Manifesto com o Leão Medieval Dithered em Posição Disruptiva Assimétrica -->
+        <article class="dash-manifesto animate-fade-in-up" style="max-width:60rem;margin:4rem auto 5rem;padding:0 1.25rem;">
+            <div class="manifesto-card" style="position:relative;border:1px solid rgba(125,226,209,0.35);background:rgba(19,21,21,0.92);padding:3rem 2.5rem;overflow:visible;">
+                <!-- Marcadores de cantos brutalistas -->
+                <span class="hermes-corner tl"></span>
+                <span class="hermes-corner tr"></span>
+                <span class="hermes-corner bl"></span>
+                <span class="hermes-corner br"></span>
+
+                <!-- Leão Medieval Dithered Disruptivo (Sangria e Sobreposição Assimétrica com o Texto) -->
+                <div class="manifesto-lion-wrap" style="position:absolute;right:-2.5rem;top:-4rem;width:340px;pointer-events:none;z-index:2;opacity:0.82;filter:drop-shadow(0 14px 32px rgba(0,0,0,0.9));">
+                    <img src="/src/assets/pngegg-dithered.svg" alt="Leão Medieval Dithered" style="width:100%;height:auto;display:block;image-rendering:pixelated;image-rendering:crisp-edges;" />
                 </div>
-                <div class="type-resistance" style="color:var(--palette-aqua);font-size:0.85rem;letter-spacing:0.18em;margin-bottom:0.75rem;">
-                    TRATADO DE RESiSTÊNCiA // PROTOCOLO DE BLiNDAGEM
+
+                <!-- Selo Técnico sobreposto ao leão -->
+                <div class="type-tech" style="position:absolute;right:1.5rem;bottom:1.5rem;z-index:4;padding:0.35rem 0.75rem;background:rgba(19,21,21,0.95);border:1px solid var(--palette-aqua);color:var(--palette-aqua);font-size:0.6875rem;letter-spacing:0.14em;">
+                    HERALDIC PROTOCOL // BYPASS-2026
                 </div>
-                <h3 class="type-editorial" style="font-size:1.4rem;color:var(--palette-snow);margin-bottom:0.875rem;line-height:1.35;">
-                    A Soberania do Candidato Diante dos Filtros Invisíveis
-                </h3>
-                <p class="type-body" style="color:var(--color-text-secondary);font-size:0.925rem;line-height:1.75;max-width:40rem;margin:0 auto 1.5rem;">
-                    Algoritmos de triagem corporativa operam descartando 98% dos currículos antes de qualquer olhar humano. Nossa arquitetura restaura a densidade técnica e a autoridade executiva de cada conquista, rompendo os bloqueios da Gupy, Workday e Greenhouse com rigor cirúrgico e precisão determinística.
-                </p>
-                <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1.5rem;font-size:0.75rem;color:var(--color-text-muted);border-top:1px dashed rgba(125,226,209,0.2);padding-top:1.25rem;" class="type-tech">
-                    <span>✓ ZERO DADOS ENVIADOS A SERVIDORES EXTERNOS</span>
-                    <span>✓ REGRAS DETERMINÍSTICAS DE FORMATAÇÃO</span>
-                    <span>✓ 100% BLINDADO CONTRA PARSERS</span>
+
+                <!-- Conteúdo Textual com Hierarquia Editorial Flutuando sobre a Arte -->
+                <div style="position:relative;z-index:3;max-width:36rem;">
+                    <div class="type-resistance" style="color:var(--palette-aqua);font-size:0.875rem;letter-spacing:0.18em;margin-bottom:0.85rem;display:inline-flex;align-items:center;gap:0.5rem;">
+                        <span class="ats-dot"></span>
+                        TRATADO DE RESiSTÊNCiA // PROTOCOLO DE BLiNDAGEM
+                    </div>
+                    
+                    <h3 class="type-editorial" style="font-size:clamp(1.4rem, 2.5vw, 1.85rem);color:var(--palette-snow);margin-bottom:1.15rem;line-height:1.25;letter-spacing:-0.01em;">
+                        A Soberania do Candidato Diante dos Filtros Invisíveis
+                    </h3>
+                    
+                    <p class="type-body" style="color:rgba(255,250,251,0.82);font-size:0.95rem;line-height:1.8;margin-bottom:1.75rem;">
+                        Algoritmos de triagem corporativa operam descartando 98% dos currículos antes de qualquer olhar humano. Nossa arquitetura restaura a densidade técnica e a autoridade executiva de cada conquista, rompendo os bloqueios da Gupy, Workday e Greenhouse com rigor cirúrgico e precisão determinística.
+                    </p>
+
+                    <div style="display:flex;flex-wrap:wrap;gap:1.5rem;font-size:0.75rem;color:var(--color-text-muted);border-top:1px dashed rgba(125,226,209,0.25);padding-top:1.25rem;" class="type-tech">
+                        <span>✓ ZERO DADOS ENVIADOS A SERVIDORES EXTERNOS</span>
+                        <span>✓ REGRAS DETERMINÍSTICAS DE FORMATAÇÃO</span>
+                        <span>✓ 100% BLINDADO CONTRA PARSERS</span>
+                    </div>
                 </div>
             </div>
         </article>
