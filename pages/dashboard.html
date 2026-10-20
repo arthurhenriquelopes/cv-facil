@@ -203,6 +203,13 @@
 </head>
 
 <body>
+    <!-- Moldura Perfeita da Viewport (Unificada, Zero Sobreposição) -->
+    <div class="screen-frame-viewport"></div>
+
+    <!-- React Bits WebGL Dither Shader Canvas -->
+    <div id="dither-bg" class="dither-bg-canvas"></div>
+
+    <script type="module" src="/src/dither-mount.jsx"></script>
     <script type="module">
         import { injectNavbar } from '/src/lib/layout.js';
         import { getState, resetFlow, resetJobState } from '/src/lib/store.js';

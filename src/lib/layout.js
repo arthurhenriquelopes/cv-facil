@@ -83,6 +83,12 @@ export function injectStepFooter({ label = 'Salvar e Continuar', id = 'btn-conti
  * [LINKS ESQUERDA] [LOGO CENTRALIZADA STACKED] [LINKS DIREITA + BOTÃO CTA TÉCNICO]
  */
 export function injectNavbar({ activePage = 'landing' } = {}) {
+  if (!document.querySelector('.screen-frame-viewport')) {
+    const frame = document.createElement('div');
+    frame.className = 'screen-frame-viewport';
+    document.body.prepend(frame);
+  }
+
   const nav = document.createElement('nav');
   nav.className = 'hermes-navbar';
   nav.innerHTML = `
