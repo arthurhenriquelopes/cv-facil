@@ -9,16 +9,22 @@ const DEFAULT_CONFIG = {
   backgroundColor: '#131515',
   ditherMode: 'bayer',
   colorNum: 4,
-  pixelSize: 2,
+  pixelSize: 3,
   waveSpeed: 0.05,
-  waveFrequency: 3.0,
+  waveFrequency: 3,
   waveAmplitude: 0.3,
-  scale: 1.0,
-  contrast: 1.0,
-  brightness: 0.0,
+  scale: 1,
+  contrast: 1,
+  brightness: -0.1,
   mouseEffect: 'erase',
   mouseRadius: 0.3,
-  palette: ['#131515', '#1a332e', '#339989', '#7de2d1', '#fffafb']
+  palette: [
+    '#131515',
+    '#1a332e',
+    '#339989',
+    '#7de2d1',
+    '#fffafb'
+  ]
 };
 
 export default function DitherTuner() {
@@ -33,7 +39,20 @@ export default function DitherTuner() {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Atalho de teclado Alt+B para alternar o Tuner
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.altKey && (e.key === 'b' || e.key === 'B')) {
+        setIsDismissed(false);
+        setIsOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Salvar no localStorage sempre que mudar
   useEffect(() => {
@@ -102,37 +121,75 @@ export default function DitherTuner() {
           fontFamily: 'var(--font-tech, monospace)'
         }}
       >
-        <button
-          onClick={() => setIsOpen(prev => !prev)}
-          style={{
-            background: isOpen ? 'var(--palette-aqua, #7de2d1)' : 'rgba(19, 21, 21, 0.95)',
-            color: isOpen ? '#131515' : 'var(--palette-aqua, #7de2d1)',
-            border: '1px solid var(--palette-aqua, #7de2d1)',
-            padding: '8px 14px',
-            fontSize: '11px',
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-        >
-          <span>{isOpen ? '✕ FECHAR TUNER' : '⚙ BG TUNER'}</span>
-          {!isOpen && (
-            <span
+        {!isDismissed ? (
+          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+            <button
+              onClick={() => setIsOpen(prev => !prev)}
               style={{
-                background: 'rgba(125,226,209,0.2)',
-                padding: '2px 5px',
-                fontSize: '10px'
+                background: isOpen ? 'var(--palette-aqua, #7de2d1)' : 'rgba(19, 21, 21, 0.95)',
+                color: isOpen ? '#131515' : 'var(--palette-aqua, #7de2d1)',
+                border: '1px solid var(--palette-aqua, #7de2d1)',
+                padding: '8px 14px',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.8)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
             >
-              {Math.round(config.opacity * 100)}%
-            </span>
-          )}
-        </button>
+              <span>{isOpen ? '✕ FECHAR' : '⚙ BG TUNER'}</span>
+              {!isOpen && (
+                <span
+                  style={{
+                    background: 'rgba(125,226,209,0.2)',
+                    padding: '2px 5px',
+                    fontSize: '10px'
+                  }}
+                >
+                  {Math.round(config.opacity * 100)}%
+                </span>
+              )}
+            </button>
+            {!isOpen && (
+              <button
+                onClick={() => setIsDismissed(true)}
+                title="Ocultar botão (pressione Alt+B para reabrir)"
+                style={{
+                  background: 'rgba(19, 21, 21, 0.95)',
+                  color: '#888',
+                  border: '1px solid rgba(125,226,209,0.3)',
+                  padding: '8px 10px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.8)'
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsDismissed(false)}
+            title="Abrir BG Tuner (Alt+B)"
+            style={{
+              background: 'rgba(19, 21, 21, 0.85)',
+              color: 'var(--palette-aqua, #7de2d1)',
+              border: '1px solid rgba(125,226,209,0.4)',
+              padding: '6px 10px',
+              fontSize: '10px',
+              cursor: 'pointer',
+              opacity: 0.6
+            }}
+          >
+            ⚙
+          </button>
+        )}
 
         {/* Modal / Gaveta de Configuração */}
         {isOpen && (
