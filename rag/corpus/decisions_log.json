@@ -1,0 +1,66 @@
+{
+  "project": "CV Fácil",
+  "last_updated": "2026-10-28T16:35:00-03:00",
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "date": "2026-10-20",
+      "category": "design",
+      "title": "Adoção Estrita do Guia Anti-Slop e Remoção de Cantos Arredondados",
+      "context": "Projetos de IA sofrem com estética homogênea de 3 cards idênticos, bordas arredondadas e badges neon pulsantes.",
+      "decision": "Aplicar border-radius: 0px estrito em toda a interface; abolir badges com @keyframes pulse; usar diagramações editoriais assimétricas e contraste WCAG AA.",
+      "status": "IMPLEMENTED",
+      "impacted_files": ["gemini.md", "src/style.css", "src/styles/*.css"]
+    },
+    {
+      "id": "DEC-002",
+      "date": "2026-10-20",
+      "category": "design",
+      "title": "Shader WebGL Dither Halftone como Textura Oficial de Fundo",
+      "context": "Necessidade de textura visual autêntica inspirada no logo halftone, evitando orbes de blur roxo/ciano genéricos.",
+      "decision": "Implementar componente WebGL Dither com parâmetros sintonizados (opacidade 0.7, pixelSize 3, brightness -0.1, waveSpeed 0.05, paleta Pine Green/Aqua/Dark). Incluir painel Tuner com atalho Alt+B.",
+      "status": "IMPLEMENTED",
+      "impacted_files": ["src/components/Dither.jsx", "src/components/DitherTuner.jsx", "src/dither-mount.jsx"]
+    },
+    {
+      "id": "DEC-003",
+      "date": "2026-10-28",
+      "category": "architecture_rag",
+      "title": "RAG para Conhecimento Externo, Janela Longa para CV do Usuário",
+      "context": "Baseado no Guia Mestre (28/10/2026). Fatiar o currículo e a vaga em chunks para RAG destrói coerência e contexto sem necessidade, pois cabem inteiros nos 1M tokens do Gemini.",
+      "decision": "Manter o currículo e o texto da vaga inteiros no prompt do modelo. O RAG é dedicado exclusivamente a conhecimento externo mutável: regras de parsers ATS, taxonomias CBO/Tech, guias de redação XYZ e regras de segurança.",
+      "status": "IMPLEMENTED",
+      "impacted_files": ["rag/corpus/*", "rag/engine/*", "api/chat.js"]
+    },
+    {
+      "id": "DEC-004",
+      "date": "2026-10-28",
+      "category": "backend_ats",
+      "title": "Score ATS Híbrido: Regras Determinísticas + Avaliação Semântica Explicável",
+      "context": "Prometer '100% de aprovação no ATS' é fraude; sistemas como Greenhouse não usam pontuação automática. O usuário precisa de sub-scores auditáveis e acionáveis.",
+      "decision": "Construir índice composto com pré-checagem determinística (colunas, datas, contatos, cabeçalhos padronizados) somada à análise semântica de contexto e penalidade por keyword-stuffing.",
+      "status": "IMPLEMENTED",
+      "impacted_files": ["rag/engine/ats_evaluator.js", "src/prompts/analyze-job.js"]
+    },
+    {
+      "id": "DEC-005",
+      "date": "2026-10-28",
+      "category": "security_lgpd",
+      "title": "Higienização de Injeção de Prompt e Conformidade com Art. 20 LGPD",
+      "context": "1% dos currículos reais contém injeções de prompt ocultas. Além disso, o Art. 20 da LGPD exige direito de revisão humana de decisões automatizadas.",
+      "decision": "Implementar módulo security_sanitizer para higienizar entradas antes de enviar ao LLM e garantir que todo feedback ofereça explicação clara e possibilidade de edição manual pelo usuário.",
+      "status": "IMPLEMENTED",
+      "impacted_files": ["rag/engine/security_sanitizer.js"]
+    },
+    {
+      "id": "DEC-006",
+      "date": "2026-10-28",
+      "category": "fine_tuning",
+      "title": "Fine-Tuning para Formato e Comportamento via Datasets Sintéticos Curados",
+      "context": "Modelos Gemini evoluem rapidamente (3.8 Flash, Argon); SFT em fatos causa obsolescência rápida. SFT deve focar em formatação JSON perfeita e estilo de reescrita sem alucinação.",
+      "decision": "Estruturar pipelines de geração e validação de datasets JSONL para SFT (reescrita XYZ e parsing estruturado) respeitando o schema oficial do Gemini.",
+      "status": "IMPLEMENTED",
+      "impacted_files": ["rag/fine_tuning/*"]
+    }
+  ]
+}

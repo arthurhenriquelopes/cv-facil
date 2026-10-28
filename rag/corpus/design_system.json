@@ -1,0 +1,53 @@
+{
+  "version": "2026.10",
+  "system_name": "CV Fácil Design System & Unslop Engine",
+  "philosophy": {
+    "anti_slop": true,
+    "brutalist_editorial": true,
+    "subtraction_principle": "Menos camadas decorativas, mais hierarquia tipográfica e contraste limpo."
+  },
+  "tokens": {
+    "colors": {
+      "bg_dark": "#131515",
+      "charcoal": "#2b2c28",
+      "pine_green": "#339989",
+      "aqua": "#7de2d1",
+      "snow_white": "#fffafb",
+      "warning": "#e09f3e",
+      "danger": "#d64045"
+    },
+    "typography": {
+      "display": "TASA Explorer, sans-serif",
+      "ui": "Clash Grotesk, sans-serif",
+      "editorial_serif": "Montagu Slab, serif",
+      "tech_mono": "'Space Mono', monospace"
+    },
+    "border_radius": "0px !important (Bordas 100% retas, proibido cantos arredondados)",
+    "contrast_standard": "WCAG AA (mínimo 4.5:1 para texto normal, 7:1 para leitura de documento)"
+  },
+  "visual_textures": {
+    "background": "Halftone & Dither tátil via WebGL Shader",
+    "dither_official_params": {
+      "opacity": 0.7,
+      "waveColor": "#339989",
+      "backgroundColor": "#131515",
+      "ditherMode": "bayer",
+      "pixelSize": 3,
+      "waveSpeed": 0.05,
+      "waveFrequency": 3.0,
+      "waveAmplitude": 0.3,
+      "scale": 1.0,
+      "contrast": 1.0,
+      "brightness": -0.1,
+      "mouseEffect": "erase",
+      "mouseRadius": 0.3
+    }
+  },
+  "prohibited_ai_slop_patterns": [
+    "Cardocalypse: grids simétricos de 3 cards com bordas suaves e ícones neon dentro de círculos",
+    "Skeleton wireframes piscando no hero (barrinhas cinzas sem conteúdo real)",
+    "Badges com keyframe pulse infinito (bolinhas piscando em convulsão)",
+    "Glows radiais roxos e cianos sem relação com a identidade da marca",
+    "Textos cinza escuro sobre fundo preto com contraste inferior a 60%"
+  ]
+}

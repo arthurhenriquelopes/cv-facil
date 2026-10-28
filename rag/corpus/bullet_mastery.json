@@ -1,0 +1,43 @@
+{
+  "version": "2026.10",
+  "description": "Frameworks e padrões de alta performance para redação e reescrita de bullet points em currículos sem alucinação de fatos.",
+  "frameworks": {
+    "google_xyz": {
+      "name": "Fórmula XYZ do Google",
+      "formula": "Conquistei [X], medido por [Y], realizando [Z]",
+      "components": {
+        "x": "Resultado claro ou conquista objetiva alcançada",
+        "y": "Métrica tangível ou percentual de impacto no negócio/engenharia",
+        "z": "Ação específica, método, arquitetura ou tecnologia utilizada"
+      },
+      "good_example": "Reduzi a latência média de resposta de APIs em 42% (de 380ms para 220ms) ao reescrever rotas críticas em Go e implementar cache inteligente com Redis.",
+      "bad_example": "Responsável por ajudar na performance de APIs da equipe."
+    },
+    "star_method": {
+      "name": "Método STAR",
+      "components": ["Situação (Contexto)", "Tarefa (Desafio)", "Ação (O que você fez)", "Resultado (Impacto quantificado)"],
+      "rule": "Resuma a situação/tarefa em 1 linha e dê 80% do peso do bullet para Ação + Resultado."
+    }
+  },
+  "action_verbs_pt_br": {
+    "lideranca_e_gestao": ["Liderei", "Coordenei", "Direcionei", "Estruturei", "Orquestrei", "Conduzi", "Capacitei", "Fundamentei"],
+    "construcao_e_engenharia": ["Arquitetei", "Desenvolvi", "Implementei", "Projetei", "Construí", "Refatorei", "Integrei", "Automatizei"],
+    "otimizacao_e_eficiencia": ["Otimizei", "Reduzi", "Acelerei", "Eliminei", "Consolidei", "Maximizou", "Mitiguei", "Aprimorei"],
+    "negocio_e_impacto": ["Alavanquei", "Aumentei", "Gerei", "Economizei", "Entreguei", "Expandi", "Conquistei", "Negociei"],
+    "analise_e_pesquisa": ["Diagnostiquei", "Analisei", "Mapeei", "Auditei", "Identifiquei", "Validei", "Mensurou", "Investiguei"]
+  },
+  "forbidden_slop_and_cliches": [
+    "Profissional proativo e dinâmico",
+    "Excelente comunicação interpessoal e trabalho em equipe",
+    "Capacidade de pensar fora da caixa",
+    "Focado em resultados de alta sinergia",
+    "Responsável por diversas tarefas no dia a dia",
+    "Apaixonado por tecnologia e inovação contínua",
+    "Buscando novos desafios para agregar valor"
+  ],
+  "anti_hallucination_rules": [
+    "NUNCA invente números, percentuais, ferramentas ou atribuições que não foram fornecidos ou sugeridos pelo usuário no CV original.",
+    "Se o usuário declarar 'fiz refatoração da API e ficou mais rápido', use '[métrica estimada, ex: ~30%]' ou pergunte/sugira a métrica com marcadores claros de validação humana.",
+    "Preserve datas, empresas e escopo original sem distorção factual."
+  ]
+}

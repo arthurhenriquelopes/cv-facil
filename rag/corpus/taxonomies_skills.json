@@ -1,0 +1,76 @@
+{
+  "version": "2026.10",
+  "description": "Taxonomia normalizada de ocupações (CBO - Classificação Brasileira de Ocupações) e habilidades técnicas/tecnológicas com sinônimos e equivalências.",
+  "roles": [
+    {
+      "standard_title": "Desenvolvedor de Software Backend",
+      "cbo_code": "2124-05",
+      "synonyms": ["Backend Engineer", "Engenheiro de Backend", "Desenvolvedor Backend", "Programador Backend", "Software Engineer - Backend"],
+      "core_skills": ["Node.js", "Java", "Python", "Go", "C#", ".NET", "PostgreSQL", "MySQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", "APIs REST", "GraphQL", "Microserviços", "CI/CD", "Kafka", "RabbitMQ"],
+      "seniorities": ["Júnior", "Pleno", "Sênior", "Especialista / Staff", "Tech Lead"]
+    },
+    {
+      "standard_title": "Desenvolvedor de Software Frontend",
+      "cbo_code": "2124-05",
+      "synonyms": ["Frontend Engineer", "Engenheiro de Frontend", "Desenvolvedor Frontend", "Programador Web Frontend"],
+      "core_skills": ["JavaScript", "TypeScript", "React", "Next.js", "Vue.js", "HTML5", "CSS3", "Tailwind CSS", "Redux", "Zustand", "Webpack", "Vite", "Acessibilidade Web (a11y)", "Performance Web", "Jest", "Cypress", "Playwright"],
+      "seniorities": ["Júnior", "Pleno", "Sênior", "Staff"]
+    },
+    {
+      "standard_title": "Desenvolvedor Full Stack",
+      "cbo_code": "2124-05",
+      "synonyms": ["Full Stack Engineer", "Engenheiro Full Stack", "Desenvolvedor Fullstack"],
+      "core_skills": ["TypeScript", "Node.js", "React", "PostgreSQL", "Docker", "Git", "REST APIs", "Cloud Computing", "Arquitetura de Software"],
+      "seniorities": ["Júnior", "Pleno", "Sênior", "Tech Lead"]
+    },
+    {
+      "standard_title": "Engenheiro de Dados",
+      "cbo_code": "2124-20",
+      "synonyms": ["Data Engineer", "Engenheiro de Big Data", "Arquiteto de Dados"],
+      "core_skills": ["Python", "SQL", "Apache Spark", "Airflow", "Kafka", "Databricks", "Snowflake", "BigQuery", "Data Lake", "dbt", "ETL", "ELT", "Modelagem Dimensional"],
+      "seniorities": ["Júnior", "Pleno", "Sênior", "Staff Data Engineer"]
+    },
+    {
+      "standard_title": "Cientista de Dados / Especialista em IA",
+      "cbo_code": "2124-25",
+      "synonyms": ["Data Scientist", "Machine Learning Engineer", "Engenheiro de ML", "AI Engineer"],
+      "core_skills": ["Python", "Pandas", "Scikit-Learn", "PyTorch", "TensorFlow", "Estatística", "Modelos de Linguagem (LLMs)", "RAG", "Fine-Tuning", "LangChain", "LlamaIndex", "Hugging Face", "MLOps"],
+      "seniorities": ["Júnior", "Pleno", "Sênior", "Principal AI Scientist"]
+    },
+    {
+      "standard_title": "Engenheiro DevOps / SRE",
+      "cbo_code": "2124-30",
+      "synonyms": ["DevOps Engineer", "Site Reliability Engineer", "Engenheiro de Infraestrutura Cloud"],
+      "core_skills": ["Linux", "Docker", "Kubernetes", "Terraform", "Ansible", "AWS", "Google Cloud Platform (GCP)", "Azure", "GitHub Actions", "GitLab CI", "Prometheus", "Grafana", "Observabilidade"],
+      "seniorities": ["Júnior", "Pleno", "Sênior", "Staff SRE"]
+    },
+    {
+      "standard_title": "Gerente de Produto (Product Manager)",
+      "cbo_code": "1423-05",
+      "synonyms": ["Product Manager", "PM", "Group Product Manager", "Product Owner"],
+      "core_skills": ["Descoberta de Produto (Product Discovery)", "Roadmap de Produto", "Métricas de Negócio (CAC, LTV, Churn, ROI)", "Metodologias Ágeis (Scrum, Kanban)", "Pesquisa com Usuários", "Análise de Dados", "SQL", "A/B Testing"],
+      "seniorities": ["Associate PM", "Product Manager", "Senior PM", "Group PM", "Head de Produto"]
+    }
+  ],
+  "synonym_mappings": {
+    "k8s": "Kubernetes",
+    "js": "JavaScript",
+    "ts": "TypeScript",
+    "postgres": "PostgreSQL",
+    "pg": "PostgreSQL",
+    "gcp": "Google Cloud Platform (GCP)",
+    "node": "Node.js",
+    "nodejs": "Node.js",
+    "reactjs": "React",
+    "react.js": "React",
+    "vue": "Vue.js",
+    "next": "Next.js",
+    "nextjs": "Next.js",
+    "ai": "Inteligência Artificial",
+    "ia": "Inteligência Artificial",
+    "ml": "Machine Learning",
+    "ci/cd": "Integração Contínua / Entrega Contínua (CI/CD)",
+    "devops": "DevOps / SRE",
+    "qa": "Qualidade de Software / Testes Automatizados"
+  }
+}

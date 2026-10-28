@@ -1,0 +1,109 @@
+{
+  "version": "2026.10",
+  "last_updated": "2026-10-28",
+  "description": "Base de conhecimento curada sobre comportamentos, regras de parsing e armadilhas dos principais Applicant Tracking Systems (ATS).",
+  "platforms": {
+    "workday": {
+      "name": "Workday",
+      "market_share_tier": "Enterprise / Fortune 500",
+      "parser_engine": "Parsing semântico avançado com fallback para OCR e regex",
+      "parsing_quirks": [
+        "Falha frequentemente ao extrair texto em layouts de duas colunas, intercalando linhas de colunas adjacentes.",
+        "Tabelas sem bordas ou com formatações complexas são frequentemente achatadas ou corrompidas.",
+        "Campos de cabeçalho e rodapé (.docx ou .pdf) são rotineiramente ignorados por segurança ou limites de OCR.",
+        "Gera preenchimento automático de campos com base em cabeçalhos padronizados (Experiência, Educação, Habilidades)."
+      ],
+      "supported_formats": ["pdf", "docx"],
+      "recommended_format": "pdf com texto selecionável ou docx padrão",
+      "scoring_type": "Filtro de busca por palavras-chave com correspondência semântica e perguntas eliminatórias (knockout questions)."
+    },
+    "greenhouse": {
+      "name": "Greenhouse",
+      "market_share_tier": "Tech / High Growth / Startups",
+      "parser_engine": "Parser baseado em texto com indexação elástica",
+      "parsing_quirks": [
+        "Deliberadamente NÃO atribui score percentual ou nota automática que reprove o candidato.",
+        "Recrutadores utilizam busca booleana (AND, OR, NOT) sobre o texto integral indexado.",
+        "Lê cartas de apresentação e as inclui no pool de busca do candidato.",
+        "Imagens, ícones de redes sociais ou gráficos de barras com 'nível de proficiência' (ex: 80% Python) são descartados."
+      ],
+      "supported_formats": ["pdf", "docx"],
+      "recommended_format": "pdf textual",
+      "scoring_type": "Busca booleana e triagem manual pelo recrutador."
+    },
+    "taleo": {
+      "name": "Oracle Taleo",
+      "market_share_tier": "Governo / Grandes Corporações Tradicionais",
+      "parser_engine": "Parser legado rigoroso baseado em correspondência exata de tokens",
+      "parsing_quirks": [
+        "Um dos poucos sistemas que ainda atribui um percentual explícito de correspondência ('Requisition Rank').",
+        "Muito sensível à grafia exata das palavras-chave (ex: 'Node.js' vs 'NodeJS').",
+        "Pode ter problemas severos com PDFs codificados com fontes não padrão; docx é frequentemente recomendado por recrutadores Taleo.",
+        "Seções com nomes não convencionais (ex: 'Minha Jornada') não são mapeadas para o banco de dados."
+      ],
+      "supported_formats": ["docx", "pdf", "rtf", "txt"],
+      "recommended_format": "docx ou pdf com fontes do sistema",
+      "scoring_type": "Percentual de aderência exata a palavras-chave (Requisition Rank)."
+    },
+    "gupy": {
+      "name": "Gupy",
+      "market_share_tier": "Líder no mercado corporativo brasileiro",
+      "parser_engine": "IA de afinidade (Gaia / modelos neurais de embedding em PT-BR) combinada com triagem de testes",
+      "parsing_quirks": [
+        "Analisa afinidade semântica entre o perfil preenchido/currículo e a descrição cadastrada pela empresa.",
+        "Avalia a coerência entre tempo de experiência, títulos de cargos e competências declaradas.",
+        "Penaliza inconsistências temporais graves ou falta de detalhamento em experiências recentes.",
+        "Testes de perfil, lógica e português possuem peso eliminatório antes mesmo da leitura do currículo."
+      ],
+      "supported_formats": ["pdf", "docx"],
+      "recommended_format": "pdf estruturado com termos em português formal",
+      "scoring_type": "Ranking de afinidade por IA com pontos de corte definidos pelo recrutador."
+    },
+    "lever": {
+      "name": "Lever",
+      "market_share_tier": "Scale-ups / Tech companies",
+      "parser_engine": "Indexação limpa de texto em formato unificado",
+      "parsing_quirks": [
+        "Organiza os candidatos em estágios visuais (Kanban).",
+        "Permite que os recrutadores busquem tags e habilidades extraídas automaticamente.",
+        "Não oculta o PDF original; o recrutador visualiza o documento renderizado lado a lado com os campos parseados."
+      ],
+      "supported_formats": ["pdf", "docx"],
+      "recommended_format": "pdf com design tipográfico de alto contraste",
+      "scoring_type": "Indexação textual limpa sem auto-rejeição."
+    }
+  },
+  "general_ats_golden_rules": [
+    {
+      "id": "SINGLE_COLUMN_LAYOUT",
+      "rule": "Layout estritamente em coluna única para leitura pelo parser",
+      "importance": "CRITICAL",
+      "reason": "Parsers ATS leem da esquerda para a direita de forma linear. Colunas duplas misturam blocos de texto não relacionados gerando texto incompreensível."
+    },
+    {
+      "id": "STANDARD_SECTION_HEADERS",
+      "rule": "Usar cabeçalhos de seção padronizados",
+      "importance": "HIGH",
+      "valid_headers": ["Resumo Profissional", "Experiência Profissional", "Formação Acadêmica", "Habilidades Técnicas", "Certificações", "Idiomas", "Projetos"],
+      "reason": "Parsers mapeiam blocos para schemas de banco de dados buscando termos específicos."
+    },
+    {
+      "id": "NO_GRAPHIC_SKILL_BARS",
+      "rule": "Nunca utilizar barras gráficas, círculos ou porcentagens para habilidades",
+      "importance": "CRITICAL",
+      "reason": "Robôs ATS não conseguem quantificar barras de progresso desenhadas em CSS/vetor; apenas o texto sobrevive e a nota vira ruído."
+    },
+    {
+      "id": "DATE_CONSISTENCY",
+      "rule": "Padronização de datas (MM/AAAA ou Mês/Ano)",
+      "importance": "HIGH",
+      "reason": "O parser calcula automaticamente a duração total de cada experiência para somar anos de atuação."
+    },
+    {
+      "id": "KEYWORD_CONTEXT_ANTI_STUFFING",
+      "rule": "Palavras-chave devem sempre aparecer acompanhadas de contexto e métricas, nunca isoladas em repetição artificial",
+      "importance": "CRITICAL",
+      "reason": "Sistemas modernos penalizam densidade antinatural de termos e recrutadores humanos descartam currículos com blocos soltos de palavras-chave."
+    }
+  ]
+}

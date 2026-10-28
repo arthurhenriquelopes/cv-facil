@@ -1,6 +1,6 @@
-# DIRETRIZES DE DESIGN & GUIA DE UNSLOP (GEMINI.MD)
+# DIRETRIZES DE DESIGN, ARQUITETURA RAG & GUIA ANTI-SLOP (GEMINI.MD)
 > **CV Fácil — Regras Rígidas para Agentes e Desenvolvedores**  
-> *Este documento reúne as diretrizes de desintoxicação visual ("De-slop / Unslop") compiladas a partir de discussões e guias de design (Hacker News, Reddit r/webdesign, r/SaaS, Impeccable.style, 925studios).*
+> *Este documento reúne as diretrizes de desintoxicação visual ("De-slop / Unslop"), arquitetura de RAG, Engenharia de ATS, Fine-Tuning supervisionado e memória interativa do projeto baseadas no Guia Mestre (28/10/2026).*
 
 ---
 
@@ -30,7 +30,7 @@ Qualquer código ou layout desenvolvido no repositório DEVE seguir estas avers�
 - **Regra:** Nunca coloque mockups com barrinhas cinzas fingindo ser texto no hero ou no corpo da página.
 - **Alternativa:** Mostre **conteúdo real de currículo**: antes vs depois concreto, trechos reais de vagas, palavras-chave auditadas e métricas autênticas.
 
-### 🚫 Aversão 3: Proibido o "Regra da Adição" (Adote o Princípio da Subtração)
+### 🚫 Aversão 3: Proibido a "Regra da Adição" (Adote o Princípio da Subtração)
 - **Regra:** Não adicione uma borda, um gradiente interno ou um container decorativo se a tipografia e o espaçamento em branco já resolverem a hierarquia.
 - **Ação:** Delete caixas desnecessárias. Menos camadas = mais sofisticação.
 
@@ -44,12 +44,15 @@ Qualquer código ou layout desenvolvido no repositório DEVE seguir estas avers�
 ### 🚫 Aversão 6: Proibido o "Blob Glow" Roxo/Ciano Genérico
 - **Regra:** Fundo não é aquarela borrada. A textura visual da marca CV Fácil é o **Halftone / Dither pontilhado tátil**, derivado diretamente do logotipo oficial.
 
+### 🚫 Aversão 7: Proibido Cantos Arredondados
+- **Regra:** Em todo o ecossistema visual, `border-radius: 0 !important;`. Botões, caixas, modais e containers têm bordas 100% retas e brutalistas.
+
 ---
 
 ## 3. A Linguagem Gráfica Oficial: Halftone & Dither Tátil
 
 Para garantir autenticidade única que nenhuma IA genérica produz:
-1. **Fundo com Halftone Marcante:** Padrão matricial vetorial presente, com micropontos nas cores exatas da paleta (`#339989` Pine Green, `#7de2d1` Aqua e `#fffafb` Snow) sobre a base sólida `#131515`.
+1. **Fundo com Halftone Marcante:** Shader WebGL oficial (`src/components/Dither.jsx` / `DitherTuner.jsx`) sintonizado nos valores de referência (`opacity: 0.7`, `pixelSize: 3`, `brightness: -0.1`, `waveSpeed: 0.05`).
 2. **Logotipo Halftone Oficial (`src/assets/logo-halftone.png`):** Protagonista visual do Hero e do Onboarding.
 3. **Tipografia Tríplice com Autoridade:**
    - **TASA Explorer:** Display geométrico cirúrgico.
@@ -62,7 +65,53 @@ Para garantir autenticidade única que nenhuma IA genérica produz:
 
 Antes de concluir qualquer tela:
 - [ ] O layout foge do padrão "3 cards idênticos com ícones coloridos"?
-- [ ] O fundo tem o halftone pontilhado autêntico e audível da marca, em vez de blur genérico?
+- [ ] O fundo tem o halftone pontilhado autêntico da marca, em vez de blur genérico?
 - [ ] Todo o texto fala de dores concretas (robôs ATS, Gupy, Workday, palavras-chave)?
 - [ ] A tela tem contraste alto e confortável para leitura prolongada?
-- [ ] O botão principal tem peso claro e foco na ação do usuário?
+- [ ] Todos os elementos mantêm bordas estritamente retas (`border-radius: 0`)?
+
+---
+
+## 5. Diretiva de Memória Contínua & Registro Interativo no RAG
+
+> **REGRA DE RESPONSABILIDADE DO AGENTE:**
+> Qualquer decisão arquitetural, técnica, de segurança ou de design DEVE ser gravada imediatamente e interativamente no RAG em `rag/corpus/decisions_log.json` através do módulo `rag/engine/decision_recorder.js`.
+> **O usuário NÃO precisa pedir "salva isso".** Sempre que uma definição for tomada ou alinhada, o agente deve registrar a entrada com `id`, `category`, `context`, `decision` e `impacted_files`.
+
+---
+
+## 6. Arquitetura de RAG & Engenharia de ATS (Guia Mestre)
+
+1. **O que vai no RAG vs o que vai no Prompt:**
+   - **No Prompt (Contexto de 1M tokens):** O currículo integral do candidato e a descrição completa da vaga. **PROIBIDO fatiar o CV do usuário em chunks de RAG.**
+   - **No RAG (`rag/corpus/`):** Conhecimento externo curado e versionado:
+     - Regras de parsers ATS por plataforma (`ats_parsers.json`: Workday, Taleo, Greenhouse, Gupy, Lever).
+     - Taxonomia de ocupações CBO e competências tecnológicas (`taxonomies_skills.json`).
+     - Frameworks de escrita de bullets (`bullet_mastery.json`: Fórmula XYZ do Google, Método STAR, verbos de ação em PT-BR).
+     - Sistema de design e decisões do projeto (`design_system.json`, `decisions_log.json`).
+
+2. **Cálculo de Score ATS Honesto & Híbrido:**
+   - **Determinístico Primeiro:** Avalie dados de contato, cabeçalhos padronizados, datas e layout antes de chamar o LLM via `rag/engine/ats_evaluator.js`.
+   - **Zero Promessa Falsa:** Nunca prometa "100% de aprovação no ATS" (plataformas como Greenhouse não reprovam automaticamente). Chame de *Índice de Compatibilidade e Legibilidade ATS*.
+   - **Anti-Stuffing Ativo:** Penalize repetição mecânica ou blocos soltos de palavras-chave.
+   - **Sub-scores Explicáveis:** Divida o score em legibilidade para parser, presença de métricas/verbos, requisitos obrigatórios e alinhamento de senioridade.
+
+---
+
+## 7. Diretrizes de Fine-Tuning & Não-Alucinação
+
+1. **Fine-Tuning ensina formato e comportamento, não fatos.**
+2. **Datasets Curados (`rag/fine_tuning/datasets/`):**
+   - Pares estritamente validados no schema oficial do Gemini (`systemInstruction`, `contents` com `user` e `model`).
+   - `bullet_rewriter.jsonl`: Transformação de bullets fracos para XYZ sem inventar fatos.
+   - `cv_parser_structured.jsonl`: Extração precisa para JSON estruturado.
+3. **Regra de Não-Alucinação (Anti-Hallucination):**
+   - O modelo NUNCA pode inventar empresas, métricas, cursos ou diplomas que o usuário não possua. Se faltar a métrica exata, deve sugerir marcadores como `[~X%]` para validação humana.
+
+---
+
+## 8. Segurança de Entrada & Conformidade LGPD
+
+1. **Sanitização de Injeção de Prompt:** Todo texto de CV e de vaga de emprego deve passar pelo `rag/engine/security_sanitizer.js` para neutralizar tentativas de prompt injection (`ignore previous instructions`, `system prompt override`, tags `<system>`).
+2. **Proteção de Dados (LGPD):** Números de CPF são ofuscados automaticamente.
+3. **Artigo 20 da LGPD (Revisão Humana):** O usuário tem o direito inalienável de revisar, editar e auditar qualquer alteração sugerida pela IA antes da exportação final do currículo.

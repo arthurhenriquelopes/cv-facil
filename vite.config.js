@@ -4,11 +4,33 @@ import react from '@vitejs/plugin-react';
 import chatHandler from './api/chat.js';
 
 import extractHandler from './api/extract.js';
+import ragHandler from './api/rag.js';
 
 // Simple Vite plugin to serve the Vercel function locally
 const vercelApiPlugin = () => ({
   name: 'vercel-api-plugin',
   configureServer(server) {
+    server.middlewares.use('/api/rag', async (req, res, next) => {
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', async () => {
+        try {
+          req.body = body ? JSON.parse(body) : {};
+          const urlObj = new URL(req.url, 'http://localhost');
+          req.query = Object.fromEntries(urlObj.searchParams);
+          res.status = (code) => { res.statusCode = code; return res; };
+          res.json = (data) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(data));
+          };
+          await ragHandler(req, res);
+        } catch (err) {
+          console.error('API RAG Error:', err);
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+    });
     server.middlewares.use('/api/chat', async (req, res, next) => {
       if (req.method === 'POST') {
         let body = '';
