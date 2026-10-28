@@ -2,16 +2,17 @@
 <html lang="pt-BR">
 
 <head>
+    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificados Selecionados | CvPorVaga</title>
+    <title>Certificados Selecionados | CV Fácil</title>
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
     <style>
         .cert-review-card {
             background: var(--color-surface);
             border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
+            border-radius:0;
             padding: 1.25rem;
             display: flex;
             flex-direction: column;
@@ -46,7 +47,7 @@
             color: #10b981;
             background: rgba(16, 185, 129, 0.08);
             border: 1px solid rgba(16, 185, 129, 0.15);
-            border-radius: 999px;
+            border-radius:0;
             padding: 0.25rem 0.625rem;
             max-width: 100%;
             overflow: hidden;
@@ -96,7 +97,7 @@
             align-items: center;
             gap: 0.375rem;
             padding: 0.625rem 1.25rem;
-            border-radius: var(--radius-md);
+            border-radius:0;
             border: 1px solid var(--color-border);
             transition: all 0.2s;
             cursor: pointer;
@@ -217,7 +218,7 @@
                 <div class="cert-review-card" style="animation-delay: ${idx * 0.06}s;">
                     <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem;">
                         <div style="display:flex; align-items:center; gap:0.625rem; flex:1; min-width:0;">
-                            <div style="width:2rem; height:2rem; border-radius:0.5rem; background:rgba(16,185,129,0.1); color:#10b981; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <div style="width:2rem; height:2rem; border-radius:0; background:rgba(16,185,129,0.1); color:#10b981; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="8" r="6"></circle>
                                     <path d="M15.477 12.89 17 21.5l-5-3.5-5 3.5 1.523-8.61"></path>
@@ -227,7 +228,7 @@
                                 ${cert.title || 'Certificação'}
                             </h4>
                         </div>
-                        <button class="btn-remove-cert" data-cert-idx="${idx}" style="background:none; border:none; color:var(--color-gray-500); cursor:pointer; padding:0.25rem; border-radius:0.25rem; flex-shrink:0;" title="Remover certificado">
+                        <button class="btn-remove-cert" data-cert-idx="${idx}" style="background:none; border:none; color:var(--color-gray-500); cursor:pointer; padding:0.25rem; border-radius:0; flex-shrink:0;" title="Remover certificado">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                         </button>
                     </div>
@@ -278,7 +279,7 @@
                             <span>${d.title}</span>
                             <span style="color:var(--color-text-muted); font-size:0.75rem; font-style:italic;">— ${d.reason}</span>
                         </div>
-                        <button class="btn-restore-cert" data-dropped-idx="${idx}" style="background:var(--color-gray-800); border:1px solid var(--color-gray-600); color:var(--color-gray-300); padding:0.25rem 0.75rem; border-radius:0.25rem; font-size:0.75rem; cursor:pointer; white-space:nowrap; transition:0.2s;" onmouseover="this.style.background='var(--color-gray-700)'" onmouseout="this.style.background='var(--color-gray-800)'">
+                        <button class="btn-restore-cert" data-dropped-idx="${idx}" style="background:var(--color-gray-800); border:1px solid var(--color-gray-600); color:var(--color-gray-300); padding:0.25rem 0.75rem; border-radius:0; font-size:0.75rem; cursor:pointer; white-space:nowrap; transition:0.2s;" onmouseover="this.style.background='var(--color-gray-700)'" onmouseout="this.style.background='var(--color-gray-800)'">
                             + Restaurar
                         </button>
                     </div>
@@ -380,7 +381,7 @@
         <div id="cert-review-content">
             <div id="cert-results" style="display:none;">
                 <div style="text-align:center; margin-bottom:2.5rem;" class="animate-fade-in-up">
-                    <div style="display:inline-flex; align-items:center; justify-content:center; width:3.5rem; height:3.5rem; border-radius:1rem; background:rgba(16,185,129,0.1); color:#10b981; margin-bottom:1rem;">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; width:3.5rem; height:3.5rem; border-radius:0; background:rgba(16,185,129,0.1); color:#10b981; margin-bottom:1rem;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="8" r="6"></circle>
                             <path d="M15.477 12.89 17 21.5l-5-3.5-5 3.5 1.523-8.61"></path>
@@ -393,7 +394,7 @@
                         De um total de <span id="total-count">0</span>, a IA priorizou os mais estratégicos para a sua vaga.
                     </p>
                     <div style="margin-top: 1rem;">
-                        <button id="btn-add-cert-manual" style="background:rgba(16,185,129,0.1); border:1px solid #10b981; color:#10b981; padding:0.5rem 1rem; border-radius:0.5rem; font-size:0.875rem; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='rgba(16,185,129,0.1)'">
+                        <button id="btn-add-cert-manual" style="background:rgba(16,185,129,0.1); border:1px solid #10b981; color:#10b981; padding:0.5rem 1rem; border-radius:0; font-size:0.875rem; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='rgba(16,185,129,0.1)'">
                             + Adicionar Certificado
                         </button>
                     </div>
@@ -422,7 +423,7 @@
     </main>
 
     <!-- Footer -->
-    <div id="footer-wrap" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:50; padding:1.25rem 1rem 1.5rem; background:rgba(10,10,10,0.85); backdrop-filter:blur(20px); border-top:1px solid var(--color-border);">
+    <div id="footer-wrap" class="onboarding-footer" style="display:none;">
         <div style="max-width:var(--max-width); margin:0 auto; display:flex; align-items:center; justify-content:center; gap:1rem;">
             <button id="btn-skip-certs" class="skip-link">
                 Pular

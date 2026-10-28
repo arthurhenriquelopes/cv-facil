@@ -27,3 +27,37 @@
 @import './styles/components.css';
 @import './styles/ats.css';
 @import './styles/landing.css';
+
+/* ─── Contrato Visual Rígido CV Fácil: 100% Brutalista & Zero Cantos Arredondados ─── */
+button,
+input,
+textarea,
+select,
+.card,
+.modal,
+.modal-content,
+.badge,
+.pill,
+.icon-box,
+.btn,
+.btn-primary,
+.btn-secondary,
+.onboarding-btn-continue,
+.onboarding-back-btn,
+.onboarding-step-pill,
+.onboarding-header,
+.onboarding-footer,
+.dash-card,
+.dash-hero,
+.step-content,
+.screen-frame-viewport {
+  border-radius: 0 !important;
+}
+
+body {
+  background-color: var(--palette-black);
+  color: var(--palette-snow);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

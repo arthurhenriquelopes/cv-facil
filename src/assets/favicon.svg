@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Fundo Obsidian Dark com borda bruta -->
+  <rect width="64" height="64" fill="#131515" />
+  <rect x="2" y="2" width="60" height="60" fill="none" stroke="#339989" stroke-width="2" />
+  <rect x="6" y="6" width="52" height="52" fill="none" stroke="#7de2d1" stroke-width="1" stroke-opacity="0.4" />
+  
+  <!-- Símbolo Geométrico Hermes / Dither Monograma CV -->
+  <!-- Letra C geométrica -->
+  <path d="M 28 20 L 18 20 L 18 44 L 28 44 L 28 38 L 24 38 L 24 26 L 28 26 Z" fill="#7de2d1" />
+  
+  <!-- Letra V geométrica com dither cruzado -->
+  <path d="M 34 20 L 40 38 L 46 20 L 52 20 L 43 44 L 37 44 L 28 20 Z" fill="#fffafb" />
+
+  <!-- Acento Halftone / Hermes Pontilhado nos Cantos -->
+  <rect x="10" y="10" width="3" height="3" fill="#339989" />
+  <rect x="51" y="10" width="3" height="3" fill="#339989" />
+  <rect x="10" y="51" width="3" height="3" fill="#339989" />
+  <rect x="51" y="51" width="3" height="3" fill="#339989" />
+  
+  <rect x="30" y="49" width="4" height="4" fill="#7de2d1" />
+</svg>

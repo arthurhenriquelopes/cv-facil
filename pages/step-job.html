@@ -4,127 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descrição da Vaga | CvPorVaga</title>
+    <title>Descrição da Vaga | CV Fácil</title>
+    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg">
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
-    <style>
-        .job-model-card:hover {
-            border-color: var(--color-border-hover);
-            box-shadow: var(--shadow-glow);
-        }
-    </style>
 </head>
 
-<body style="padding-bottom: 6rem;">
-    <!-- Basic minimal header -->
-    <header
-        style="border-bottom:1px solid var(--color-border); padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; height: 3.75rem; background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);">
-        <div style="width: 2.25rem;"></div>
-        <h1 style="font-size:0.875rem; font-weight:700; color:var(--color-text); margin:0;">ATS Scanner Pro</h1>
-        <span id="step-gear-mount" style="display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;"></span>
-    </header>
-
-    <main class="page-content step-content" style="max-width:64rem;margin:0 auto;padding-top:3rem;">
-        <div style="text-align:center;margin-bottom:2.5rem;">
-            <div class="type-resistance" style="margin-bottom:0.75rem;color:var(--palette-aqua);font-size:0.85rem;letter-spacing:0.16em;display:inline-flex;align-items:center;gap:0.4rem;padding:0.25rem 0.6rem;border:1px solid rgba(125,226,209,0.3);background:rgba(51,153,137,0.1);">
-                <span class="ats-dot"></span>
-                ETAPA 02 // CRUZAMENTO COM A VAGA
-            </div>
-            <p id="top-link" class="type-tech"
-                style="color:var(--color-text-tertiary);font-size:0.875rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
-                <a href="/pages/step-ats-scanner.html" style="color:inherit;text-decoration:none;"><i
-                        class="pi pi-arrow-left"></i> Voltar e trocar arquivo</a>
-            </p>
-            <h2 id="job-title" class="type-heading"
-                style="font-size:clamp(1.5rem,4vw,2rem);font-weight:700;margin-bottom:0.75rem;letter-spacing:-0.025em;color:var(--color-text);">
-                A vaga que você quer</h2>
-            <p id="job-subtitle" class="type-body" style="color:var(--color-text-secondary);font-weight:500;font-size:1rem;margin:0;">
-                Informe a empresa e cole a descrição da vaga para otimizar seu currículo.</p>
+<body>
+    <main class="page-content step-content" style="max-width:54rem;margin:0 auto;padding-left:1.5rem;padding-right:1.5rem;">
+        <div style="text-align:center;margin-bottom:2.5rem;" class="animate-fade-in-up">
+            <h1 id="job-title" class="type-heading"
+                style="font-size:1.75rem;font-weight:700;letter-spacing:-0.025em;color:var(--palette-snow);margin-bottom:0.5rem;">
+                A Vaga Que Você Quer</h1>
+            <p id="job-subtitle" class="type-body" style="color:var(--color-text-secondary);font-size:0.9rem;margin:0;">
+                Informe a empresa e cole a descrição da vaga para calibrar seu currículo e o score ATS.</p>
         </div>
 
-        <div style="max-width:48rem;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card" style="padding:2rem;border-radius:0;display:flex;flex-direction:column;gap:1.5rem;">
             <div>
-                <label class="form-label" for="company-name">Nome da Empresa (Vaga) *</label>
+                <label class="form-label" for="company-name">Nome da Empresa Alvo *</label>
                 <input type="text" class="form-input" id="company-name"
-                    placeholder="Ex: Nubank, Mercado Livre, Google, Midas..."
-                    style="height:3.25rem;font-size:0.9375rem;">
+                    placeholder="Ex: Nubank, Mercado Livre, Google, Itaú..."
+                    style="height:3rem;font-size:0.9375rem;">
             </div>
 
             <div>
-                <label class="form-label" for="job-desc">Descrição da Vaga *</label>
+                <label class="form-label" for="job-desc">Descrição / Requisitos da Vaga *</label>
                 <textarea class="form-input" id="job-desc"
-                    style="width:100%;min-height:22rem;font-size:0.875rem;line-height:1.7;resize:vertical;padding:1.5rem;"
-                    placeholder="Cole aqui os requisitos, responsabilidades e informações da vaga..."></textarea>
+                    style="width:100%;min-height:18rem;font-size:0.875rem;line-height:1.6;resize:vertical;padding:1rem;"
+                    placeholder="Cole aqui os requisitos, responsabilidades, tecnologias e qualificações descritas no anúncio da vaga..."></textarea>
             </div>
         </div>
     </main>
 
-    <!-- Bottom Action Bar -->
-    <div
-        style="position:fixed;bottom:0;left:0;right:0;padding:1.5rem 1rem;display:flex;justify-content:center;border-top:1px solid var(--color-border);z-index:50;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);">
-        <div style="width:100%;max-width:40rem;">
-            <button id="btn-next" disabled
-                style="width:100%;height:3.5rem;border-radius:0.5rem;background:var(--color-text);color:var(--color-bg);font-size:1rem;font-weight:700;border:none;cursor:not-allowed;opacity:0.15;transition:all 0.2s;">
-                Continuar
-            </button>
-        </div>
-    </div>
-
     <script type="module">
+        import { injectStepHeader, injectStepFooter } from '/src/lib/layout.js';
         import { getState, setState } from '/src/lib/store.js';
-        import { injectSettingsGear } from '/src/lib/settings.js';
 
         const state = getState();
+        const backTarget = state.flow === 'ats' ? '/pages/step-ats-scanner.html' : '/pages/step-profile.html';
+
+        injectStepHeader({ step: 2, backHref: backTarget });
+        injectStepFooter({ label: 'Continuar para Análise ATS', id: 'btn-continue', disabled: true });
+
         const companyInput = document.getElementById('company-name');
         const textarea = document.getElementById('job-desc');
+        const btnContinue = document.getElementById('btn-continue');
 
-        // Restore state
         if (state.targetCompany) companyInput.value = state.targetCompany;
         if (state.jobDescription) textarea.value = state.jobDescription;
-
-        // Flow logic
-        if (state.flow === 'ats') {
-            document.querySelector('header h1').textContent = 'ATS Scanner Pro';
-            document.getElementById('job-title').textContent = 'A vaga que você quer';
-            document.getElementById('job-subtitle').textContent = 'Informe a empresa e cole a descrição da vaga para analisar compatibilidade.';
-            document.getElementById('btn-next').textContent = 'Analisar Compatibilidade';
-            document.getElementById('top-link').innerHTML = '<a href="/pages/step-ats-scanner.html" style="color:inherit;text-decoration:none;"><i class="pi pi-arrow-left"></i> Voltar e trocar arquivo</a>';
-        } else {
-            document.querySelector('header h1').textContent = 'Gerador CV Otimizado';
-            document.getElementById('job-title').textContent = 'Onde você quer trabalhar?';
-            document.getElementById('job-subtitle').textContent = 'Informe a empresa e cole a descrição da vaga para otimizar seu currículo.';
-            document.getElementById('btn-next').textContent = 'Continuar';
-            document.getElementById('top-link').innerHTML = '<a href="/pages/step-profile.html" style="color:inherit;text-decoration:none;"><i class="pi pi-arrow-left"></i> Voltar à edição de perfil</a>';
-        }
 
         function checkCanProceed() {
             const companyFilled = companyInput.value.trim().length >= 2;
             const descFilled = textarea.value.trim().length >= 10;
-            const btn = document.getElementById('btn-next');
-
-            if (companyFilled && descFilled) {
-                btn.style.pointerEvents = 'auto';
-                btn.style.opacity = '1';
-                btn.disabled = false;
-                btn.style.cursor = 'pointer';
-            } else {
-                btn.style.pointerEvents = 'none';
-                btn.style.opacity = '0.15';
-                btn.disabled = true;
-                btn.style.cursor = 'not-allowed';
+            if (btnContinue) {
+                btnContinue.disabled = !(companyFilled && descFilled);
             }
         }
 
         companyInput.addEventListener('input', checkCanProceed);
         textarea.addEventListener('input', checkCanProceed);
-
-        // Trigger check on load
         checkCanProceed();
 
-        const mount = document.getElementById('step-gear-mount');
-        if (mount) injectSettingsGear(mount);
-
-        document.getElementById('btn-next').addEventListener('click', e => {
+        btnContinue.addEventListener('click', e => {
             e.preventDefault();
             const company = companyInput.value.trim();
             const desc = textarea.value.trim();
@@ -136,8 +78,14 @@
                 targetRole: '',
             });
 
-            // Both flows go through step-ats-loading now
             window.location.href = '/pages/step-ats-loading.html';
+        });
+
+        // Atalho Enter
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey && btnContinue && !btnContinue.disabled) {
+                btnContinue.click();
+            }
         });
     </script>
 </body>

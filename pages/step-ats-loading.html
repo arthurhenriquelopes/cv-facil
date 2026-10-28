@@ -2,183 +2,184 @@
 <html lang="pt-BR">
 
 <head>
+    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisando | CvPorVaga</title>
+    <title>Análise ATS em Andamento | CV Fácil</title>
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
     <style>
         .loader-spinner {
-            width: 3rem;
-            height: 3rem;
-            border: 3px solid var(--color-border);
-            border-top-color: var(--color-text);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 3.5rem;
+            height: 3.5rem;
+            border: 2px solid rgba(125, 226, 209, 0.2);
+            border-top-color: var(--palette-aqua);
+            border-radius:0;
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
         .step-icon-active {
-            border-color: var(--color-text) !important;
-            border-left-color: transparent !important;
-            animation: spin 1s linear infinite;
+            border-color: var(--palette-aqua) !important;
+            background: rgba(51, 153, 137, 0.2) !important;
+            animation: spin 1.2s linear infinite;
         }
 
         .step-text-active {
-            color: var(--color-text) !important;
+            color: var(--palette-snow) !important;
         }
 
         .step-row-active {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            background: rgba(51, 153, 137, 0.1) !important;
+            border: 1px solid var(--palette-pine) !important;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 
-<body style="padding-bottom: 6rem; display:flex; flex-direction:column; min-height:100vh;">
-    <!-- Basic minimal header -->
-    <header
-        style="border-bottom:1px solid var(--color-border); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem;">
-        <h1 style="font-size:0.875rem; font-weight:700; color:var(--color-text); margin:0;">ATS Scanner Pro</h1>
+<body style="min-height:100vh;display:flex;flex-direction:column;background:var(--palette-black);">
+    <div class="screen-frame-viewport"></div>
+
+    <header class="onboarding-header">
+        <div class="onboarding-header-inner">
+            <div class="onboarding-left">
+                <a href="/" class="hermes-nav-brand">
+                    <span class="hermes-logo-title type-logo">CV FÁCIL</span>
+                    <span class="hermes-logo-sub type-tech">ATS ARCHITECT</span>
+                </a>
+            </div>
+
+            <div class="onboarding-center">
+                <div class="onboarding-step-pill">
+                    <span class="step-num type-tech">AUDITORIA</span>
+                    <span class="step-divider">//</span>
+                    <span class="step-name type-tech">SIMULAÇÃO DE PARSER ATS</span>
+                </div>
+            </div>
+
+            <div class="onboarding-right">
+                <span id="step-gear-mount"></span>
+            </div>
+        </div>
+        <div class="onboarding-progress-track">
+            <div id="top-progress" class="onboarding-progress-bar" style="width: 25%;"></div>
+        </div>
     </header>
 
-    <main class="page-content"
-        style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 1rem;">
+    <main class="step-content" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem;">
+        <div class="loader-spinner" style="margin-bottom:2.5rem;"></div>
 
-        <div class="loader-spinner" style="margin-bottom:2rem;"></div>
+        <h2 class="type-heading" style="font-size:1.75rem;font-weight:700;color:var(--palette-snow);margin-bottom:2rem;letter-spacing:-0.025em;text-align:center;">
+            Processando Auditoria do Currículo
+        </h2>
 
-        <h2 style="font-size:1.5rem; font-weight:700; color:var(--color-text); margin-bottom:3rem;">Analisando seu
-            Currículo</h2>
-
-        <div style="width:100%; max-width:28rem; display:flex; flex-direction:column; gap:1rem;">
-
-            <div id="step-0"
-                style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border:1px solid transparent; border-radius:0.75rem; transition:all 0.3s;">
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <div class="step-icon"
-                        style="width:1.25rem; height:1.25rem; border-radius:50%; border:2px solid var(--color-border); display:flex; align-items:center; justify-content:center;">
-                    </div>
-                    <span class="step-text"
-                        style="font-size:0.875rem; font-weight:700; color:var(--color-text-tertiary);">Enviando
-                        currículo...</span>
+        <div style="width:100%;max-width:32rem;display:flex;flex-direction:column;gap:0.75rem;">
+            <div id="step-0" class="step-row card" style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border:1px solid rgba(255,250,251,0.08);background:rgba(26,28,26,0.6);border-radius:0;">
+                <div style="display:flex;align-items:center;gap:0.875rem;">
+                    <div class="step-icon" style="width:1rem;height:1rem;border:2px solid rgba(125,226,209,0.3);border-radius:0;display:flex;align-items:center;justify-content:center;"></div>
+                    <span class="step-text type-tech" style="font-size:0.8125rem;font-weight:700;color:var(--color-text-tertiary);letter-spacing:0.04em;">1. Extraindo texto e normalizando seções</span>
                 </div>
             </div>
 
-            <div id="step-1"
-                style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border:1px solid transparent; border-radius:0.75rem; transition:all 0.3s;">
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <div class="step-icon"
-                        style="width:1.25rem; height:1.25rem; border-radius:50%; border:2px solid var(--color-border); display:flex; align-items:center; justify-content:center;">
-                    </div>
-                    <span class="step-text"
-                        style="font-size:0.875rem; font-weight:700; color:var(--color-text-tertiary);">Analisando com
-                        recrutador IA...</span>
+            <div id="step-1" class="step-row card" style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border:1px solid rgba(255,250,251,0.08);background:rgba(26,28,26,0.6);border-radius:0;">
+                <div style="display:flex;align-items:center;gap:0.875rem;">
+                    <div class="step-icon" style="width:1rem;height:1rem;border:2px solid rgba(125,226,209,0.3);border-radius:0;display:flex;align-items:center;justify-content:center;"></div>
+                    <span class="step-text type-tech" style="font-size:0.8125rem;font-weight:700;color:var(--color-text-tertiary);letter-spacing:0.04em;">2. Avaliação determinística de ATS e formatação</span>
                 </div>
             </div>
 
-            <div id="step-2"
-                style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border:1px solid transparent; border-radius:0.75rem; transition:all 0.3s;">
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <div class="step-icon"
-                        style="width:1.25rem; height:1.25rem; border-radius:50%; border:2px solid var(--color-border); display:flex; align-items:center; justify-content:center;">
-                    </div>
-                    <span class="step-text"
-                        style="font-size:0.875rem; font-weight:700; color:var(--color-text-tertiary);">Gerando sugestões
-                        de melhoria...</span>
+            <div id="step-2" class="step-row card" style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border:1px solid rgba(255,250,251,0.08);background:rgba(26,28,26,0.6);border-radius:0;">
+                <div style="display:flex;align-items:center;gap:0.875rem;">
+                    <div class="step-icon" style="width:1rem;height:1rem;border:2px solid rgba(125,226,209,0.3);border-radius:0;display:flex;align-items:center;justify-content:center;"></div>
+                    <span class="step-text type-tech" style="font-size:0.8125rem;font-weight:700;color:var(--color-text-tertiary);letter-spacing:0.04em;">3. Cruzamento semântico com os requisitos da vaga</span>
                 </div>
             </div>
 
-            <div id="step-3"
-                style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border:1px solid transparent; border-radius:0.75rem; transition:all 0.3s;">
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <div class="step-icon"
-                        style="width:1.25rem; height:1.25rem; border-radius:50%; border:2px solid var(--color-border); display:flex; align-items:center; justify-content:center;">
-                    </div>
-                    <span class="step-text"
-                        style="font-size:0.875rem; font-weight:700; color:var(--color-text-tertiary);">Finalizando
-                        relatório...</span>
+            <div id="step-3" class="step-row card" style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border:1px solid rgba(255,250,251,0.08);background:rgba(26,28,26,0.6);border-radius:0;">
+                <div style="display:flex;align-items:center;gap:0.875rem;">
+                    <div class="step-icon" style="width:1rem;height:1rem;border:2px solid rgba(125,226,209,0.3);border-radius:0;display:flex;align-items:center;justify-content:center;"></div>
+                    <span class="step-text type-tech" style="font-size:0.8125rem;font-weight:700;color:var(--color-text-tertiary);letter-spacing:0.04em;">4. Elaborando sugestões cirúrgicas de reescrita XYZ</span>
                 </div>
             </div>
-
         </div>
     </main>
 
     <script type="module">
+        import { getState, setState, resetFlow } from '/src/lib/store.js';
+        import { analyzeJob } from '/src/prompts/analyze-job.js';
+        import { injectSettingsGear } from '/src/lib/settings.js';
+
+        const mount = document.getElementById('step-gear-mount');
+        if (mount) injectSettingsGear(mount);
+
         let currentIdx = 0;
 
         function updateUI() {
-            if (currentIdx > 3) return;
+            const steps = [
+                document.getElementById('step-0'),
+                document.getElementById('step-1'),
+                document.getElementById('step-2'),
+                document.getElementById('step-3')
+            ];
 
-            // Previous steps complete
-            for (let i = 0; i < currentIdx; i++) {
-                const el = document.getElementById(`step-${i}`);
-                el.classList.remove('step-row-active');
-                el.querySelector('.step-icon').classList.remove('step-icon-active');
-                el.querySelector('.step-icon').style.border = 'none';
-                el.querySelector('.step-icon').innerHTML = '<i class="pi pi-check-circle" style="color:#22c55e; font-size:1.25rem;"></i>';
-                el.querySelector('.step-text').style.color = '#22c55e';
+            const progressBar = document.getElementById('top-progress');
+            if (progressBar) {
+                progressBar.style.width = `${Math.min(100, (currentIdx + 1) * 25)}%`;
             }
 
-            // Current step active
-            const el = document.getElementById(`step-${currentIdx}`);
-            el.classList.add('step-row-active');
-            el.querySelector('.step-text').classList.add('step-text-active');
-            el.querySelector('.step-icon').classList.add('step-icon-active');
-            el.querySelector('.step-icon').innerHTML = '';
+            steps.forEach((el, idx) => {
+                if (!el) return;
+                const icon = el.querySelector('.step-icon');
+                const text = el.querySelector('.step-text');
+
+                if (idx < currentIdx) {
+                    el.className = 'step-row card';
+                    el.style.borderColor = 'rgba(51, 153, 137, 0.4)';
+                    el.style.background = 'rgba(51, 153, 137, 0.08)';
+                    icon.className = 'step-icon';
+                    icon.style.borderColor = 'var(--palette-aqua)';
+                    icon.style.background = 'var(--palette-aqua)';
+                    icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#131515" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+                    text.style.color = 'var(--palette-snow)';
+                } else if (idx === currentIdx) {
+                    el.className = 'step-row card step-row-active';
+                    icon.className = 'step-icon step-icon-active';
+                    icon.innerHTML = '';
+                    text.style.color = 'var(--palette-aqua)';
+                } else {
+                    el.className = 'step-row card';
+                    el.style.borderColor = 'rgba(255, 250, 251, 0.08)';
+                    el.style.background = 'rgba(26, 28, 26, 0.6)';
+                    icon.className = 'step-icon';
+                    icon.style.borderColor = 'rgba(125, 226, 209, 0.2)';
+                    icon.style.background = 'transparent';
+                    icon.innerHTML = '';
+                    text.style.color = 'var(--color-text-tertiary)';
+                }
+            });
         }
 
-        // Actual logic call
-        import { getState, setState, resetFlow } from '/src/lib/store.js';
-        import { analyzeJob } from '/src/prompts/analyze-job.js';
-
         async function run() {
-            try {
-                const state = getState();
+            const state = getState();
 
-                // Determine CV text source: raw cvText (ATS flow) or built from profile (generator flow)
+            try {
                 let cvText = state.cvText;
-                if (!cvText && state.profile) {
-                    // Build text from structured profile for generator flow
-                    const p = state.profile;
-                    const parts = [];
-                    if (p.name) parts.push(p.name);
-                    if (p.email) parts.push(`Email: ${p.email}`);
-                    if (p.phone) parts.push(`Telefone: ${p.phone}`);
-                    if (p.location) parts.push(`Localização: ${p.location}`);
-                    if (p.linkedin) parts.push(`LinkedIn: ${p.linkedin}`);
-                    if (p.github) parts.push(`GitHub: ${p.github}`);
-                    if (p.portfolio) parts.push(`Portfólio: ${p.portfolio}`);
-                    if (p.summary) parts.push(`\nResumo: ${p.summary}`);
+                if (!cvText || cvText.trim().length === 0) {
+                    const p = state.profile || {};
+                    cvText = `Nome: ${p.name || ''}\nEmail: ${p.email || ''}\nTelefone: ${p.phone || ''}\nResumo: ${p.summary || ''}\n`;
                     if (p.experiences?.length) {
-                        parts.push('\nExperiências:');
-                        p.experiences.forEach(exp => {
-                            const period = exp.isCurrent ? `${exp.startDate || ''} - Atual` : `${exp.startDate || ''} - ${exp.endDate || ''}`;
-                            parts.push(`  - ${exp.title || 'Cargo'} em ${exp.company || 'Empresa'} (${period})`);
-                            if (exp.description) parts.push(`    ${exp.description}`);
-                        });
+                        cvText += '\nExperiências:\n' + p.experiences.map(e => `${e.role} em ${e.company} (${e.startDate} - ${e.endDate}): ${e.highlights?.join(' ') || ''}`).join('\n');
                     }
                     if (p.education?.length) {
-                        parts.push('\nFormação:');
-                        p.education.forEach(edu => {
-                            parts.push(`  - ${edu.degree || 'Curso'} em ${edu.institution || 'Instituição'} (${edu.startDate || ''} - ${edu.endDate || ''})`);
-                        });
+                        cvText += '\nFormação:\n' + p.education.map(ed => `${ed.degree} na ${ed.institution} (${ed.startYear} - ${ed.endYear})`).join('\n');
                     }
-                    if (p.skills?.length) parts.push(`\nHabilidades: ${p.skills.join(', ')}`);
-                    if (p.languages?.length) {
-                        parts.push('\nIdiomas:');
-                        p.languages.forEach(lang => parts.push(`  - ${lang.name}: ${lang.level}`));
+                    if (p.skills?.length) {
+                        cvText += '\nHabilidades: ' + p.skills.join(', ');
                     }
-                    if (p.certifications?.length) {
-                        parts.push('\nCertificações:');
-                        p.certifications.forEach(cert => parts.push(`  - ${cert.name || cert.title} (${cert.issuer || cert.institution || ''})`));
-                    }
-                    cvText = parts.join('\n');
                 }
 
-                if (!cvText) {
-                    throw new Error('Faltam dados do currículo');
-                }
-
-                // Stage tracking via onStageChange callback
                 const stageMap = { recruiter: 1, improvements: 2, done: 3 };
 
                 const result = await analyzeJob({
@@ -196,16 +197,13 @@
                 });
 
                 setState({ analysisResult: result });
-
-                // Jump to 100% complete
-                currentIdx = 4;
+                currentIdx = 3;
                 updateUI();
 
                 setTimeout(() => {
                     if (state.flow === 'ats') {
                         resetFlow();
                     }
-                    // Both flows go to the new result page
                     window.location.href = '/pages/step-ats-result.html';
                 }, 800);
 
@@ -216,7 +214,6 @@
             }
         }
 
-        // Start animation for step 0 immediately
         currentIdx = 0;
         updateUI();
         run();

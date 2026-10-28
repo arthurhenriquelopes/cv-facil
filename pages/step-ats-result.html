@@ -2,100 +2,62 @@
 <html lang="pt-BR">
 
 <head>
+    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado da Análise | CvPorVaga</title>
+    <title>Resultado da Análise ATS | CV Fácil</title>
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
-    <style>
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--color-bg);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        * { box-sizing: border-box; }
-
-        header {
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid var(--color-border);
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        a { text-decoration: none; transition: color 0.2s; }
-
-        .header-link {
-            color: var(--color-text);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-            font-size: 0.875rem;
-        }
-
-        .header-link:hover { color: var(--color-text-secondary); }
-
-        .new-test-link {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            padding: 0.5rem 0.875rem;
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            transition: all 0.2s;
-        }
-
-        .new-test-link:hover { 
-            color: var(--color-text); 
-            border-color: var(--color-border-hover);
-            background: var(--color-accent-dim);
-        }
-    </style>
 </head>
 
 <body>
-    <header>
-        <div style="display:flex; align-items:center; gap:1rem;">
-            <a href="/pages/step-ats-scanner.html" class="header-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m15 18-6-6 6-6" />
-                </svg>
-                ATS Scanner Pro
-            </a>
+    <div class="screen-frame-viewport"></div>
+
+    <header class="onboarding-header">
+        <div class="onboarding-header-inner">
+            <div class="onboarding-left">
+                <a href="/pages/dashboard.html" class="onboarding-back-btn" title="Voltar ao Painel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    <span>VOLTAR</span>
+                </a>
+                <div class="onboarding-header-divider"></div>
+                <a href="/" class="hermes-nav-brand">
+                    <span class="hermes-logo-title type-logo">CV FÁCIL</span>
+                    <span class="hermes-logo-sub type-tech">ATS ARCHITECT</span>
+                </a>
+            </div>
+
+            <div class="onboarding-center">
+                <div class="onboarding-step-pill">
+                    <span class="step-num type-tech">DIAGNÓSTICO</span>
+                    <span class="step-divider">//</span>
+                    <span class="step-name type-tech">RELATÓRIO DE COMPATIBILIDADE</span>
+                </div>
+            </div>
+
+            <div class="onboarding-right">
+                <a href="/pages/step-ats-scanner.html" class="onboarding-back-btn type-tech">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
+                    <span>NOVO TESTE</span>
+                </a>
+                <span id="step-gear-mount"></span>
+            </div>
         </div>
-        <div>
-            <a href="/pages/step-ats-scanner.html" class="new-test-link" id="btn-new-test">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                    <path d="M3 3v5h5" />
-                </svg>
-                Novo Teste
-            </a>
+        <div class="onboarding-progress-track">
+            <div class="onboarding-progress-bar" style="width: 100%;"></div>
         </div>
     </header>
 
-    <div id="render-target" style="flex: 1;">
+    <div id="render-target" class="step-content" style="max-width:var(--max-width);margin:0 auto;padding-left:1.5rem;padding-right:1.5rem;">
         <!-- Content injected by JS -->
     </div>
 
     <script type="module" src="/src/pages/ats-result.js"></script>
+    <script type="module">
+        import { injectSettingsGear } from '/src/lib/settings.js';
+        const mount = document.getElementById('step-gear-mount');
+        if (mount) injectSettingsGear(mount);
+    </script>
 </body>
 
 </html>

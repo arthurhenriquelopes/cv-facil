@@ -104,7 +104,7 @@ button, input, textarea, select {
   top: 14px;
   left: 14px;
   right: 14px;
-  background: rgba(19, 21, 21, 0.94);
+  background: rgba(19, 21, 21, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 50;
@@ -115,7 +115,7 @@ button, input, textarea, select {
 .step-header-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  height: 3.5rem;
+  height: 3.75rem;
   padding: 0 1.25rem;
   display: flex;
   align-items: center;
@@ -125,66 +125,111 @@ button, input, textarea, select {
 .onboarding-left {
   display: flex;
   align-items: center;
+  gap: 0.875rem;
+}
+
+.onboarding-header-divider {
+  width: 1px;
+  height: 1.25rem;
+  background: rgba(255, 250, 251, 0.12);
 }
 
 .onboarding-back-btn,
 .step-header .back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.35rem 0.625rem;
-  border-radius: var(--radius-sm);
-  background: transparent;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0 !important;
+  background: rgba(26, 28, 26, 0.6);
+  border: 1px solid rgba(255, 250, 251, 0.1);
   color: var(--color-text-secondary);
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-family: var(--font-tech);
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   transition: all var(--transition-fast);
   cursor: pointer;
+  text-decoration: none;
 }
 .onboarding-back-btn:hover,
 .step-header .back-btn:hover {
+  color: var(--palette-aqua);
+  border-color: var(--palette-aqua);
+  background: rgba(51, 153, 137, 0.15);
+}
+
+/* ─── Logo Oficial CV Fácil no Header com Fonte Kihim ─── */
+.hermes-nav-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+.hermes-nav-brand:hover {
+  opacity: 0.85;
+}
+.hermes-logo-title {
+  font-family: var(--font-logo) !important;
+  font-size: 1.45rem;
+  line-height: 1;
   color: var(--palette-snow);
-  background: var(--color-bg-card);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.hermes-logo-sub {
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--palette-aqua);
+  padding: 0.1rem 0.35rem;
+  border: 1px solid rgba(125, 226, 209, 0.35);
+  background: rgba(51, 153, 137, 0.15);
+  border-radius: 0 !important;
+  line-height: 1;
 }
 
 .onboarding-center {
   display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-.onboarding-brand {
-  display: flex;
-  align-items: center;
-}
-.onboarding-logo-img {
-  height: 24px;
-  display: block;
+  justify-content: center;
 }
 
 .onboarding-step-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  font-family: var(--font-sans);
+  gap: 0.5rem;
+  font-family: var(--font-tech);
   font-size: 0.75rem;
-  color: var(--color-text-tertiary);
-  background: var(--color-bg-card);
-  padding: 0.2rem 0.625rem;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--color-border);
+  color: var(--palette-snow);
+  background: rgba(26, 28, 26, 0.85);
+  padding: 0.35rem 0.85rem;
+  border-radius: 0 !important;
+  border: 1px solid rgba(125, 226, 209, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .onboarding-step-pill .step-num {
-  font-family: var(--font-mono);
-  font-weight: 600;
+  font-family: var(--font-tech);
+  font-weight: 700;
   color: var(--palette-aqua);
+  letter-spacing: 0.05em;
+}
+
+.onboarding-step-pill .step-divider {
+  color: rgba(125, 226, 209, 0.4);
+  font-weight: 700;
 }
 
 .onboarding-step-pill .step-name {
-  color: var(--color-text-secondary);
-  font-weight: 500;
+  color: var(--palette-snow);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .onboarding-right {
@@ -197,7 +242,7 @@ button, input, textarea, select {
 .progress-bar {
   width: 100%;
   height: 2px;
-  background: rgba(255, 250, 251, 0.04);
+  background: rgba(255, 250, 251, 0.06);
   position: relative;
 }
 
@@ -205,6 +250,7 @@ button, input, textarea, select {
 .progress-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--palette-pine), var(--palette-aqua));
+  box-shadow: 0 0 10px rgba(125, 226, 209, 0.5);
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -212,12 +258,12 @@ button, input, textarea, select {
 .onboarding-footer,
 .step-footer {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
   z-index: 50;
-  padding: 0.875rem 1.25rem;
-  background: rgba(19, 21, 21, 0.94);
+  padding: 0.875rem 1.5rem;
+  background: rgba(19, 21, 21, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--color-border);
@@ -232,9 +278,11 @@ button, input, textarea, select {
 }
 
 .onboarding-footer-hint {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  font-family: var(--font-sans);
+  font-size: 0.725rem;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-tech);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .onboarding-btn-continue,
@@ -243,32 +291,141 @@ button, input, textarea, select {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 2.625rem;
-  padding: 0 1.375rem;
+  height: 2.75rem;
+  padding: 0 1.5rem;
   background: var(--palette-snow);
   color: var(--palette-black);
-  font-family: var(--font-sans);
-  font-weight: 600;
+  font-family: var(--font-tech);
+  font-weight: 700;
   font-size: 0.8125rem;
-  letter-spacing: 0.01em;
-  border-radius: var(--radius-sm);
-  border: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 0 !important;
+  border: 1px solid var(--palette-snow);
   cursor: pointer;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 .onboarding-btn-continue:hover,
 .btn-continue:hover {
-  opacity: 0.9;
+  background: var(--palette-aqua);
+  border-color: var(--palette-aqua);
+  color: var(--palette-black);
   transform: translateY(-1px);
 }
 .onboarding-btn-continue:disabled,
 .btn-continue:disabled {
-  opacity: 0.2;
+  opacity: 0.25;
   cursor: not-allowed;
   transform: none;
+  background: var(--palette-charcoal);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
 }
 
-/* ============ SITE NAVBAR ============ */
+/* ============ VIEWPORT FRAME (BORDAS OFICIAIS HERMES / CV FÁCIL) ============ */
+.screen-frame-viewport {
+  position: fixed;
+  inset: 0;
+  border: 14px solid var(--palette-pine);
+  outline: 2px solid var(--palette-aqua);
+  outline-offset: -14px;
+  pointer-events: none;
+  z-index: 1000;
+  box-sizing: border-box;
+  border-radius: 0 !important;
+}
+
+/* ============ SITE & HERMES NAVBAR ============ */
+.hermes-navbar {
+  position: sticky;
+  top: 14px;
+  z-index: 50;
+  background: rgba(19, 21, 21, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.hermes-navbar-inner {
+  max-width: 78rem;
+  margin: 0 auto;
+  height: 4.5rem;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hermes-nav-left,
+.hermes-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+}
+
+.hermes-nav-right {
+  justify-content: flex-end;
+}
+
+.hermes-nav-link {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  transition: color 150ms ease;
+  border-radius: 0 !important;
+  position: relative;
+}
+.hermes-nav-link:hover,
+.hermes-nav-link.active {
+  color: var(--palette-aqua);
+  outline: 2px solid var(--palette-aqua);
+  outline-offset: 2px;
+}
+
+.hermes-brand-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.hermes-brand-title {
+  font-family: var(--font-logo) !important;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--palette-snow);
+}
+
+.hermes-cta-btn {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--palette-snow);
+  border: 1px solid rgba(125, 226, 209, 0.4);
+  background: rgba(51, 153, 137, 0.12);
+  padding: 0.5rem 1rem;
+  transition: all 150ms ease;
+  text-decoration: none;
+  border-radius: 0 !important;
+  position: relative;
+}
+.hermes-cta-btn:hover {
+  background: var(--palette-aqua);
+  color: var(--palette-black);
+  border-color: var(--palette-aqua);
+  outline: 2px solid var(--palette-aqua);
+  outline-offset: 2px;
+}
+
 .site-navbar {
   position: sticky;
   top: 0;
@@ -303,12 +460,12 @@ button, input, textarea, select {
 }
 
 .nav-link {
-  font-family: var(--font-sans);
+  font-family: var(--font-tech);
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--color-text-secondary);
   padding: 0.4rem 0.625rem;
-  border-radius: var(--radius-sm);
+  border-radius: 0 !important;
   transition: color var(--transition-fast);
 }
 .nav-link:hover,
@@ -317,13 +474,13 @@ button, input, textarea, select {
 }
 
 .nav-cta-btn {
-  font-family: var(--font-sans);
+  font-family: var(--font-tech);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 700;
   background: var(--palette-snow);
   color: var(--palette-black);
   padding: 0.4rem 0.875rem;
-  border-radius: var(--radius-sm);
+  border-radius: 0 !important;
   transition: opacity var(--transition-fast);
 }
 .nav-cta-btn:hover {
@@ -370,12 +527,12 @@ button, input, textarea, select {
 /* ============ FORM ============ */
 .form-label {
   display: block;
-  font-family: var(--font-display);
-  font-size: 0.6875rem;
-  font-weight: 600;
+  font-family: var(--font-tech) !important;
+  font-size: 0.725rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-text-tertiary);
+  letter-spacing: 0.08em;
+  color: var(--palette-aqua);
   margin-bottom: 0.5rem;
 }
 
@@ -384,10 +541,10 @@ button, input, textarea, select {
   padding: 0.75rem 1rem;
   border: 1px solid var(--color-border);
   background: var(--color-bg-input);
-  color: var(--color-text);
+  color: var(--palette-snow);
   font-size: 0.9375rem;
-  font-family: var(--font-sans);
-  border-radius: var(--radius-md);
+  font-family: var(--font-body) !important;
+  border-radius: 0 !important;
   outline: none;
   transition: all var(--transition-base);
 }
@@ -396,7 +553,7 @@ button, input, textarea, select {
 }
 .form-input:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(125, 226, 209, 0.12), 0 0 16px rgba(125, 226, 209, 0.08);
+  box-shadow: 0 0 0 2px rgba(125, 226, 209, 0.2), 0 0 16px rgba(125, 226, 209, 0.1);
   background: var(--color-bg);
 }
 .form-input::placeholder {
@@ -404,6 +561,7 @@ button, input, textarea, select {
 }
 textarea.form-input {
   resize: vertical;
+  border-radius: 0 !important;
   min-height: 8rem;
   line-height: 1.6;
 }

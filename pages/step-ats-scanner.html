@@ -4,119 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATS Scanner Pro | CvPorVaga</title>
+    <title>Scanner ATS & Diagnóstico | CV Fácil</title>
+    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg">
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
 </head>
 
-<body style=" padding-bottom: 6rem;">
-    <!-- Basic minimal header -->
-    <!-- Basic minimal header -->
-    <header
-        style="border-bottom:1px solid var(--color-border); padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; height: 3.75rem; background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);">
-        <a href="/pages/dashboard.html"
-            style="color:var(--color-text-secondary); text-decoration:none; display:flex; align-items:center; width: 2.25rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        </a>
-        <h1 style="font-size:0.875rem; font-weight:700; color:var(--color-text); margin:0;">ATS Scanner Pro</h1>
-        <span id="step-gear-mount" style="display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;"></span>
-    </header>
-
-    <main class="page-content step-content" style="max-width:48rem; margin:0 auto; padding:4rem 1rem;">
-        <div style="text-align:center; margin-bottom:3rem;">
-            <div class="type-resistance" style="margin-bottom:0.75rem;color:var(--palette-aqua);font-size:0.85rem;letter-spacing:0.16em;display:inline-flex;align-items:center;gap:0.4rem;padding:0.25rem 0.6rem;border:1px solid rgba(125,226,209,0.3);background:rgba(51,153,137,0.1);">
-                <span class="ats-dot"></span>
-                AUDiTORiA DE ALGORiTMO // SCANNER ATS ATiVO
-            </div>
-            <h2 class="type-heading"
-                style="font-size:clamp(1.5rem, 4vw, 2rem); font-weight:700; color:var(--palette-snow); margin-bottom:0.75rem; letter-spacing:-0.025em;">
-                Vamos descobrir o que está travando você</h2>
+<body>
+    <main class="page-content step-content" style="max-width:48rem;margin:0 auto;padding-left:1.5rem;padding-right:1.5rem;">
+        <div style="text-align:center;margin-bottom:2.5rem;" class="animate-fade-in-up">
+            <h1 class="type-heading"
+                style="font-size:1.75rem;font-weight:700;color:var(--palette-snow);margin-bottom:0.5rem;letter-spacing:-0.025em;">
+                Auditoria de Legibilidade ATS</h1>
             <p class="type-body"
-                style="color:var(--color-text-secondary); font-weight:500; font-size:1rem; max-width: 36rem; margin:0 auto; line-height:1.6;">
-                Envie seu CV atual e nossa IA vai simular exatamente como os robôs das empresas leem seu arquivo.</p>
+                style="color:var(--color-text-secondary);font-size:0.9rem;max-width:34rem;margin:0 auto;line-height:1.6;">
+                Envie seu currículo em PDF para simular a leitura dos robôs ATS e identificar pontos de bloqueio.</p>
         </div>
 
-        <div class="card"
-            style="padding:2.5rem;  max-width: 40rem; margin: 0 auto; border:1px solid var(--color-gray-300)">
+        <div class="card" style="padding:2.5rem;border-radius:0;border:1px solid var(--color-border);">
             <div style="margin-bottom:1.5rem;" id="upload-header">
-                <h3 style="font-size:0.95rem; font-weight:700; color:var(--color-gray-900); margin-bottom:0.25rem;">
-                    Anexe seu currículo</h3>
-                <p style="font-size:0.8125rem; font-weight:600; color:var(--color-gray-400);">PDF, max 5MB</p>
+                <h3 class="type-heading" style="font-size:1rem;font-weight:700;color:var(--palette-snow);margin-bottom:0.25rem;">
+                    Selecione o Arquivo do Currículo</h3>
+                <p class="type-tech" style="font-size:0.75rem;color:var(--palette-aqua);letter-spacing:0.06em;">FORMATO PDF // MÁXIMO 5MB</p>
             </div>
 
             <label for="pdf-upload" id="drop-zone"
-                style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3.5rem 1.5rem; border:2px dashed var(--color-gray-300); border-radius:0.75rem; cursor:pointer;  transition:all 0.2s ease;">
-                <div
-                    style="width:3.5rem; height:3.5rem;  color:var(--color-gray-600); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
-                    <i class="pi pi-upload" style="font-size:1.5rem;"></i>
+                style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3.5rem 1.5rem;border:2px dashed var(--palette-pine);border-radius:0;cursor:pointer;background:rgba(51,153,137,0.04);transition:all var(--transition-fast);">
+                <div style="width:3.5rem;height:3.5rem;color:var(--palette-aqua);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;border:1px solid rgba(125,226,209,0.3);background:rgba(51,153,137,0.15);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
                 </div>
-                <h4 style="font-size:0.95rem; font-weight:700; color:var(--color-gray-800); margin-bottom:0.25rem;">
-                    Clique para upload ou arraste e solte</h4>
-                <p style="font-size:0.8125rem; font-weight:500; color:var(--color-gray-400);">Arquivo único (Max 5 MB)
-                </p>
+                <h4 class="type-tech" style="font-size:0.875rem;font-weight:700;color:var(--palette-snow);margin-bottom:0.35rem;letter-spacing:0.04em;">
+                    CLIQUE PARA CARREGAR OU ARRASTE O ARQUIVO</h4>
+                <p class="type-body" style="font-size:0.8125rem;color:var(--color-text-secondary);margin:0;">Arquivo PDF baseado em texto selecionável</p>
                 <input type="file" id="pdf-upload" accept="application/pdf" style="display:none;">
             </label>
 
             <!-- Selected State -->
-            <div id="selected-state" style="display:none; text-align:center; padding-top:1rem;">
-                <h3 style="font-size:1.25rem; font-weight:700; color:var(--color-gray-900); margin-bottom:0.25rem;">
-                    Arquivo selecionado</h3>
-                <p style="font-size:0.875rem; color:var(--color-gray-500); margin-bottom:2rem;">Este é o currículo que
-                    será analisado pela nossa IA.</p>
-
-                <div
-                    style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border:1px solid var(--color-gray-300); border-radius:0.75rem; text-align:left;">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div
-                            style="width:3rem; height:3rem; background:#fee2e2; color:#ef4444; border-radius:0.5rem; display:flex; align-items:center; justify-content:center;">
-                            <i class="pi pi-file-pdf" style="font-size:1.5rem;"></i>
+            <div id="selected-state" style="display:none;background:rgba(26,28,26,0.8);border:1px solid var(--palette-pine);padding:1.5rem;border-radius:0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <div style="width:2.5rem;height:2.5rem;background:rgba(51,153,137,0.2);display:flex;align-items:center;justify-content:center;color:var(--palette-aqua);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                         </div>
                         <div>
-                            <p id="file-name"
-                                style="font-size:0.875rem; font-weight:700; color:var(--color-gray-900); margin:0 0 0.15rem;">
-                                Nome_do_arquivo.pdf</p>
-                            <p id="file-size" style="font-size:0.75rem; color:var(--color-gray-500); margin:0;">0.00 MB
-                            </p>
+                            <p id="file-name" class="type-tech" style="font-size:0.875rem;font-weight:700;color:var(--palette-snow);margin:0;"></p>
+                            <p id="file-size" class="type-body" style="font-size:0.75rem;color:var(--color-text-tertiary);margin:0;"></p>
                         </div>
                     </div>
-                    <button id="btn-remove"
-                        style="background:transparent; border:none; color:var(--color-gray-500); cursor:pointer; padding:0.5rem; display:flex; align-items:center; justify-content:center; transition:color 0.2s;">
-                        <i class="pi pi-times" style="font-size:1.125rem;"></i>
-                    </button>
+                    <button id="btn-remove" class="type-tech" style="background:transparent;border:1px solid rgba(255,250,251,0.2);color:var(--palette-snow);padding:0.4rem 0.75rem;font-size:0.7rem;cursor:pointer;">TROCAR</button>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Bottom Action Bar -->
-    <div
-        style="position:fixed; bottom:0; left:0; right:0; padding:1.5rem 1rem;  display:flex; justify-content:center; z-index:50;">
-        <div style="width:100%; max-width:40rem;">
-            <button id="btn-continue" disabled
-                style="width:100%; height:3.5rem; border-radius:0.5rem; background:var(--color-gray-100); color:var(--color-gray-400); font-size:1rem; font-weight:700; border:none; transition:all 0.2s; cursor:not-allowed;">Continuar</button>
-        </div>
-    </div>
-
     <script type="module">
+        import { injectStepHeader, injectStepFooter } from '/src/lib/layout.js';
         import { setState } from '/src/lib/store.js';
         import { extractTextFromPDF } from '/src/lib/pdf.js';
-        import { injectSettingsGear } from '/src/lib/settings.js';
+
+        injectStepHeader({ step: 1, backHref: '/pages/dashboard.html' });
+        injectStepFooter({ label: 'Continuar para a Vaga', id: 'btn-continue', disabled: true });
 
         const input = document.getElementById('pdf-upload');
-        const btn = document.getElementById('btn-continue');
         const dropZone = document.getElementById('drop-zone');
-
         const uploadHeader = document.getElementById('upload-header');
         const selectedState = document.getElementById('selected-state');
         const fileNameEl = document.getElementById('file-name');
         const fileSizeEl = document.getElementById('file-size');
         const btnRemove = document.getElementById('btn-remove');
+        const btnContinue = document.getElementById('btn-continue');
 
         let selectedFile = null;
 
         input.addEventListener('change', (e) => {
-            selectedFile = e.target.files[0];
-            if (selectedFile) {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
                 if (selectedFile.size > 5 * 1024 * 1024) {
                     alert('Arquivo muito grande. O limite é 5MB.');
                     selectedFile = null;
@@ -130,57 +96,41 @@
                 fileNameEl.textContent = selectedFile.name;
                 fileSizeEl.textContent = (selectedFile.size / (1024 * 1024)).toFixed(2) + ' MB';
 
-                btn.disabled = false;
-                btn.style.background = 'var(--color-text)';
-                btn.style.color = 'var(--color-bg)';
-                btn.style.cursor = 'pointer';
+                if (btnContinue) btnContinue.disabled = false;
             }
         });
 
         btnRemove.addEventListener('click', () => {
             selectedFile = null;
             input.value = '';
-
             dropZone.style.display = 'flex';
             uploadHeader.style.display = 'block';
             selectedState.style.display = 'none';
-
-            btn.disabled = true;
-            btn.style.background = 'var(--color-gray-100)';
-            btn.style.color = 'var(--color-gray-400)';
-            btn.style.cursor = 'not-allowed';
+            if (btnContinue) btnContinue.disabled = true;
         });
 
-        btn.addEventListener('click', async () => {
+        btnContinue.addEventListener('click', async (e) => {
+            e.preventDefault();
             if (!selectedFile) return;
 
-            btn.disabled = true;
-            btn.textContent = 'Extraindo texto do PDF...';
+            btnContinue.disabled = true;
+            btnContinue.querySelector('span').textContent = 'Extraindo texto do PDF...';
 
             try {
-                // Extract raw text from PDF — NO AI parsing needed
                 const fullText = await extractTextFromPDF(selectedFile);
-
-                // Save raw text and flag as ATS flow
                 setState({
                     flow: 'ats',
                     cvText: fullText,
                     cvFileName: selectedFile.name,
                 });
-
-                // Redirect to job description step
                 window.location.href = '/pages/step-job.html';
-
             } catch (err) {
                 console.error(err);
-                alert('Erro ao processar o PDF. Tente novamente.');
-                btn.disabled = false;
-                btn.textContent = 'Continuar';
+                alert('Erro ao processar o PDF. Certifique-se de que o arquivo contém texto selecionável.');
+                btnContinue.disabled = false;
+                btnContinue.querySelector('span').textContent = 'Continuar para a Vaga';
             }
         });
-
-        const mount = document.getElementById('step-gear-mount');
-        if (mount) injectSettingsGear(mount);
     </script>
 </body>
 

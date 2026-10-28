@@ -15,6 +15,18 @@
  * 6. .type-body        -> Clash Grotesk (Interface Geral / Leitura / Formulários / Botões)
  */
 
+/* ─── 0. Kihim (Display Geométrico / Marca Oficial CV Fácil no Header) ─── */
+@font-face {
+  font-family: 'Kihim';
+  src: url('../assets/fonts/Kihim-Regular.woff2') format('woff2'),
+       url('../assets/fonts/Kihim-Regular.woff') format('woff'),
+       url('../assets/fonts/Kihim-Regular.ttf') format('truetype'),
+       url('../assets/fonts/Kihim-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ─── 1. UnifrakturMaguntia (Blackletter / Gothic Monumental) ─── */
 @font-face {
   font-family: 'UnifrakturMaguntia';
@@ -95,7 +107,8 @@
    TOKENS DE TIPOGRAFIA (ROOT)
    ═════════════════════════════════════════════════════════════ */
 :root {
-  /* 6 Tokens Fundamentais */
+  /* Tokens Fundamentais */
+  --font-logo: 'Kihim', serif;
   --font-hero: 'UnifrakturMaguntia', serif;
   --font-resistance: 'Resistance', monospace;
   --font-heading: 'Leluja', monospace;
@@ -109,13 +122,24 @@
   --font-section: var(--font-heading);
   --font-meta: var(--font-tech);
   --font-hero-cv: 'Jacquard 12', cursive, sans-serif;
-  --font-hero-brand: var(--font-hero);
+  --font-hero-brand: var(--font-logo);
   --font-leluja: var(--font-heading);
-  --font-display: var(--font-hero);
+  --font-display: var(--font-tech);
   --font-tasa: var(--font-tech);
   --font-sans: var(--font-body);
   --font-serif: var(--font-editorial);
   --font-mono: var(--font-heading);
+}
+
+/* ─── CLASSE ESPECIAL: .type-logo (Kihim para o Logo CV Fácil no Header) ─── */
+.type-logo,
+.hermes-logo-title,
+.onboarding-logo-title,
+.brand-logo-text {
+  font-family: var(--font-logo) !important;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 /* ═════════════════════════════════════════════════════════════

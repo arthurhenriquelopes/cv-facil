@@ -1,7 +1,7 @@
 /**
  * @file layout.js
- * @description Componentes estruturais (Navbar, Step Header, Footer).
- * Estética Hermes Agent / Nous Research com tipografia de marca e navegação horizontal espaçada.
+ * @description Componentes estruturais padronizados (Navbar, Step Header, Footer, Moldura de Tela).
+ * Estética Hermes Agent / Nous Research com tipografia de marca Kihim e navegação horizontal precisa.
  */
 import { injectSettingsGear } from './settings.js';
 import { attachSmoothHover } from './motion.js';
@@ -17,7 +17,25 @@ const STEP_NAMES = {
   8: 'Currículo Pronto'
 };
 
+function ensureFrameAndFavicon() {
+  if (!document.querySelector('.screen-frame-viewport')) {
+    const frame = document.createElement('div');
+    frame.className = 'screen-frame-viewport';
+    document.body.prepend(frame);
+  }
+
+  if (!document.querySelector('link[rel~="icon"]')) {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = '/src/assets/favicon.svg';
+    document.head.appendChild(link);
+  }
+}
+
 export function injectStepHeader({ step, total = 7, backHref = '/pages/dashboard.html' }) {
+  ensureFrameAndFavicon();
+
   const pct = Math.min(100, Math.round((step / total) * 100));
   const stepLabel = STEP_NAMES[step] || `Etapa ${step}`;
 
@@ -26,21 +44,22 @@ export function injectStepHeader({ step, total = 7, backHref = '/pages/dashboard
   header.innerHTML = `
     <div class="onboarding-header-inner">
       <div class="onboarding-left">
-        <a href="${backHref}" class="onboarding-back-btn" title="Voltar">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          <span>Voltar</span>
+        <a href="${backHref}" class="onboarding-back-btn" title="Voltar ao Painel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          <span>VOLTAR</span>
+        </a>
+        <div class="onboarding-header-divider"></div>
+        <a href="/" class="hermes-nav-brand">
+          <span class="hermes-logo-title type-logo">CV FÁCIL</span>
+          <span class="hermes-logo-sub type-tech">ATS ARCHITECT</span>
         </a>
       </div>
 
       <div class="onboarding-center">
-        <a href="/" class="hermes-nav-brand">
-          <span class="hermes-logo-title type-hero">CV FÁCIL</span>
-          <span class="hermes-logo-sub type-tech">ATS ARCHITECT</span>
-        </a>
         <div class="onboarding-step-pill">
           <span class="step-num type-tech">${step}/${total}</span>
-          <span class="step-divider">•</span>
-          <span class="step-name type-heading">${stepLabel}</span>
+          <span class="step-divider">//</span>
+          <span class="step-name type-tech">${stepLabel}</span>
         </div>
       </div>
 
@@ -64,11 +83,11 @@ export function injectStepFooter({ label = 'Salvar e Continuar', id = 'btn-conti
   footer.innerHTML = `
     <div class="onboarding-footer-inner">
       <div class="onboarding-footer-hint type-tech">
-        <span>Pressione Enter para avançar</span>
+        <span>PRESSIONE [ENTER] PARA AVANÇAR</span>
       </div>
-      <button id="${id}" class="onboarding-btn-continue type-body" ${disabled ? 'disabled' : ''}>
+      <button id="${id}" class="onboarding-btn-continue type-tech" ${disabled ? 'disabled' : ''}>
         <span>${label}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
     </div>
   `;
@@ -83,11 +102,7 @@ export function injectStepFooter({ label = 'Salvar e Continuar', id = 'btn-conti
  * [LINKS ESQUERDA] [LOGO CENTRALIZADA STACKED] [LINKS DIREITA + BOTÃO CTA TÉCNICO]
  */
 export function injectNavbar({ activePage = 'landing' } = {}) {
-  if (!document.querySelector('.screen-frame-viewport')) {
-    const frame = document.createElement('div');
-    frame.className = 'screen-frame-viewport';
-    document.body.prepend(frame);
-  }
+  ensureFrameAndFavicon();
 
   const nav = document.createElement('nav');
   nav.className = 'hermes-navbar';
@@ -100,7 +115,7 @@ export function injectNavbar({ activePage = 'landing' } = {}) {
 
       <div class="hermes-nav-center">
         <a href="/" class="hermes-brand-stacked">
-          <span class="hermes-brand-title type-hero">CV FÁCIL</span>
+          <span class="hermes-brand-title type-logo">CV FÁCIL</span>
         </a>
       </div>
 
@@ -119,3 +134,9 @@ export function injectNavbar({ activePage = 'landing' } = {}) {
   const cta = nav.querySelector('.hermes-cta-btn');
   if (cta) attachSmoothHover(cta);
 }
+
+export default {
+  injectStepHeader,
+  injectStepFooter,
+  injectNavbar
+};

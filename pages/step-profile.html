@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suas Informações | CvPorVaga</title>
+    <title>Dados Pessoais & Experiência | CV Fácil</title>
+    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg">
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
 </head>
@@ -60,7 +61,7 @@
         function renderExperiences() {
             const exps = getState().profile.experiences || [];
             renderArr(exps, 'experiences-list', 'badge-exp', (exp, idx) => `
-                <div style="border:1px solid var(--color-gray-300); border-radius:var(--radius-md); overflow:hidden;  margin-bottom:1rem;">
+                <div style="border:1px solid var(--color-gray-300); border-radius:0; overflow:hidden;  margin-bottom:1rem;">
                     ${renderAccordionHeader(exp.title || 'Cargo não definido', `${exp.company || 'Empresa'} • ${exp.startDate || 'Início'} - ${exp.isCurrent ? 'Atual' : (exp.endDate || 'Fim')}`, exp._expanded, idx, 'exp')}
                     <div style="display: ${exp._expanded ? 'block' : 'none'}; padding:1.25rem; border-top:1px solid var(--color-gray-200);">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
@@ -84,7 +85,7 @@
         function renderEducation() {
             const edus = getState().profile.education || [];
             renderArr(edus, 'education-list', 'badge-edu', (edu, idx) => `
-                <div style="border:1px solid var(--color-gray-300); border-radius:var(--radius-md); overflow:hidden;  margin-bottom:1rem;">
+                <div style="border:1px solid var(--color-gray-300); border-radius:0; overflow:hidden;  margin-bottom:1rem;">
                     ${renderAccordionHeader(edu.degree || 'Curso não definido', edu.institution || 'Instituição', edu._expanded, idx, 'edu')}
                     <div style="display: ${edu._expanded ? 'block' : 'none'}; padding:1.25rem; border-top:1px solid var(--color-gray-200);">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
@@ -102,7 +103,7 @@
         function renderLanguages() {
             const langs = getState().profile.languages || [];
             renderArr(langs, 'languages-list', 'badge-lang', (lang, idx) => `
-                <div style="border:1px solid var(--color-gray-300); border-radius:var(--radius-md); overflow:hidden;  margin-bottom:1rem;">
+                <div style="border:1px solid var(--color-gray-300); border-radius:0; overflow:hidden;  margin-bottom:1rem;">
                     ${renderAccordionHeader(lang.name || 'Idioma não definido', lang.level || 'Nível não informado', lang._expanded, idx, 'lang')}
                     <div style="display: ${lang._expanded ? 'block' : 'none'}; padding:1.25rem; border-top:1px solid var(--color-gray-200);">
                         <div style="display:grid; gap:1rem; margin-bottom:1rem;">
@@ -125,7 +126,7 @@
         function renderProjects() {
             const projs = getState().profile.projects || [];
             renderArr(projs, 'projects-list', 'badge-proj', (proj, idx) => `
-                <div style="border:1px solid var(--color-gray-300); border-radius:var(--radius-md); overflow:hidden;  margin-bottom:1rem;">
+                <div style="border:1px solid var(--color-gray-300); border-radius:0; overflow:hidden;  margin-bottom:1rem;">
                     ${renderAccordionHeader(proj.title || 'Novo projeto', proj.role || 'Papel no projeto', proj._expanded, idx, 'proj')}
                     <div style="display: ${proj._expanded ? 'block' : 'none'}; padding:1.25rem; border-top:1px solid var(--color-gray-200);">
                         <div style="display:grid; gap:1rem; margin-bottom:1rem;">
@@ -146,7 +147,7 @@
                 const issuerVal = cert.issuer || cert.institution || '';
                 const dateVal = cert.date || cert.year || '';
                 return `
-                <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden; margin-bottom:1rem; background:var(--color-surface);">
+                <div style="border:1px solid var(--color-border); border-radius:0; overflow:hidden; margin-bottom:1rem; background:var(--color-surface);">
                     ${renderAccordionHeader(titleVal || 'Nova certificação', issuerVal || 'Instituição emissora', cert._expanded, idx, 'cert')}
                     <div style="display: ${cert._expanded ? 'block' : 'none'}; padding:1.25rem; border-top:1px solid var(--color-gray-200);">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
@@ -167,7 +168,7 @@
 
             let html = '<div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">';
             html += skills.map((s, i) => `
-                <span style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.375rem 0.75rem; border:1px solid var(--color-gray-300); border-radius:1rem; font-size:0.875rem; font-weight:500; color:var(--color-gray-700);  box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                <span style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.375rem 0.75rem; border:1px solid var(--color-gray-300); border-radius:0; font-size:0.875rem; font-weight:500; color:var(--color-gray-700);  box-shadow:0 1px 2px rgba(0,0,0,0.05);">
                     ${s}
                     <button class="btn-remove-skill" data-index="${i}" style="background:transparent; border:none; color:var(--color-gray-400); cursor:pointer; padding:0; display:flex; align-items:center; transition:color 0.2s;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -549,22 +550,18 @@
     </script>
 
     <main class="page-content step-content"
-        style="max-width:var(--max-width);margin:0 auto;padding-left:1rem;padding-right:1rem;">
+        style="max-width:var(--max-width);margin:0 auto;padding-left:1.5rem;padding-right:1.5rem;">
         <div style="text-align:center;margin-bottom:2.5rem;" class="animate-fade-in-up">
-            <div class="type-resistance" style="margin-bottom:0.75rem;color:var(--palette-aqua);font-size:0.85rem;letter-spacing:0.16em;display:inline-flex;align-items:center;gap:0.4rem;padding:0.25rem 0.6rem;border:1px solid rgba(125,226,209,0.3);background:rgba(51,153,137,0.1);">
-                <span class="ats-dot"></span>
-                ETAPA 01 // EXTRAÇÃO LOCAL BLiNDADA
-            </div>
-            <h1 class="type-heading" style="font-size:1.625rem;font-weight:700;letter-spacing:-0.025em;color:var(--palette-snow);margin-bottom:0.375rem;">Dados Pessoais & Experiência</h1>
-            <p class="type-body" style="color:var(--color-text-secondary);font-size:0.875rem;">Preencha suas informações profissionais ou importe seu currículo em PDF.</p>
+            <h1 class="type-heading" style="font-size:1.75rem;font-weight:700;letter-spacing:-0.025em;color:var(--palette-snow);margin-bottom:0.5rem;">Dados Pessoais & Experiência</h1>
+            <p class="type-body" style="color:var(--color-text-secondary);font-size:0.9rem;">Preencha suas informações profissionais ou importe seu currículo em PDF.</p>
         </div>
 
         <div class="space-y-6">
             <!-- Import Section -->
-            <div class="card" style="padding:1.5rem;">
+            <div class="card" style="padding:1.5rem;border-radius:0;">
                 <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
                     <div class="icon-box icon-box-filled"
-                        style="width:2.75rem;height:2.75rem;border-radius:var(--radius-md);">
+                        style="width:2.75rem;height:2.75rem;border-radius:0;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 13v8"></path>
@@ -573,14 +570,13 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 style="font-weight:700;font-size:1rem;">Importar Dados</h3>
-                        <p style="font-size:0.8125rem;color:var(--color-text-tertiary);">Substitua seus dados
-                            via LinkedIn ou PDF</p>
+                        <h3 class="type-heading" style="font-weight:700;font-size:1rem;color:var(--palette-snow);">Importar Dados</h3>
+                        <p class="type-body" style="font-size:0.8125rem;color:var(--color-text-secondary);">Substitua seus dados via LinkedIn ou PDF</p>
                     </div>
                 </div>
                 <input type="file" id="file-upload" accept="application/pdf" style="display:none;">
-                <button id="btn-import"
-                    style="width:100%;height:2.75rem;border-radius:var(--radius-md);border:1px dashed var(--color-border-hover);background:transparent;font-weight:600;font-size:0.8125rem;color:var(--color-text-secondary);display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;transition:all var(--transition-base);">
+                <button id="btn-import" class="type-tech"
+                    style="width:100%;height:2.75rem;border-radius:0;border:1px dashed var(--palette-pine);background:rgba(51,153,137,0.06);font-weight:700;font-size:0.8125rem;color:var(--palette-aqua);display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;transition:all var(--transition-base);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -589,9 +585,9 @@
                     </svg>
                     Importar do LinkedIn ou PDF
                 </button>
-                <button id="btn-import-direct" type="button"
-                    style="width:100%;height:2.75rem;border-radius:var(--radius-md);border:1px solid rgba(16,185,129,0.4);background:rgba(16,185,129,0.08);font-weight:700;font-size:0.8125rem;color:#34d399;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;margin-top:0.5rem;transition:all var(--transition-base);"
-                    onmouseover="this.style.background='rgba(16,185,129,0.15)'" onmouseout="this.style.background='rgba(16,185,129,0.08)'">
+                <button id="btn-import-direct" type="button" class="type-tech"
+                    style="width:100%;height:2.75rem;border-radius:0;border:1px solid var(--palette-pine);background:rgba(51,153,137,0.12);font-weight:700;font-size:0.8125rem;color:var(--palette-aqua);display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;margin-top:0.5rem;transition:all var(--transition-base);"
+                    onmouseover="this.style.background='rgba(51,153,137,0.22)'" onmouseout="this.style.background='rgba(51,153,137,0.12)'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -600,7 +596,7 @@
                 </button>
                 <input type="file" id="file-upload-direct" accept="application/pdf" style="display:none;">
                 <div id="import-status"
-                    style="display:none;align-items:center;justify-content:center;gap:0.75rem;width:100%;height:2.75rem;border-radius:var(--radius-md);border:1px solid var(--color-border);margin-top:0.5rem;">
+                    style="display:none;align-items:center;justify-content:center;gap:0.75rem;width:100%;height:2.75rem;border-radius:0;border:1px solid var(--color-border);margin-top:0.5rem;">
                 </div>
             </div>
 
@@ -659,7 +655,7 @@
                 <div style="display:flex;align-items:center;margin-bottom:1.25rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div
-                            style="width:2.5rem;height:2.5rem;border-radius:var(--radius-sm);background:#fefce8;color:#ca8a04;display:flex;align-items:center;justify-content:center;">
+                            style="width:2.5rem;height:2.5rem;border-radius:0;background:#fefce8;color:#ca8a04;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -682,7 +678,7 @@
                     <input id="new-skill-input" class="form-input" placeholder="Adicionar nova habilidade..."
                         style="flex:1;">
                     <button id="btn-add-skill"
-                        style="width:2.75rem; height:2.75rem; border-radius:var(--radius-md); background:var(--color-text); color:var(--color-bg); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--transition-base);">
+                        style="width:2.75rem; height:2.75rem; border-radius:0; background:var(--color-text); color:var(--color-bg); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--transition-base);">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -697,7 +693,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div
-                            style="width:2.5rem;height:2.5rem;border-radius:var(--radius-sm);border:1px solid var(--color-gray-400);color:var(--color-gray-900);background:transparent;display:flex;align-items:center;justify-content:center;">
+                            style="width:2.5rem;height:2.5rem;border-radius:0;border:1px solid var(--color-gray-400);color:var(--color-gray-900);background:transparent;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -711,7 +707,7 @@
                         </div>
                     </div>
                     <button id="btn-add-exp"
-                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:var(--radius-md);font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
+                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:0;font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -727,7 +723,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div
-                            style="width:2.5rem;height:2.5rem;border-radius:var(--radius-sm);background:#faf5ff;color:#9333ea;display:flex;align-items:center;justify-content:center;">
+                            style="width:2.5rem;height:2.5rem;border-radius:0;background:#faf5ff;color:#9333ea;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -744,7 +740,7 @@
                         </div>
                     </div>
                     <button id="btn-add-edu"
-                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:var(--radius-md);font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
+                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:0;font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -760,7 +756,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div
-                            style="width:2.5rem;height:2.5rem;border-radius:var(--radius-sm);background:#fdf2f8;color:#db2777;display:flex;align-items:center;justify-content:center;">
+                            style="width:2.5rem;height:2.5rem;border-radius:0;background:#fdf2f8;color:#db2777;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -778,7 +774,7 @@
                         </div>
                     </div>
                     <button id="btn-add-lang"
-                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:var(--radius-md);font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
+                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:0;font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -794,7 +790,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div
-                            style="width:2.5rem;height:2.5rem;border-radius:var(--radius-sm);background:#ecfdf5;color:#059669;display:flex;align-items:center;justify-content:center;">
+                            style="width:2.5rem;height:2.5rem;border-radius:0;background:#ecfdf5;color:#059669;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -810,7 +806,7 @@
                         </div>
                     </div>
                     <button id="btn-add-proj"
-                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:var(--radius-md);font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
+                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:0;font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -826,7 +822,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <div
-                            style="width:2.5rem;height:2.5rem;border-radius:var(--radius-sm);background:#fff7ed;color:#ea580c;display:flex;align-items:center;justify-content:center;">
+                            style="width:2.5rem;height:2.5rem;border-radius:0;background:#fff7ed;color:#ea580c;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -840,7 +836,7 @@
                         </div>
                     </div>
                     <button id="btn-add-cert"
-                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:var(--radius-md);font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
+                        style="background:var(--color-accent-dim);color:var(--color-text-secondary);border:1px solid var(--color-border);padding:0.375rem 0.875rem;border-radius:0;font-weight:600;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:0.375rem;transition:all var(--transition-base);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -851,7 +847,7 @@
 
                 <!-- Multi-file upload zone for certificates -->
                 <div id="cert-upload-zone"
-                    style="border:1px dashed var(--color-border-hover);border-radius:var(--radius-md);padding:1rem;margin-bottom:1rem;cursor:pointer;transition:all 0.2s;text-align:center;"
+                    style="border:1px dashed var(--color-border-hover);border-radius:0;padding:1rem;margin-bottom:1rem;cursor:pointer;transition:all 0.2s;text-align:center;"
                     onmouseover="this.style.borderColor='#ea580c';this.style.background='rgba(234,88,12,0.04)'"
                     onmouseout="this.style.borderColor='';this.style.background='transparent'">
                     <input type="file" id="cert-files-input" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" style="display:none;">
